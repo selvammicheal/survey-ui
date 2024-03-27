@@ -304,3 +304,20 @@ p {
 body{
   background-color: #f0ebf8 !important;
 }
+.question-heading {
+  font-weight: 500;
+  color: #202124;
+}
+
+.question-field input{
+  color:#70757a;
+}
+.short-question{
+  width: 50%;
+}
+.multiple-choice {
+  color:#70757a;
+}
+.visible-hide{
+  visibility: hidden;
+}
