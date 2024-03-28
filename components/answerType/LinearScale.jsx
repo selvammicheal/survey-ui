@@ -1,61 +1,34 @@
+import useSection from "@/app/store/section";
 import { useState } from "react"
 
-const { FormControl, Select, MenuItem } = require("@mui/material")
+const { Select, MenuItem } = require("@mui/material")
 
-const LinearScale = () => {
+const LinearScale = ({questionData, sectionIndex, questionIndex}) => {
 
-    const IntialLinear = {
-        startValue: 1,
-        startLabel: null,
-        endValue: 5,
-        endLabel: null
-    }
-
-    const [linearData, setLinearData] = useState(IntialLinear);
-// console.log(linearData,"linearData")
+    const updateLinearData = useSection((state) => state.updateLinearData);
     
     const linearOnChange = (value, type) => {
-        if (type === "start") {
-            const data = { ...linearData }
-            data.startValue = value
-            setLinearData(data)
-        } else if (type === "end") {
-            const data = { ...linearData }
-            data.endValue = value
-            setLinearData(data)
-        }
+        updateLinearData(type, value, sectionIndex, questionIndex);
     }
 
     const linearLabelChange = (value, type) => {
-        if (type === "start") {
-            const data = { ...linearData }
-            data.startLabel = value
-            setLinearData(data)
-        } else if (type === "end") {
-            const data = { ...linearData }
-            data.endLabel = value
-            setLinearData(data)
-        }
+        updateLinearData(type, value, sectionIndex, questionIndex);
     }
 
-
-    
-
     return (
-        <FormControl fullWidth className='main-linear' >
+        <div className="main-linear">
             <div className="d-flex">
-                {/* <InputLabel id="icon-select-label">Answer Type</InputLabel> */}
                 <Select
                     style={{ width: "fit-content" }}
                     labelId="icon-select-label"
                     label="Icon Select"
-                    defaultValue="1"
-                    onChange={(e) => linearOnChange(e.target.value, "start")}
+                    value={questionData?.questionData?.startIndex}
+                    onChange={(e) => linearOnChange(e.target.value, "startIndex")}
                 >
-                    <MenuItem value="0">
+                    <MenuItem value={0}>
                         <span className="ms-3">0</span>
                     </MenuItem>
-                    <MenuItem value="1">
+                    <MenuItem value={1}>
                         <span className="ms-3">1</span>
                     </MenuItem>
                 </Select>
@@ -66,12 +39,12 @@ const LinearScale = () => {
                     style={{ width: "fit-content" }}
                     labelId="icon-select-label"
                     label="Icon Select"
-                    defaultValue="5"
-                    onChange={(e) => linearOnChange(e.target.value, "end")}
+                    value={questionData?.questionData?.endIndex}
+                    onChange={(e) => linearOnChange(e.target.value, "endIndex")}
                 >
                     {
                         [2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-                            <MenuItem value={`${item}`}>
+                            <MenuItem value={item}>
                                 <span className="ms-3">{item}</span>
                             </MenuItem>
                         ))
@@ -83,27 +56,26 @@ const LinearScale = () => {
                 <div className="row" >
                     <div className='col-md-4'>
                         <div className='d-flex align-items-center mt-3'>
-                            <div className="mutiple_option"> {linearData.startValue}</div>
+                            <div className="mutiple_option">{questionData?.questionData?.startIndex}</div>
                             <div className='w-100 ms-2'>
-                                <input type="text" name="name" placeholder="Label (Optional)" onChange={(e) => linearLabelChange(e.target.value, "start")} className='text-light-color questionType' />
+                                <input type="text" name="name" placeholder="Label (Optional)" value={questionData?.questionData?.startLabel} onChange={(e) => linearLabelChange(e.target.value, "startLabel")} className='text-light-color questionType' />
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div className="row" >
                     <div className='col-md-4'>
                         <div className='d-flex align-items-center mt-3'>
-                            <div className="mutiple_option"> {linearData.endValue}</div>
+                            <div className="mutiple_option">{questionData?.questionData?.endIndex}</div>
                             <div className='w-100 ms-2'>
-                                <input type="text" name="name" placeholder="Label (Optional)" onChange={(e) => linearLabelChange(e.target.value, "end")} className='text-light-color questionType' />
+                                <input type="text" name="name" placeholder="Label (Optional)" value={questionData?.questionData?.endLabel} onChange={(e) => linearLabelChange(e.target.value, "endLabel")} className='text-light-color questionType' />
                             </div>
                         </div>
                     </div>
 
                 </div>
             </div>
-        </FormControl>
+        </div>
     )
 }
 

@@ -1,43 +1,34 @@
+import useSection from "@/app/store/section";
 import CloseRounded from "@mui/icons-material/CloseRounded";
 import { Radio } from "@mui/material";
 import { useState } from "react";
 
-const MultiChoiceGrid = () => {
+const MultiChoiceGrid = ({questionData, sectionIndex, questionIndex}) => {
 
-    const [multipleChoiceGridRow, setMultipleChoiceGridRow] = useState(["Row 1"])
-
-    const [multipleChoiceGridCol, setMultipleChoiceGridCol] = useState(["Column 1"])
+    const updateRowColData = useSection((state) => state.updateRowColData);
 
     const addRows = () => {
-        setMultipleChoiceGridRow((prevState) => [...prevState, `Row ${prevState.length + 1}`])
+        updateRowColData("addRow", null, null, sectionIndex, questionIndex, null )
     }
 
     const addColumns = () => {
-        setMultipleChoiceGridCol((prevState) => [...prevState, `Column ${prevState.length + 1}`])
+        updateRowColData("addCol", null, null, sectionIndex, questionIndex, null )
     }
 
     const MultipleRemove = (index) => {
-        const remove = [...multipleChoiceGridRow]
-        remove.splice(index, 1);
-        setMultipleChoiceGridRow([...remove])
+        updateRowColData("removeRow", null, null, sectionIndex, questionIndex, index )
     }
 
     const MultipleCloumnRemove = (index) => {
-        const arry = [...multipleChoiceGridCol]
-        arry.splice(index, 1);
-        setMultipleChoiceGridCol([...arry])
+        updateRowColData("removeCol", null, null, sectionIndex, questionIndex, index )
     }
 
     const rowLabelChange = (value, index) => {
-        const data = [...multipleChoiceGridRow]
-        data[index] = value;
-        setMultipleChoiceGridRow([...data])
+        updateRowColData("rowData", "name", value, sectionIndex, questionIndex, index )
     }
 
     const colLabelChange = (value, index) => {
-        const data = [...multipleChoiceGridCol]
-        data[index] = value;
-        setMultipleChoiceGridCol([...data])
+        updateRowColData("colData", "name", value, sectionIndex, questionIndex, index )
     }
 
 
@@ -46,17 +37,17 @@ const MultiChoiceGrid = () => {
             <div className="col-md-6">
                 <div className="multipleHeading mt-2">Row</div>
                 {
-                    multipleChoiceGridRow.map((item, index) => (
+                    questionData?.questionData?.rowData.map((item, index) => (
 
                         <div className="row mt-2">
 
                             <div className='d-flex align-items-center'>
                                 <div className="mutiple_option">{index + 1}.</div>
                                 <div className='w-100'>
-                                    <input type="text" name="name" onChange={(e) => rowLabelChange(e.target.value, index)} value={item} className='text-light-color questionType' />
+                                    <input type="text" name="name" onChange={(e) => rowLabelChange(e.target.value, index)} value={item.name} className='text-light-color questionType' />
                                 </div>
                                 {
-                                    (index > 0 || multipleChoiceGridRow.length > 1) &&
+                                    (index > 0 || questionData?.questionData?.rowData.length > 1) &&
                                     <div className="align-self-center close-btn" onClick={() => MultipleRemove(index)}>
                                         <CloseRounded />
                                     </div>
@@ -68,7 +59,7 @@ const MultiChoiceGrid = () => {
                 }
 
                 <div className='d-flex align-items-end mt-3'>
-                    <div className="mutiple_option">{multipleChoiceGridRow.length + 1}.</div>
+                    <div className="mutiple_option">{questionData?.questionData?.rowData.length + 1}.</div>
                     <div className="w-100 ms-2">
                         <div className='add-option' onClick={() => addRows()}>Add Option</div>
                     </div>
@@ -76,12 +67,10 @@ const MultiChoiceGrid = () => {
 
             </div>
 
-
-
             <div className="col-md-6">
                 <div className="multipleHeading mt-2">Columns</div>
                 {
-                    multipleChoiceGridCol.map((item, index) => (
+                    questionData?.questionData?.colData.map((item, index) => (
                         <div className="row mt-2">
                             <div className='d-flex align-items-center'>
                                 <div className="mutiple_option">
@@ -93,10 +82,10 @@ const MultiChoiceGrid = () => {
                                     />
                                 </div>
                                 <div className="w-100">
-                                    <input type="text" name="name" value={item} onChange={(e) => colLabelChange(e.target.value, index)} className='text-light-color questionType' />
+                                    <input type="text" name="name" value={item.name} onChange={(e) => colLabelChange(e.target.value, index)} className='text-light-color questionType' />
                                 </div>
                                 {
-                                    (index > 0 || multipleChoiceGridCol.length > 1) &&
+                                    (index > 0 || questionData?.questionData?.colData.length > 1) &&
                                     <div className="align-self-center close-btn" onClick={() => MultipleCloumnRemove(index)}>
                                         <CloseRounded />
                                     </div>

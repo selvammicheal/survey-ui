@@ -1,5 +1,4 @@
 import { useState } from "react";
-import AddNewQuestions from "../answerType/AddnewQuestions";
 import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwoTone';
 import TextFieldsTwoToneIcon from '@mui/icons-material/TextFieldsTwoTone';
 import ImageIcon from '@mui/icons-material/Image';

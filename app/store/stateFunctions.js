@@ -85,8 +85,8 @@ export const QUESTION_TYPE = {
         question: "Untitled Question",
         questionImgSrc: "",
         questionData: {
-            startIndex: 0,
-            endIndex: 10,
+            startIndex: 1,
+            endIndex: 5,
             startLabel: "",
             endLabel: ""
         },
@@ -101,12 +101,13 @@ export const QUESTION_TYPE = {
             rowData: [
                 {
                     name: "Row 1"
-                }
+                },
             ],
             colData: [
                 {
-                    name: "Row 1"
-                }
+                    name: "Col 1"
+                },
+                
             ],
         },
         active: true,
@@ -120,12 +121,12 @@ export const QUESTION_TYPE = {
             rowData: [
                 {
                     name: "Row 1"
-                }
+                },
             ],
             colData: [
                 {
-                    name: "Row 1"
-                }
+                    name: "Col 1"
+                },
             ],
         },
         active: true,

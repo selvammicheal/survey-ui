@@ -58,6 +58,8 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
         updateActiveContent(true, sectionIndex, questionIndex)
     }
 
+    console.log(questionData,'questionData')
+
     const renderAnswerType = () => {
         switch (questionData?.questionType) {
             case "short":
@@ -73,13 +75,13 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                     </div>
                 )
             case "multiple-choice":
-                return <MultipleChoice />
+                return <MultipleChoice questionData={questionData} sectionIndex={sectionIndex} questionIndex={questionIndex}/>
 
             case "checkboxes":
-                return <CheckBox />
+                return <CheckBox questionData={questionData} sectionIndex={sectionIndex} questionIndex={questionIndex}/>
 
             case "dropdown":
-                return <DropDown />
+                return <DropDown questionData={questionData} sectionIndex={sectionIndex} questionIndex={questionIndex}/>
 
             case "date":
                 return (
@@ -99,130 +101,136 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                     </LocalizationProvider>
                 )
             case "linear":
-                return <LinearScale />
+                return <LinearScale questionData={questionData} sectionIndex={sectionIndex} questionIndex={questionIndex}/>
 
             case "multiple-choice-grid":
-                return <MultiChoiceGrid />
+                return <MultiChoiceGrid questionData={questionData} sectionIndex={sectionIndex} questionIndex={questionIndex}/>
 
             case "checkbox-grid":
-                return <CheckBoxGrid />
+                return <CheckBoxGrid questionData={questionData} sectionIndex={sectionIndex} questionIndex={questionIndex}/>
         }
 
     }
 
+    let linearCount = questionData?.questionData?.startIndex == 0 ? questionData?.questionData?.endIndex + 1 : questionData?.questionData?.endIndex
+
     return (
         <div className="main-form-haeding">
-            <div className={`main-form-wrap ${!questionData?.active && "left-border-0"}`} style={{position: "relative"}} onClick={() => updateActiveContentFunc()}>
+            <div className={`main-form-wrap ${!questionData?.active && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveContentFunc()}>
                 <>
-                {questionData?.active &&
-                    <>
-                        <div className="row">
-                            <div className="col-md-7">
-                                <input type="text" name="name" className='text-light-color dark-text' autoFocus={true} value={questionData.question} onChange={(e) => updateQuestionFunc(e.target.value)} />
-                            </div>
-                            <div className="col-md-1 align-self-center">
-                                <div className='upload-main-img' onClick={() => inputRef?.current.click()}>
-                                    <InsertPhotoOutlinedIcon className="ligthColor uploadimg" />
-                                </div>
-                                <input type="file" className='hiden-file' ref={inputRef} onChange={handleChange} />
-                            </div>
-                            <div className="col-md-4">
-                                <div className="optionBar">
-                                    <FormControl fullWidth>
-                                        <Select
-                                            labelId="icon-select-label"
-                                            defaultValue="short"
-                                            label="Icon Select"
-                                            onChange={(e) => updateQuestionType(e.target.value)}
-                                        >
-                                            <MenuItem value="short">
-                                                <ShortTextIcon />
-                                                <span className="ms-3">Short answer</span>
-                                            </MenuItem>
-                                            <MenuItem value="paragraph">
-                                                <ReorderSharpIcon />
-                                                <span className="ms-3">Paragraph</span>
-                                            </MenuItem>
-                                            <hr />
-                                            <MenuItem value="multiple-choice">
-                                                <AdjustSharpIcon />
-                                                <span className="ms-3">Multiple choice</span>
-                                            </MenuItem>
-                                            <MenuItem value="checkboxes">
-                                                <CheckBoxOutlinedIcon />
-                                                <span className="ms-3">Checkboxes</span>
-                                            </MenuItem>
-                                            <MenuItem value="dropdown">
-                                                <ArrowDropDownCircleOutlinedIcon />
-                                                <span className="ms-3">Dropdown</span>
-                                            </MenuItem>
-                                            <hr />
-                                            <MenuItem value="linear">
-                                                <LinearScaleOutlinedIcon />
-                                                <span className="ms-3">Linear scale</span>
-                                            </MenuItem>
-                                            <MenuItem value="multiple-choice-grid">
-                                                <DragIndicatorOutlinedIcon />
-                                                <span className="ms-3">Multiple choice grid</span>
-                                            </MenuItem>
-                                            <MenuItem value="checkbox-grid">
-                                                <AppsOutlinedIcon />
-                                                <span className="ms-3">Checkbox grid</span>
-                                            </MenuItem>
-                                            <hr />
-                                            <MenuItem value="date">
-                                                <InsertInvitationOutlinedIcon />
-                                                <span className="ms-3">Date</span>
-                                            </MenuItem>
-                                            <MenuItem value="time">
-                                                <AccessTimeOutlinedIcon />
-                                                <span className="ms-3">Time</span>
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                            </div>
-                        </div>
-                        {
-                            questionData?.questionImgSrc &&
+                    {questionData?.active &&
+                        <>
                             <div className="row">
-                                <div className="col-md-12">
-                                    <div className="questionmain-wrap">
-                                        <img src={questionData?.questionImgSrc} className='questionImage' />
-                                        <div className="question-setting" id='basic-button'>
-                                            <MoreVertIcon />
-                                        </div>
+                                <div className="col-md-7">
+                                    <input type="text" name="name" className='text-light-color dark-text' autoFocus={true} value={questionData.question} onChange={(e) => updateQuestionFunc(e.target.value)} />
+                                </div>
+                                <div className="col-md-1 align-self-center">
+                                    <div className='upload-main-img' onClick={() => inputRef?.current.click()}>
+                                        <InsertPhotoOutlinedIcon className="ligthColor uploadimg" />
+                                    </div>
+                                    <input type="file" className='hiden-file' ref={inputRef} onChange={handleChange} />
+                                </div>
+                                <div className="col-md-4">
+                                    <div className="optionBar">
+                                        <FormControl fullWidth>
+                                            <Select
+                                                labelId="icon-select-label"
+                                                defaultValue="short"
+                                                label="Icon Select"
+                                                value={questionData.questionType}
+                                                onChange={(e) => updateQuestionType(e.target.value)}
+                                            >
+                                                <MenuItem value="short">
+                                                    <ShortTextIcon />
+                                                    <span className="ms-3">Short answer</span>
+                                                </MenuItem>
+                                                <MenuItem value="paragraph">
+                                                    <ReorderSharpIcon />
+                                                    <span className="ms-3">Paragraph</span>
+                                                </MenuItem>
+                                                <hr />
+                                                <MenuItem value="multiple-choice">
+                                                    <AdjustSharpIcon />
+                                                    <span className="ms-3">Multiple choice</span>
+                                                </MenuItem>
+                                                <MenuItem value="checkboxes">
+                                                    <CheckBoxOutlinedIcon />
+                                                    <span className="ms-3">Checkboxes</span>
+                                                </MenuItem>
+                                                <MenuItem value="dropdown">
+                                                    <ArrowDropDownCircleOutlinedIcon />
+                                                    <span className="ms-3">Dropdown</span>
+                                                </MenuItem>
+                                                <hr />
+                                                <MenuItem value="linear">
+                                                    <LinearScaleOutlinedIcon />
+                                                    <span className="ms-3">Linear scale</span>
+                                                </MenuItem>
+                                                <MenuItem value="multiple-choice-grid">
+                                                    <DragIndicatorOutlinedIcon />
+                                                    <span className="ms-3">Multiple choice grid</span>
+                                                </MenuItem>
+                                                <MenuItem value="checkbox-grid">
+                                                    <AppsOutlinedIcon />
+                                                    <span className="ms-3">Checkbox grid</span>
+                                                </MenuItem>
+                                                <hr />
+                                                <MenuItem value="date">
+                                                    <InsertInvitationOutlinedIcon />
+                                                    <span className="ms-3">Date</span>
+                                                </MenuItem>
+                                                <MenuItem value="time">
+                                                    <AccessTimeOutlinedIcon />
+                                                    <span className="ms-3">Time</span>
+                                                </MenuItem>
+                                            </Select>
+                                        </FormControl>
                                     </div>
                                 </div>
                             </div>
-                        }
-
-                        <div className='mb-4'>
                             {
-                                (renderAnswerType())
+                                questionData?.questionImgSrc &&
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="questionmain-wrap">
+                                            <img src={questionData?.questionImgSrc} className='questionImage' />
+                                            <div className="question-setting" id='basic-button'>
+                                                <MoreVertIcon />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             }
-                        </div>
 
-                        <hr />
-                        <div className="questionSettings">
-                            <div className="row">
-                                <div className="col-md-3 text-center align-self-center" onClick={() => console.log("clicked.........")}>
-                                    <ContentCopyRoundedIcon className="ligthColor" />
-                                </div>
-                                <div className="col-md-3 align-self-center text-center borderRight">
-                                    <DeleteOutlinedIcon className="ligthColor" />
-                                </div>
-                                <div className="col-md-6">
-                                    <span>Required</span>
-                                    <Switch />
+                            <div className='mb-4'>
+                                {
+                                    (renderAnswerType())
+                                }
+                            </div>
+
+                            <hr />
+
+                            <div className="questionSettings">
+                                <div className="d-flex justify-content-end" style={{gap:"0px 25px"}}>
+                                    <div className="text-center align-self-center" onClick={() => console.log("clicked.........")}>
+                                        <ContentCopyRoundedIcon className="ligthColor" />
+                                    </div>
+                                    <div className="align-self-center text-center ">
+                                        <DeleteOutlinedIcon className="ligthColor" />
+                                    </div>
+                                    <div className="question-line"></div>
+                                    <div className="">
+                                        <span>Required</span>
+                                        <Switch />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </>
-                }
+                        </>
+                    }
 
-                {
-                    (!questionData?.active && questionData?.questionType === "short") &&
+
+                    {
+                        (!questionData?.active && questionData?.questionType === "short") &&
                         <div className='short-question'>
                             <div className="question-heading ms-2 mb-3">
                                 {questionData.question}
@@ -231,10 +239,10 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                 <input type='text' value={"Short answer text"} disabled={true} />
                             </div>
                         </div>
-                }
+                    }
 
-                {
-                    (!questionData?.active && questionData?.questionType === "paragraph") &&
+                    {
+                        (!questionData?.active && questionData?.questionType === "paragraph") &&
                         <div className='short-question'>
                             <div className="question-heading ms-2 mb-3">
                                 {questionData.question}
@@ -243,19 +251,117 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                 <input type='text' value={"Long answer text"} disabled={true} />
                             </div>
                         </div>
-                }
+                    }
 
-                {
-                    (!questionData?.active && questionData?.questionType === "multiple-choice") &&
+                    {
+                        (!questionData?.active && questionData?.questionType === "multiple-choice") &&
                         <div className='short-question'>
                             <div className="question-heading ms-2 mb-3">
                                 {questionData.question}
                             </div>
-                            <div className="question-field">
-                                <div className="row mt-2">
-                                    <div className="col-md-10">
-                                        <div className='d-flex align-items-center mt-3'>
-                                            <div className="mutiple_option">
+                            {
+                                questionData?.questionData?.options.map((option, index) => (
+                                    <div className="question-field">
+                                        <div className="row mt-2">
+                                            <div className="col-md-10">
+                                                <div className='d-flex align-items-center mt-3'>
+                                                    <div className="mutiple_option">
+                                                        <Radio
+                                                            checked={false}
+                                                            value="disabled"
+                                                            disabled
+                                                            name="radio-buttons"
+                                                        />
+                                                    </div>
+                                                    <div className="w-100 ms-2 multiple-choice">
+                                                        {option.name}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <img src={option.imgSrc} className='questionImage mt-3 ms-4' alt="" />
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    }
+
+                    {
+                        (!questionData?.active && questionData?.questionType === "checkboxes") &&
+                        <div className='short-question'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            {
+                                questionData?.questionData?.options.map((option, index) => (
+                                    <div className="question-field">
+                                        <div className="row mt-2">
+                                            <div className="col-md-10">
+                                                <div className='d-flex align-items-center mt-3'>
+                                                    <div className="mutiple_option">
+                                                        <FormGroup>
+                                                            <FormControlLabel disabled control={<Checkbox />} />
+                                                        </FormGroup>
+                                                    </div>
+                                                    <div className="w-100 ms-2 multiple-choice">
+                                                        {option.name}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+
+                        </div>
+                    }
+
+
+                    {
+                        (!questionData?.active && questionData?.questionType === "dropdown") &&
+
+                        <div className='short-question'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            {
+                                questionData?.questionData?.options.map((option, index) => (
+
+                                    <div className="question-field">
+                                        <div className="row mt-2">
+                                            <div className="col-md-10">
+                                                <div className='d-flex align-items-center mt-3'>
+                                                    <div className="mutiple_option">
+                                                        {index + 1}.
+                                                    </div>
+                                                    <div className="w-100 ms-2 multiple-choice">
+                                                        {option.name}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+
+                        </div>
+                    }
+
+                    {
+                        (!questionData?.active && questionData?.questionType === "linear") &&
+                        <div className='short-questions'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            <div className="mt-2 d-flex justify-content-between mx-4 align-items-center">
+                                <div className='mx-2'>{questionData.questionData.startLabel}</div>
+                                {
+                                    [...Array(linearCount).keys()].map((x) => (
+                                        <div className="d-flex flex-column align-items-center  text-center">
+                                            <div className="mb-2">
+                                                {questionData?.questionData?.startIndex == 0 ? x : x + 1}
+                                            </div>
+                                            <div className="">
                                                 <Radio
                                                     checked={false}
                                                     value="disabled"
@@ -263,471 +369,160 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                                     name="radio-buttons"
                                                 />
                                             </div>
-                                            <div className="w-100 ms-2 multiple-choice">
-                                                Option 1
+                                        </div>
+                                    ))
+                                }
+                                <div className='mx-2'>{questionData.questionData.endLabel}</div>
+                            </div>
+                        </div>
+                    }
+
+                    {
+                        (!questionData?.active && questionData?.questionType === "multiple-choice-grid") &&
+                        <div className='short-questions'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            <div className="question-field">
+                                <div className="row mt-4">
+                                    <div className="col-md-2">
+                                        <div className='align-items-center'>
+                                            <div className="mutiple_option visible-hide ms-3">
+                                                Row
+                                            </div>
+                                            {
+                                                questionData.questionData.rowData.map((x) => (
+                                                    <div className="mutiple_option ms-3 mt-3">
+                                                        {x.name}
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className="col-md-10 align-items-center">
+                                        <div className='d-grid overflow-auto' style={{ whiteSpace: "nowrap" }}>
+                                            <div className="d-flex justify-content-between align-items-center" >
+                                                {
+                                                    questionData.questionData.colData.map((x) => (
+                                                        <div className="d-flex flex-column align-items-center w-100">
+                                                            <div className="mutiple_option">
+                                                                {x.name}
+                                                            </div>
+                                                            {
+                                                                questionData.questionData.rowData.map((x) => (
+                                                                    <div className="mutiple_option mt-3 ">
+                                                                        <Radio
+                                                                            checked={false}
+                                                                            value="disabled"
+                                                                            disabled
+                                                                            name="radio-buttons"
+                                                                        />
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </div>
+                                                    ))
+                                                }
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                }
+                    }
 
+                    {
+                        (!questionData?.active && questionData?.questionType === "checkbox-grid") &&
 
-
-                    {/* checkbox */}
-                    {/* <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
-                            Question
-                        </div>
-                        <div className="question-field">
-                            <div className="row mt-2">
-                                <div className="col-md-10">
-                                    <div className='d-flex align-items-center mt-3'>
-                                        <div className="mutiple_option">
-                                        <FormGroup>
-                                                <FormControlLabel disabled control={<Checkbox />} />
-                                            </FormGroup>
-                                        </div>
-                                        <div className="w-100 ms-2 multiple-choice">
-                                            Option 1
+                        <div className='short-questions'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            <div className="question-field">
+                                <div className="row mt-4">
+                                    <div className="col-md-2">
+                                        <div className='align-items-center'>
+                                            <div className="mutiple_option visible-hide ms-3">
+                                                Row
+                                            </div>
+                                            {
+                                                questionData.questionData.rowData.map((x) => (
+                                                    <div className="mutiple_option ms-3 mt-3">
+                                                        {x.name}
+                                                    </div>
+                                                ))
+                                            }
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
-
-
-                    {/* dropdown */}
-                    {/* <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
-                            Question
-                        </div>
-                        <div className="question-field">
-                            <div className="row mt-2">
-                                <div className="col-md-10">
-                                    <div className='d-flex align-items-center mt-3'>
-                                        <div className="mutiple_option">
-                                        1
-                                        </div>
-                                        <div className="w-100 ms-2 multiple-choice">
-                                            Option 1
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
-
-
-
-                    {/* dropdown */}
-                    {/* <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
-                            Question
-                        </div>
-                        <div className="question-field">
-                            <div className="row mt-2">
-                                <div className="col-md-10">
-                                    <div className='d-flex align-items-center mt-3'>
-                                        <div className="mutiple_option">
-                                        1
-                                        </div>
-                                        <div className="w-100 ms-2 multiple-choice">
-                                            Option 1
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
-
-                    {/* linear */}
-                    {/* <div className='short-questions'>
-                        <div className="question-heading ms-2 mb-3">
-                            Question
-                        </div>
-                        <div className="row mt-2 d-flex justify-content-center">
-                            <div className="col-md-1 d-flex flex-column align-items-center  text-center">
-                                <div className="mb-2">
-                                    1
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-flex flex-column align-items-center ">
-                                <div className="mb-2">
-                                    2
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-flex flex-column align-items-center ">
-                                <div className="mb-2">
-                                    3
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-flex flex-column align-items-center ">
-                                <div className="mb-2">
-                                    4
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-flex flex-column align-items-center ">
-                                <div className="mb-2">
-                                    5
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-flex flex-column align-items-center ">
-                                <div className="mb-2">
-                                    6
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-flex flex-column align-items-center ">
-                                <div className="mb-2">
-                                    7
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-flex flex-column align-items-center ">
-                                <div className="mb-2">
-                                    8
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-flex flex-column align-items-center ">
-                                <div className="mb-2">
-                                    9
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-1 d-flex flex-column align-items-center ">
-                                <div className="mb-2">
-                                    10
-                                </div>
-                                <div className="">
-                                    <Radio
-                                        checked={false}
-                                        value="disabled"
-                                        disabled
-                                        name="radio-buttons"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
-
-
-                    {/* multiplechoice grid */}
-                    {/* <div className='short-questions'>
-                        <div className="question-heading ms-2 mb-3">
-                            Untitled Question
-                        </div>
-                        <div className="question-field">
-                            <div className="row mt-4">
-                                <div className="col-md-2">
-                                    <div className='align-items-center'>
-                                        <div className="mutiple_option visible-hide col-off-set">
-                                            Row
-                                        </div>
-                                        <div className="mutiple_option ms-3 mt-3">
-                                            Row 1
-                                        </div>
-                                        <div className="mutiple_option ms-3 mt-3">
-                                            Row 2
-                                        </div>
-                                        <div className="mutiple_option ms-3 mt-3">
-                                            Row 3
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-10 align-items-center">
-                                    <div className="row">
-                                        <div className="col-md-4 d-flex flex-column align-items-center">
-                                            <div className="mutiple_option">
-                                                Column 1
-                                            </div>
-                                            <div className="mutiple_option mt-3 ">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
-                                            </div>
-                                            <div className="mutiple_option mt-3 ">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
-                                            </div>
-                                            <div className="mutiple_option mt-3 ">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-4 d-flex flex-column align-items-center">
-                                            <div className="mutiple_option">
-                                                Column 1
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-4 d-flex flex-column align-items-center">
-                                            <div className="mutiple_option">
-                                                Column 1
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
+                                    <div className="col-md-10 align-items-center">
+                                        <div className='d-grid overflow-auto' style={{ whiteSpace: "nowrap" }}>
+                                            <div className="d-flex justify-content-between align-items-center" >
+                                                {
+                                                    questionData.questionData.colData.map((x) => (
+                                                        <div className="d-flex flex-column align-items-center w-100">
+                                                            <div className="mutiple_option">
+                                                                {x.name}
+                                                            </div>
+                                                            {
+                                                                questionData.questionData.rowData.map((x) => (
+                                                                    <div className="mutiple_option mt-3 ">
+                                                                        <FormGroup>
+                                                                            <FormControlLabel disabled control={<Checkbox />} />
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </div>
+                                                    ))
+                                                }
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>  */}
+                    }
 
 
-
-
-                    {/* checkbox grid */}
-                    {/* <div className='short-questions'>
-                        <div className="question-heading ms-2 mb-3">
-                            Untitled Question
-                        </div>
-                        <div className="question-field">
-                            <div className="row mt-4">
-                                <div className="col-md-2">
-                                    <div className='align-items-center'>
-                                        <div className="mutiple_option visible-hide col-off-set">
-                                            Row
-                                        </div>
-                                        <div className="mutiple_option ms-3 mt-3">
-                                            Row 1
-                                        </div>
-                                        <div className="mutiple_option ms-3 mt-3">
-                                            Row 2
-                                        </div>
-                                        <div className="mutiple_option ms-3 mt-3">
-                                            Row 3
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-10 align-items-center">
-                                    <div className="row">
-                                        <div className="col-md-4 d-flex flex-column align-items-center">
-                                            <div className="mutiple_option">
-                                                Column 1
-                                            </div>
-                                            <div className="mutiple_option mt-3 ">
-                                                <FormGroup>
-                                                    <FormControlLabel disabled control={<Checkbox />} />
-                                                </FormGroup>
-                                            </div>
-                                            <div className="mutiple_option mt-3 ">
-                                                <FormGroup>
-                                                    <FormControlLabel disabled control={<Checkbox />} />
-                                                </FormGroup>
-                                            </div>
-                                            <div className="mutiple_option mt-3 ">
-                                                <FormGroup>
-                                                    <FormControlLabel disabled control={<Checkbox />} />
-                                                </FormGroup>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-4 d-flex flex-column align-items-center">
-                                            <div className="mutiple_option">
-                                                Column 1
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                                <FormGroup>
-                                                    <FormControlLabel disabled control={<Checkbox />} />
-                                                </FormGroup>
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                                <FormGroup>
-                                                    <FormControlLabel disabled control={<Checkbox />} />
-                                                </FormGroup>
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                                <FormGroup>
-                                                    <FormControlLabel disabled control={<Checkbox />} />
-                                                </FormGroup>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-4 d-flex flex-column align-items-center">
-                                            <div className="mutiple_option">
-                                                Column 1
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                                <FormGroup>
-                                                    <FormControlLabel disabled control={<Checkbox />} />
-                                                </FormGroup>
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                                <FormGroup>
-                                                    <FormControlLabel disabled control={<Checkbox />} />
-                                                </FormGroup>
-                                            </div>
-                                            <div className="mutiple_option mt-3 align-items-center">
-                                                <FormGroup>
-                                                    <FormControlLabel disabled control={<Checkbox />} />
-                                                </FormGroup>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    {
+                        (!questionData?.active && questionData?.questionType === "date") &&
+                        <div className='short-question'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            <div className="question-field">
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DemoContainer components={['DatePicker']}>
+                                        <DatePicker label="Month, day, year" disabled={true} />
+                                    </DemoContainer>
+                                </LocalizationProvider>
                             </div>
                         </div>
-                    </div> */}
+                    }
 
-                    {/* date */}
-                    {/* <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
-                            Untitled Question
+                    {
+                        (!questionData?.active && questionData?.questionType === "time") &&
+
+                        <div className='short-question'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            <div className="question-field">
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DemoContainer components={['TimePicker']}>
+                                        <TimePicker label="Time" disabled={true} />
+                                    </DemoContainer>
+                                </LocalizationProvider>
+                            </div>
                         </div>
-                        <div className="question-field">
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DatePicker']}>
-                            <DatePicker label="Month, day, year" disabled={true} />
-                        </DemoContainer>
-                    </LocalizationProvider>
-                        </div>
-                    </div> */}
+                    }
 
 
-                    {/* time */}
-                    {/* <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
-                            Untitled Question
-                        </div>
-                        <div className="question-field">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['TimePicker']}>
-                                    <TimePicker label="Time" disabled={true} />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </div>
-                    </div> */}
 
 
                 </>
                 {
-                    (!formData?.formHeadingActive && questionData?.active) && <FloatBar sectionIndex={sectionIndex} questionIndex={questionIndex}/>
+                    (!formData?.formHeadingActive && questionData?.active) && <FloatBar sectionIndex={sectionIndex} questionIndex={questionIndex} />
                 }
             </div>
         </div>

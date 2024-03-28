@@ -1,43 +1,34 @@
+import useSection from "@/app/store/section";
 import CloseRounded from "@mui/icons-material/CloseRounded";
 import { Checkbox, FormControlLabel, FormGroup, Radio } from "@mui/material";
 import { useState } from "react";
 
-const CheckBoxGrid = () => {
+const CheckBoxGrid = ({questionData, sectionIndex, questionIndex}) => {
 
-    const [checkBoxGridRow, setCheckBoxGridRow] = useState(["Row 1"])
-
-    const [checkBoxGridCol, setCheckBoxGridCol] = useState(["Column 1"])
+    const updateRowColData = useSection((state) => state.updateRowColData);
 
     const addRows = () => {
-        setCheckBoxGridRow((prevState) => [...prevState, `Row ${prevState.length + 1}`])
+        updateRowColData("addRow", null, null, sectionIndex, questionIndex, null )
     }
 
     const addColumns = () => {
-        setCheckBoxGridCol((prevState) => [...prevState, `Column ${prevState.length + 1}`])
+        updateRowColData("addCol", null, null, sectionIndex, questionIndex, null )
     }
 
     const CheckBoxRemove = (index) => {
-        const remove = [...checkBoxGridRow]
-        remove.splice(index, 1);
-        setCheckBoxGridRow([...remove])
+        updateRowColData("removeRow", null, null, sectionIndex, questionIndex, index )
     }
 
     const CheckCloumnRemove = (index) => {
-        const arry = [...checkBoxGridCol]
-        arry.splice(index, 1);
-        setCheckBoxGridCol([...arry])
+        updateRowColData("removeCol", null, null, sectionIndex, questionIndex, index )
     }
 
     const rowLabelChange = (value, index) => {
-        const data = [...checkBoxGridRow]
-        data[index] = value;
-        setCheckBoxGridRow([...data])
+        updateRowColData("rowData", "name", value, sectionIndex, questionIndex, index )
     }
 
     const colLabelChange = (value, index) => {
-        const data = [...checkBoxGridCol]
-        data[index] = value;
-        setCheckBoxGridCol([...data])
+        updateRowColData("colData", "name", value, sectionIndex, questionIndex, index )
     }
 
     return (
@@ -45,17 +36,17 @@ const CheckBoxGrid = () => {
             <div className="col-md-6">
                 <div className="multipleHeading mt-2">Row</div>
                 {
-                    checkBoxGridRow.map((item, index) => (
+                    questionData?.questionData?.rowData.map((item, index) => (
 
                         <div className="row mt-2">
 
                             <div className='d-flex align-items-center'>
                                 <div className="mutiple_option">{index + 1}.</div>
                                 <div className='w-100'>
-                                    <input type="text" name="name" value={item} onChange={(e) => rowLabelChange(e.target.value, index)} className='text-light-color questionType' />
+                                    <input type="text" name="name" value={item.name} onChange={(e) => rowLabelChange(e.target.value, index)} className='text-light-color questionType' />
                                 </div>
                                 {
-                                    (index > 0 || checkBoxGridRow.length > 1) &&
+                                    (index > 0 || questionData?.questionData?.rowData.length > 1) &&
                                     <div className="align-self-center close-btn" onClick={() => CheckBoxRemove(index)}>
                                         <CloseRounded />
                                     </div>
@@ -68,7 +59,7 @@ const CheckBoxGrid = () => {
                 }
 
                 <div className='d-flex align-items-end mt-3'>
-                    <div className="mutiple_option">{checkBoxGridRow.length + 1}.</div>
+                    <div className="mutiple_option">{questionData?.questionData?.rowData.length + 1}.</div>
                     <div className="w-100 ms-2">
                         <div className='add-option' onClick={() => addRows()}>Add Option</div>
                     </div>
@@ -81,7 +72,7 @@ const CheckBoxGrid = () => {
             <div className="col-md-6">
                 <div className="multipleHeading mt-2">Columns</div>
                 {
-                    checkBoxGridCol.map((item, index) => (
+                    questionData?.questionData?.colData.map((item, index) => (
                         <div className="row mt-2">
                             <div className='d-flex align-items-center'>
                                 <div className="mutiple_option">
@@ -90,10 +81,10 @@ const CheckBoxGrid = () => {
                                     </FormGroup>
                                 </div>
                                 <div className="w-100">
-                                    <input type="text" name="name" onChange={(e) => colLabelChange(e.target.value, index)} value={item} className='text-light-color questionType' />
+                                    <input type="text" name="name" onChange={(e) => colLabelChange(e.target.value, index)} value={item.name} className='text-light-color questionType' />
                                 </div>
                                 {
-                                    (index > 0 || checkBoxGridCol.length > 1) &&
+                                    (index > 0 || questionData?.questionData?.colData.length > 1) &&
                                     <div className="align-self-center close-btn" onClick={() => CheckCloumnRemove(index)}>
                                         <CloseRounded />
                                     </div>
