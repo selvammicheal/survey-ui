@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwoTone';
 import TextFieldsTwoToneIcon from '@mui/icons-material/TextFieldsTwoTone';
 import ImageIcon from '@mui/icons-material/Image';
@@ -12,6 +12,8 @@ const MainForm = () => {
     const formData = useSection((state) => state.formData);
     const updateFormData = useSection((state) => state.updateFormData);
     const updateActiveContent = useSection((state) => state.updateActiveContent);
+    const updateFormValue = useSection((state) => state.updateFormValue);
+    
 
     const updateFormTitle = (value) => {
         updateFormData(value, "formName")
@@ -26,6 +28,19 @@ const MainForm = () => {
     }
 
     console.log(formData,"formData.sections")
+
+    const dragItem = useRef(0)
+    const dragOverItem = useRef(0)
+ 
+    const handleSort = (sectionIndex) => {
+        const data  = JSON.parse(JSON.stringify(formData));
+        const copyArr = [...data.sections[sectionIndex].questions];
+        const temp = copyArr[dragItem.current]
+        copyArr[dragItem.current] = copyArr[dragOverItem.current]
+        copyArr[dragOverItem.current] = temp
+        data.sections[sectionIndex].questions = [...copyArr];
+        updateFormValue(data)
+    }
 
     return (
         <div>
@@ -44,7 +59,13 @@ const MainForm = () => {
                     <div>
                         {
                             section.questions.map((question, questionIndex) => (
-                                <div>
+                                <div 
+                                    draggable="true"
+                                    onDragStart={() => dragItem.current = questionIndex}
+                                    onDragEnter={() => dragOverItem.current = questionIndex}
+                                    onDragEnd={() => handleSort(sectionIndex)}
+                                    onDragOver={(e) => e.preventDefault()}
+                                >
                                     <Question questionData={question} sectionIndex={sectionIndex} questionIndex={questionIndex} />
                                 </div>
                             ))

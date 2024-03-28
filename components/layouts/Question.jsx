@@ -279,7 +279,9 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <img src={option.imgSrc} className='questionImage mt-3 ms-4' alt="" />
+                                        {
+                                            option.imgSrc && <img src={option.imgSrc} className='questionImage mt-3 ms-4' alt="" />
+                                        }
                                     </div>
                                 ))
                             }
@@ -309,6 +311,9 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                                 </div>
                                             </div>
                                         </div>
+                                        {
+                                            option.imgSrc && <img src={option.imgSrc} className='questionImage mt-3 ms-4' alt="" />
+                                        }
                                     </div>
                                 ))
                             }

@@ -10,7 +10,7 @@ export const updateFormData = (value, field, set) => {
     ))
 }
 
-export const updateQuestion = (set, updatedFormData) => {
+export const updateFormState = (set, updatedFormData) => {
     set((state) => (
         {
             formData: {...updatedFormData}

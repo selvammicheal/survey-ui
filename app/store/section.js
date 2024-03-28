@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { QUESTION_TYPE, updateFormData, updateQuestion } from "./stateFunctions";
+import { QUESTION_TYPE, updateFormData, updateFormState } from "./stateFunctions";
 
 const useSection = create((set, get) => ({
     formData: {
@@ -22,6 +22,9 @@ const useSection = create((set, get) => ({
         ]
     },
     updateFormData: (value, field) => updateFormData(value, field, set),
+    updateFormValue: (formData) => {
+        updateFormState(set, formData);
+    },
     updateQuestion: (field, value, sectionIndex, questionIndex) => {
         const updatedFormData = { ...get().formData };
         if (field === "questionType") {
@@ -31,7 +34,7 @@ const useSection = create((set, get) => ({
             updatedFormData.sections[sectionIndex].questions[questionIndex] = { ...QUESTION_TYPE[value] };
         }
         updatedFormData.sections[sectionIndex].questions[questionIndex][field] = value;
-        updateQuestion(set, updatedFormData);
+        updateFormState(set, updatedFormData);
     },
     updateActiveContent: (value, sectionIndex, questionIndex) => {
         const updatedFormData = { ...get().formData };
@@ -39,7 +42,7 @@ const useSection = create((set, get) => ({
         if (sectionIndex !== null) {
             updatedFormData.sections[sectionIndex].questions[questionIndex].active = value;
         }
-        updateQuestion(set, updatedFormData);
+        updateFormState(set, updatedFormData);
     },
 
     addNewQuestion: (sectionIndex, questionIndex) => {
@@ -47,12 +50,12 @@ const useSection = create((set, get) => ({
         updatedFormData.sections.map((section) => section.questions.map((x) => x.active = false));
         const data = { ...QUESTION_TYPE["short"] };
         if (questionIndex === null) {
-            updateFormData(false, "formHeadingActive", set)
+            updateFormState(false, "formHeadingActive", set)
             updatedFormData.sections[sectionIndex].questions.splice(questionIndex, 0, data);
         } else {
             updatedFormData.sections[sectionIndex].questions.splice(questionIndex + 1, 0, data);
         }
-        updateQuestion(set, updatedFormData);
+        updateFormState(set, updatedFormData);
     },
 
     updateOptions: (type, field, value, sectionIndex, questionIndex, optionIndex) => {
@@ -68,13 +71,13 @@ const useSection = create((set, get) => ({
             }
             updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.options.push(option)
         }
-        updateQuestion(set, updatedFormData);
+        updateFormState(set, updatedFormData);
     },
 
     updateLinearData: (field, value, sectionIndex, questionIndex) => {
         const updatedFormData = { ...get().formData };
         updatedFormData.sections[sectionIndex].questions[questionIndex].questionData[field] = value;
-        updateQuestion(set, updatedFormData);
+        updateFormState(set, updatedFormData);
     },
 
     updateRowColData: (type, field, value, sectionIndex, questionIndex, index) => {
@@ -98,7 +101,7 @@ const useSection = create((set, get) => ({
         } else if (type === "removeCol") {
             updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.colData.splice(index, 1)
         }
-        updateQuestion(set, updatedFormData);
+        updateFormState(set, updatedFormData);
     }
 
 }));
