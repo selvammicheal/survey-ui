@@ -1,50 +1,58 @@
 import { useState } from "react";
-import Section from "./Section";
 import AddNewQuestions from "../answerType/AddnewQuestions";
 import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwoTone';
 import TextFieldsTwoToneIcon from '@mui/icons-material/TextFieldsTwoTone';
 import ImageIcon from '@mui/icons-material/Image';
 import SplitscreenTwoToneIcon from '@mui/icons-material/SplitscreenTwoTone';
 import FloatBar from "./FloatBar";
+import useSection from "@/app/store/section";
+import Question from "./Question";
+
 const MainForm = () => {
 
-    const [formTitle, setFormTitle] = useState("Untitled form");
-    const [descriptionTitle, setDescription] = useState("Form description");
-    const[sectionCount,setSectionCount] = useState(1);
-    const [activeSection, setActiveSection] = useState(1);
+    const formData = useSection((state) => state.formData);
+    const updateFormData = useSection((state) => state.updateFormData);
+    const updateActiveContent = useSection((state) => state.updateActiveContent);
 
     const updateFormTitle = (value) => {
-        setFormTitle(value)
+        updateFormData(value, "formName")
     }
-    const updateDescriptionTitile = (value) => {
-        setDescription(value)
+    const updateDescriptionTitle = (value) => {
+        updateFormData(value, "formDescription")
     }
 
-    // const updateQuestionType=(value) => {
-    //     setQuestionType(value)
-    // }
+    const updateActiveContentFunc = () => {
+        updateFormData(true, "formHeadingActive");
+        updateActiveContent(false, null, null);
+    }
+
+    console.log(formData,"formData.sections")
 
     return (
         <div>
-            <div className="main-form-haeding" onClick={() => setActiveSection(0)}>
+            <div className="main-form-haeding" onClick={() => updateActiveContentFunc()}>
                 <div className="top-border-form"></div>
-                <div className="main-form-wrap">
-
-                    <input type="text" name="name" className='text-heading' value={formTitle} onChange={(e) => updateFormTitle(e.target.value)} />
-                    <input type="text" name="name" className='text-light-color' value={descriptionTitle} onChange={(e) => updateDescriptionTitile(e.target.value)} />
+                <div className={`main-form-wrap ${!formData?.formHeadingActive && "left-border-0"}`}>
+                    <input type="text" name="name" className='text-heading' value={formData.formName} onChange={(e) => updateFormTitle(e.target.value)} />
+                    <input type="text" name="name" className='text-light-color' value={formData.formDescription} onChange={(e) => updateDescriptionTitle(e.target.value)} />
                 </div>
                 {
-                    activeSection === 0 && <FloatBar setCount = {setSectionCount}  />
+                    formData?.formHeadingActive && <FloatBar sectionIndex={0} questionIndex={null} />
                 }
             </div>
             {
-                [...Array(sectionCount).keys()].map((x, index) => (
-                    <div onClick={() => setActiveSection(index + 1)}>
-                    <Section setCount = {setSectionCount} floatIndex={index} activeSection = {activeSection}/>
+                formData.sections.map((section, sectionIndex) => (
+                    <div>
+                        {
+                            section.questions.map((question, questionIndex) => (
+                                <div>
+                                    <Question questionData={question} sectionIndex={sectionIndex} questionIndex={questionIndex} />
+                                </div>
+                            ))
+                        }
                     </div>
                 ))
             }
-
 
         </div>
 

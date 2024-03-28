@@ -32,21 +32,34 @@ import DropDown from '../answerType/DropDown';
 import FloatBar from './FloatBar';
 import useSection from '@/app/store/section';
 
-const Section = ({ setCount, floatIndex, activeSection }) => {
+const Question = ({ questionData, questionIndex, sectionIndex }) => {
 
-    const [question, setQuestion] = useState("Untitled Question");
-    const [answerType, setAnswerType] = useState("short");
-    const [file, setFile] = useState();
     const inputRef = useRef();
 
-    const addSection = useSection((state) => state.addSection);
+    const updateQuestion = useSection((state) => state.updateQuestion);
+    const updateActiveContent = useSection((state) => state.updateActiveContent);
+    const updateFormData = useSection((state) => state.updateFormData);
+    const formData = useSection((state) => state.formData);
 
-    const updateQuestion = (value) => {
-        setQuestion(value)
+    const updateQuestionFunc = (value) => {
+        updateQuestion("question", value, sectionIndex, questionIndex)
+    }
+
+    const handleChange = (e) => {
+        updateQuestion("questionImgSrc", URL.createObjectURL(e.target.files[0]), sectionIndex, questionIndex)
+    }
+
+    const updateQuestionType = (value) => {
+        updateQuestion("questionType", value, sectionIndex, questionIndex)
+    }
+
+    const updateActiveContentFunc = () => {
+        updateFormData(false, "formHeadingActive");
+        updateActiveContent(true, sectionIndex, questionIndex)
     }
 
     const renderAnswerType = () => {
-        switch (answerType) {
+        switch (questionData?.questionType) {
             case "short":
                 return (
                     <div className="col-md-6 mb-5">
@@ -96,173 +109,169 @@ const Section = ({ setCount, floatIndex, activeSection }) => {
         }
 
     }
-    function handleChange(e) {
-        setFile(URL.createObjectURL(e.target.files[0]));
-    }
 
-    useEffect(() => {
-        addSection()
-    },[])
     return (
         <div className="main-form-haeding">
-            <div className="main-form-wrap">
+            <div className={`main-form-wrap ${!questionData?.active && "left-border-0"}`} style={{position: "relative"}} onClick={() => updateActiveContentFunc()}>
                 <>
-                    {/* <div className="row">
-                        <div className="col-md-7">
-                            <input type="text" name="name" className='text-light-color dark-text' autoFocus={true} value={question} onChange={(e) => updateQuestion(e.target.value)} />
-                        </div>
-                        <div className="col-md-1 align-self-center">
-                            <div className='upload-main-img' onClick={() => inputRef?.current.click()}>
-                                <InsertPhotoOutlinedIcon className="ligthColor uploadimg" />
-                            </div>
-                            <input type="file" className='hiden-file' ref={inputRef} onChange={handleChange} />
-                        </div>
-                        <div className="col-md-4">
-                            <div className="optionBar">
-                                <FormControl fullWidth>
-                                    <Select
-                                        labelId="icon-select-label"
-                                        defaultValue="short"
-                                        label="Icon Select"
-                                        onChange={(e) => setAnswerType(e.target.value)}
-                                    >
-                                        <MenuItem value="short">
-                                            <ShortTextIcon />
-                                            <span className="ms-3">Short answer</span>
-                                        </MenuItem>
-                                        <MenuItem value="paragraph">
-                                            <ReorderSharpIcon />
-                                            <span className="ms-3">Paragraph</span>
-                                        </MenuItem>
-                                        <hr />
-                                        <MenuItem value="multiple-choice">
-                                            <AdjustSharpIcon />
-                                            <span className="ms-3">Multiple choice</span>
-                                        </MenuItem>
-                                        <MenuItem value="checkboxes">
-                                            <CheckBoxOutlinedIcon />
-                                            <span className="ms-3">Checkboxes</span>
-                                        </MenuItem>
-                                        <MenuItem value="dropdown">
-                                            <ArrowDropDownCircleOutlinedIcon />
-                                            <span className="ms-3">Dropdown</span>
-                                        </MenuItem>
-                                        <hr />
-                                        <MenuItem value="file-upload">
-                                            <CloudUploadOutlinedIcon />
-                                            <span className="ms-3">File upload</span>
-                                        </MenuItem>
-                                        <hr />
-                                        <MenuItem value="linear">
-                                            <LinearScaleOutlinedIcon />
-                                            <span className="ms-3">Linear scale</span>
-                                        </MenuItem>
-                                        <MenuItem value="multiple-choice-grid">
-                                            <DragIndicatorOutlinedIcon />
-                                            <span className="ms-3">Multiple choice grid</span>
-                                        </MenuItem>
-                                        <MenuItem value="checkbox-grid">
-                                            <AppsOutlinedIcon />
-                                            <span className="ms-3">Checkbox grid</span>
-                                        </MenuItem>
-                                        <hr />
-                                        <MenuItem value="date">
-                                            <InsertInvitationOutlinedIcon />
-                                            <span className="ms-3">Date</span>
-                                        </MenuItem>
-                                        <MenuItem value="time">
-                                            <AccessTimeOutlinedIcon />
-                                            <span className="ms-3">Time</span>
-                                        </MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </div>
-                        </div>
-                    </div>
-                    {
-                        file &&
+                {questionData?.active &&
+                    <>
                         <div className="row">
-                            <div className="col-md-12">
-                                <div className="questionmain-wrap">
-                                    <img src={file} className='questionImage' />
-                                    <div className="question-setting" id='basic-button'>
-                                        <MoreVertIcon />
-                                    </div>
+                            <div className="col-md-7">
+                                <input type="text" name="name" className='text-light-color dark-text' autoFocus={true} value={questionData.question} onChange={(e) => updateQuestionFunc(e.target.value)} />
+                            </div>
+                            <div className="col-md-1 align-self-center">
+                                <div className='upload-main-img' onClick={() => inputRef?.current.click()}>
+                                    <InsertPhotoOutlinedIcon className="ligthColor uploadimg" />
+                                </div>
+                                <input type="file" className='hiden-file' ref={inputRef} onChange={handleChange} />
+                            </div>
+                            <div className="col-md-4">
+                                <div className="optionBar">
+                                    <FormControl fullWidth>
+                                        <Select
+                                            labelId="icon-select-label"
+                                            defaultValue="short"
+                                            label="Icon Select"
+                                            onChange={(e) => updateQuestionType(e.target.value)}
+                                        >
+                                            <MenuItem value="short">
+                                                <ShortTextIcon />
+                                                <span className="ms-3">Short answer</span>
+                                            </MenuItem>
+                                            <MenuItem value="paragraph">
+                                                <ReorderSharpIcon />
+                                                <span className="ms-3">Paragraph</span>
+                                            </MenuItem>
+                                            <hr />
+                                            <MenuItem value="multiple-choice">
+                                                <AdjustSharpIcon />
+                                                <span className="ms-3">Multiple choice</span>
+                                            </MenuItem>
+                                            <MenuItem value="checkboxes">
+                                                <CheckBoxOutlinedIcon />
+                                                <span className="ms-3">Checkboxes</span>
+                                            </MenuItem>
+                                            <MenuItem value="dropdown">
+                                                <ArrowDropDownCircleOutlinedIcon />
+                                                <span className="ms-3">Dropdown</span>
+                                            </MenuItem>
+                                            <hr />
+                                            <MenuItem value="linear">
+                                                <LinearScaleOutlinedIcon />
+                                                <span className="ms-3">Linear scale</span>
+                                            </MenuItem>
+                                            <MenuItem value="multiple-choice-grid">
+                                                <DragIndicatorOutlinedIcon />
+                                                <span className="ms-3">Multiple choice grid</span>
+                                            </MenuItem>
+                                            <MenuItem value="checkbox-grid">
+                                                <AppsOutlinedIcon />
+                                                <span className="ms-3">Checkbox grid</span>
+                                            </MenuItem>
+                                            <hr />
+                                            <MenuItem value="date">
+                                                <InsertInvitationOutlinedIcon />
+                                                <span className="ms-3">Date</span>
+                                            </MenuItem>
+                                            <MenuItem value="time">
+                                                <AccessTimeOutlinedIcon />
+                                                <span className="ms-3">Time</span>
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </div>
                             </div>
                         </div>
-                    }
-
-                    <div className='mb-4'>
                         {
-                            (renderAnswerType())
-                        }
-                    </div>
-
-                    <hr />
-                    <div className="questionSettings">
-                        <div className="row">
-                            <div className="col-md-3 text-center align-self-center" onClick={() => console.log("clicked.........")}>
-                                <ContentCopyRoundedIcon className="ligthColor" />
-                            </div>
-                            <div className="col-md-3 align-self-center text-center borderRight">
-                                <DeleteOutlinedIcon className="ligthColor" />
-                            </div>
-                            <div className="col-md-6">
-                                <span>Required</span>
-                                <Switch />
-                            </div>
-                        </div>
-                    </div> */}
-
-                    {/* short */}
-                    {/* <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
-                            Question
-                        </div>
-                        <div className="question-field">
-                            <input type='text' value={"Short answer text"} disabled={true} />
-                        </div>
-                    </div> */}
-
-
-                    {/* paragraph */}
-                    {/* <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
-                            Question
-                        </div>
-                        <div className="question-field">
-                            <input type='text' value={"Long answer text"} disabled={true} />
-                        </div>
-                    </div> */}
-
-
-
-                    {/* multiplechoice */}
-                    {/* <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
-                            Question
-                        </div>
-                        <div className="question-field">
-                            <div className="row mt-2">
-                                <div className="col-md-10">
-                                    <div className='d-flex align-items-center mt-3'>
-                                        <div className="mutiple_option">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
+                            questionData?.questionImgSrc &&
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="questionmain-wrap">
+                                        <img src={questionData?.questionImgSrc} className='questionImage' />
+                                        <div className="question-setting" id='basic-button'>
+                                            <MoreVertIcon />
                                         </div>
-                                        <div className="w-100 ms-2 multiple-choice">
-                                            Option 1
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div className='mb-4'>
+                            {
+                                (renderAnswerType())
+                            }
+                        </div>
+
+                        <hr />
+                        <div className="questionSettings">
+                            <div className="row">
+                                <div className="col-md-3 text-center align-self-center" onClick={() => console.log("clicked.........")}>
+                                    <ContentCopyRoundedIcon className="ligthColor" />
+                                </div>
+                                <div className="col-md-3 align-self-center text-center borderRight">
+                                    <DeleteOutlinedIcon className="ligthColor" />
+                                </div>
+                                <div className="col-md-6">
+                                    <span>Required</span>
+                                    <Switch />
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                }
+
+                {
+                    (!questionData?.active && questionData?.questionType === "short") &&
+                        <div className='short-question'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            <div className="question-field">
+                                <input type='text' value={"Short answer text"} disabled={true} />
+                            </div>
+                        </div>
+                }
+
+                {
+                    (!questionData?.active && questionData?.questionType === "paragraph") &&
+                        <div className='short-question'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            <div className="question-field">
+                                <input type='text' value={"Long answer text"} disabled={true} />
+                            </div>
+                        </div>
+                }
+
+                {
+                    (!questionData?.active && questionData?.questionType === "multiple-choice") &&
+                        <div className='short-question'>
+                            <div className="question-heading ms-2 mb-3">
+                                {questionData.question}
+                            </div>
+                            <div className="question-field">
+                                <div className="row mt-2">
+                                    <div className="col-md-10">
+                                        <div className='d-flex align-items-center mt-3'>
+                                            <div className="mutiple_option">
+                                                <Radio
+                                                    checked={false}
+                                                    value="disabled"
+                                                    disabled
+                                                    name="radio-buttons"
+                                                />
+                                            </div>
+                                            <div className="w-100 ms-2 multiple-choice">
+                                                Option 1
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div> */}
+                }
 
 
 
@@ -335,7 +344,7 @@ const Section = ({ setCount, floatIndex, activeSection }) => {
                     </div> */}
 
                     {/* linear */}
-                    <div className='short-questions'>
+                    {/* <div className='short-questions'>
                         <div className="question-heading ms-2 mb-3">
                             Question
                         </div>
@@ -471,7 +480,7 @@ const Section = ({ setCount, floatIndex, activeSection }) => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
 
                     {/* multiplechoice grid */}
@@ -717,14 +726,12 @@ const Section = ({ setCount, floatIndex, activeSection }) => {
 
 
                 </>
+                {
+                    (!formData?.formHeadingActive && questionData?.active) && <FloatBar sectionIndex={sectionIndex} questionIndex={questionIndex}/>
+                }
             </div>
-
-            {
-                (floatIndex + 1) === activeSection && <FloatBar setCount={setCount} />
-            }
-
         </div>
     )
 }
 
-export default Section;
+export default Question;

@@ -1,17 +1,18 @@
+import useSection from "@/app/store/section"
 import AddCircleOutlineTwoTone from "@mui/icons-material/AddCircleOutlineTwoTone"
 import Image from "@mui/icons-material/Image"
 import SplitscreenTwoTone from "@mui/icons-material/SplitscreenTwoTone"
 import TextFieldsTwoTone from "@mui/icons-material/TextFieldsTwoTone"
 
-const FloatBar = ({setCount}) => {
+const FloatBar = (props) => {
 
-
+    const addNewQuestion = useSection((state) => state.addNewQuestion);
     return (
         <div className="sideAddMenu">
-            <div className="m-3" onClick={() => setCount((prev) => prev + 1)}><AddCircleOutlineTwoTone /></div>
-            <div className="m-3"><TextFieldsTwoTone /></div>
-            <div className="m-3"><Image /></div>
-            <div className="m-3"><SplitscreenTwoTone /></div>
+            <div onClick={(e) => {e.stopPropagation; addNewQuestion(props.sectionIndex, props.questionIndex)}}><AddCircleOutlineTwoTone /></div>
+            <div><TextFieldsTwoTone /></div>
+            <div><Image /></div>
+            <div><SplitscreenTwoTone /></div>
         </div>
     )
 }

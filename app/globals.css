@@ -76,7 +76,7 @@ p {
 .main-form-haeding {
   position: relative;
   border-top: rgb(103, 58, 183);
-  width: 60%;
+  width: 70%;
   margin: 30px auto;
 }
 
@@ -127,7 +127,7 @@ p {
 
 .questionSettings {
   padding: 10px 0px 0px 0px;
-  width: 34%;
+  width: 45%;
   margin-left: auto;
 }
 
@@ -294,12 +294,15 @@ p {
   cursor: pointer;
   position: absolute;
   top: 0px;
-  right: -10%;
+  right: -12%;
   box-shadow: 0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
   transition: box-shadow .28s cubic-bezier(.4,0,.2,1);
   background-color: #fff;
   border: 1px solid rgb(218,220,224);
   border-radius: 8px;
+}
+.sideAddMenu div {
+  margin: 12px;
 }
 body{
   background-color: #f0ebf8 !important;
@@ -320,4 +323,8 @@ body{
 }
 .visible-hide{
   visibility: hidden;
+}
+
+.left-border-0{
+  border-left: 0px !important;
 }
