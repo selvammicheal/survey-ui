@@ -40,7 +40,7 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
                             <div className="row mt-2">
                                 <div className='col-md-10'>
                                     <div className='d-flex align-items-center mt-3'>
-                                        <div className="mutiple_option">
+                                        <div className="multiple_option">
                                             <FormGroup>
                                                 <FormControlLabel disabled control={<Checkbox />} />
                                             </FormGroup>
@@ -52,9 +52,9 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
                                 </div>
                                 <div className="col-md-1 align-self-center">
                                     <div className='upload-main-img' onClick={() => { inputRef?.current.click(); setImgIndex(index) }}>
-                                        <InsertPhotoOutlined className="ligthColor uploadimg" />
+                                        <InsertPhotoOutlined className="lightColor" />
                                     </div>
-                                    <input type="file" className='hiden-file' ref={inputRef} onChange={(e) => handleCheckboxImg(e)} />
+                                    <input type="file" className='hidden-file' ref={inputRef} onChange={(e) => handleCheckboxImg(e)} />
                                 </div>
                                 {
                                     (index > 0 || questionData?.questionData?.options?.length > 1) &&
@@ -78,7 +78,7 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
 
             }
             <div className='d-flex align-items-end mt-3'>
-                <div className="mutiple_option">
+                <div className="multiple_option">
                     <FormGroup>
                         <FormControlLabel disabled control= {<Checkbox />} />
                     </FormGroup>

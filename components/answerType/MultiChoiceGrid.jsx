@@ -42,7 +42,7 @@ const MultiChoiceGrid = ({questionData, sectionIndex, questionIndex}) => {
                         <div className="row mt-2">
 
                             <div className='d-flex align-items-center'>
-                                <div className="mutiple_option">{index + 1}.</div>
+                                <div className="multiple_option">{index + 1}.</div>
                                 <div className='w-100'>
                                     <input type="text" name="name" onChange={(e) => rowLabelChange(e.target.value, index)} value={item.name} className='text-light-color questionType' />
                                 </div>
@@ -59,7 +59,7 @@ const MultiChoiceGrid = ({questionData, sectionIndex, questionIndex}) => {
                 }
 
                 <div className='d-flex align-items-end mt-3'>
-                    <div className="mutiple_option">{questionData?.questionData?.rowData.length + 1}.</div>
+                    <div className="multiple_option">{questionData?.questionData?.rowData.length + 1}.</div>
                     <div className="w-100 ms-2">
                         <div className='add-option' onClick={() => addRows()}>Add Option</div>
                     </div>
@@ -73,7 +73,7 @@ const MultiChoiceGrid = ({questionData, sectionIndex, questionIndex}) => {
                     questionData?.questionData?.colData.map((item, index) => (
                         <div className="row mt-2">
                             <div className='d-flex align-items-center'>
-                                <div className="mutiple_option">
+                                <div className="multiple_option">
                                     <Radio
                                         checked={false}
                                         value="disabled"
@@ -97,7 +97,7 @@ const MultiChoiceGrid = ({questionData, sectionIndex, questionIndex}) => {
 
 
                 <div className='d-flex align-items-end mt-3'>
-                    <div className="mutiple_option">
+                    <div className="multiple_option">
                         <Radio
                             checked={false}
                             value="disabled"

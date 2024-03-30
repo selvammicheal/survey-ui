@@ -43,7 +43,7 @@ const MainForm = () => {
 
     return (
         <div style={{width: "70%", margin: "0px auto"}}>
-            <div className="main-form-haeding" onClick={() => updateActiveContentFunc()}>
+            <div className="main-form-heading" onClick={() => updateActiveContentFunc()}>
                 <div className="top-border-form"></div>
                 <div className={`main-form-wrap ${!formData?.formHeadingActive && "left-border-0"}`}>
                     <input type="text" name="name" className='text-heading' value={formData.formName} onChange={(e) => updateFormTitle(e.target.value)} />
@@ -71,7 +71,7 @@ const MainForm = () => {
                         }
 
                         {/* image */}
-                        {/* <div className="main-form-haeding">
+                        {/* <div className="main-form-heading">
                             <div className="main-form-wrap">
                                 <div className="row">
                                     <div className="col-md-7">
@@ -85,7 +85,7 @@ const MainForm = () => {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <div className="questionmain-wrap">
+                                        <div className="question-main-wrap">
                                             <img src="" className='questionImages mw-100' />
 
                                         </div>
@@ -95,7 +95,7 @@ const MainForm = () => {
                         </div> */}
 
                         {/* video */}
-                        {/* <div className="main-form-haeding">
+                        {/* <div className="main-form-heading">
                             <div className="main-form-wrap">
                                 <div className="row">
                                     <div className="col-md-7">
@@ -109,7 +109,7 @@ const MainForm = () => {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <div className="questionmain-wrap">
+                                        <div className="question-main-wrap">
                                             <img src="" className='questionImages mw-100' />
 
                                         </div>
@@ -119,7 +119,7 @@ const MainForm = () => {
                         </div> */}
 
                         {/* tt text */}
-                        {/* <div className="main-form-haeding">
+                        {/* <div className="main-form-heading">
                             <div className="main-form-wrap">
                                 <div className="row">
                                     <div className="col-md-7">
@@ -133,7 +133,7 @@ const MainForm = () => {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <div className="questionmain-wrap">
+                                        <div className="question-main-wrap">
                                             <input className="text-light-color" type="text" value="Description" name="name" />
                                         </div>
                                     </div>

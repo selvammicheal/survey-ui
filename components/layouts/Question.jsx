@@ -113,23 +113,23 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
     let linearCount = questionData?.questionData?.startIndex == 0 ? questionData?.questionData?.endIndex + 1 : questionData?.questionData?.endIndex
 
     return (
-        <div className="main-form-haeding">
+        <div className="main-form-heading">
             <div className={`main-form-wrap ${!questionData?.active && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveContentFunc()}>
                 <>
                     {questionData?.active &&
                         <>
                             <div className="row">
                                 <div className="col-md-7">
-                                    <input type="text" name="name" className='text-light-color dark-text' autoFocus={true} value={questionData.question} onChange={(e) => updateQuestionFunc(e.target.value)} />
+                                    <input type="text" name="name" className='text-light-color dark-text' autoFocus={true} autoComplete='off' value={questionData.question} onChange={(e) => updateQuestionFunc(e.target.value)} />
                                 </div>
                                 <div className="col-md-1 align-self-center">
                                     <div className='upload-main-img' onClick={() => inputRef?.current.click()}>
-                                        <InsertPhotoOutlinedIcon className="ligthColor uploadimg" />
+                                        <InsertPhotoOutlinedIcon className="lightColor" />
                                     </div>
-                                    <input type="file" className='hiden-file' ref={inputRef} onChange={handleChange} />
+                                    <input type="file" className='hidden-file' ref={inputRef} onChange={handleChange} />
                                 </div>
                                 <div className="col-md-4">
-                                    <div className="optionBar">
+                                    <div>
                                         <FormControl fullWidth>
                                             <Select
                                                 labelId="icon-select-label"
@@ -190,7 +190,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                 questionData?.questionImgSrc &&
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <div className="questionmain-wrap">
+                                        <div className="question-main-wrap">
                                             <img src={questionData?.questionImgSrc} className='questionImages mw-100' />
                                             <div className="question-setting" id='basic-button'>
                                                 <MoreVertIcon />
@@ -211,10 +211,10 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                             <div className="questionSettings">
                                 <div className="d-flex justify-content-end align-items-center" style={{gap:"0px 25px"}}>
                                     <div className="text-center" onClick={() => console.log("clicked.........")}>
-                                        <ContentCopyRoundedIcon className="ligthColor" />
+                                        <ContentCopyRoundedIcon className="lightColor" />
                                     </div>
                                     <div className="text-center ">
-                                        <DeleteOutlinedIcon className="ligthColor" />
+                                        <DeleteOutlinedIcon className="lightColor" />
                                     </div>
                                     <div className="question-line"></div>
                                     <div className="">
@@ -263,7 +263,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                         <div className="row mt-2">
                                             <div className="col-md-10">
                                                 <div className='d-flex align-items-center mt-3'>
-                                                    <div className="mutiple_option">
+                                                    <div className="multiple_option">
                                                         <Radio
                                                             checked={false}
                                                             value="disabled"
@@ -298,7 +298,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                         <div className="row mt-2">
                                             <div className="col-md-10">
                                                 <div className='d-flex align-items-center mt-3'>
-                                                    <div className="mutiple_option">
+                                                    <div className="multiple_option">
                                                         <FormGroup>
                                                             <FormControlLabel disabled control={<Checkbox />} />
                                                         </FormGroup>
@@ -334,7 +334,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                         <div className="row mt-2">
                                             <div className="col-md-10">
                                                 <div className='d-flex align-items-center mt-3'>
-                                                    <div className="mutiple_option">
+                                                    <div className="multiple_option">
                                                         {index + 1}.
                                                     </div>
                                                     <div className="w-100 ms-2 multiple-choice">
@@ -390,12 +390,12 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                 <div className="row mt-4">
                                     <div className="col-md-2">
                                         <div className='align-items-center'>
-                                            <div className="mutiple_option visible-hide ms-3">
+                                            <div className="multiple_option visible-hide ms-3">
                                                 Row
                                             </div>
                                             {
                                                 questionData.questionData.rowData.map((x) => (
-                                                    <div className="mutiple_option ms-3 mt-3">
+                                                    <div className="multiple_option ms-3 mt-3">
                                                         {x.name}
                                                     </div>
                                                 ))
@@ -408,12 +408,12 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                                 {
                                                     questionData.questionData.colData.map((x) => (
                                                         <div className="d-flex flex-column align-items-center w-100">
-                                                            <div className="mutiple_option">
+                                                            <div className="multiple_option">
                                                                 {x.name}
                                                             </div>
                                                             {
                                                                 questionData.questionData.rowData.map((x) => (
-                                                                    <div className="mutiple_option mt-3 ">
+                                                                    <div className="multiple_option mt-3 ">
                                                                         <Radio
                                                                             checked={false}
                                                                             value="disabled"
@@ -445,12 +445,12 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                 <div className="row mt-4">
                                     <div className="col-md-2">
                                         <div className='align-items-center'>
-                                            <div className="mutiple_option visible-hide ms-3">
+                                            <div className="multiple_option visible-hide ms-3">
                                                 Row
                                             </div>
                                             {
                                                 questionData.questionData.rowData.map((x) => (
-                                                    <div className="mutiple_option ms-3 mt-3">
+                                                    <div className="multiple_option ms-3 mt-3">
                                                         {x.name}
                                                     </div>
                                                 ))
@@ -463,12 +463,12 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                                 {
                                                     questionData.questionData.colData.map((x) => (
                                                         <div className="d-flex flex-column align-items-center w-100">
-                                                            <div className="mutiple_option">
+                                                            <div className="multiple_option">
                                                                 {x.name}
                                                             </div>
                                                             {
                                                                 questionData.questionData.rowData.map((x) => (
-                                                                    <div className="mutiple_option mt-3 ">
+                                                                    <div className="multiple_option mt-3 ">
                                                                         <FormGroup>
                                                                             <FormControlLabel disabled control={<Checkbox />} />
                                                                         </FormGroup>

@@ -41,7 +41,7 @@ const CheckBoxGrid = ({questionData, sectionIndex, questionIndex}) => {
                         <div className="row mt-2">
 
                             <div className='d-flex align-items-center'>
-                                <div className="mutiple_option">{index + 1}.</div>
+                                <div className="multiple_option">{index + 1}.</div>
                                 <div className='w-100'>
                                     <input type="text" name="name" value={item.name} onChange={(e) => rowLabelChange(e.target.value, index)} className='text-light-color questionType' />
                                 </div>
@@ -59,7 +59,7 @@ const CheckBoxGrid = ({questionData, sectionIndex, questionIndex}) => {
                 }
 
                 <div className='d-flex align-items-end mt-3'>
-                    <div className="mutiple_option">{questionData?.questionData?.rowData.length + 1}.</div>
+                    <div className="multiple_option">{questionData?.questionData?.rowData.length + 1}.</div>
                     <div className="w-100 ms-2">
                         <div className='add-option' onClick={() => addRows()}>Add Option</div>
                     </div>
@@ -75,7 +75,7 @@ const CheckBoxGrid = ({questionData, sectionIndex, questionIndex}) => {
                     questionData?.questionData?.colData.map((item, index) => (
                         <div className="row mt-2">
                             <div className='d-flex align-items-center'>
-                                <div className="mutiple_option">
+                                <div className="multiple_option">
                                     <FormGroup>
                                         <FormControlLabel disabled control={<Checkbox />} />
                                     </FormGroup>
@@ -97,7 +97,7 @@ const CheckBoxGrid = ({questionData, sectionIndex, questionIndex}) => {
 
 
                 <div className='d-flex align-items-end mt-3'>
-                    <div className="mutiple_option">
+                    <div className="multiple_option">
                         <FormGroup>
                             <FormControlLabel disabled control={<Checkbox />} />
                         </FormGroup>

@@ -25,7 +25,7 @@ const DropDown = ({questionData, sectionIndex, questionIndex}) => {
                     <div className="row mt-2" key={index}>
                         <div className='col-md-11'>
                             <div className='d-flex align-items-center mt-3'>
-                                <div className="mutiple_option">{index + 1}.</div>
+                                <div className="multiple_option">{index + 1}.</div>
                                 <div className='w-100'>
                                     <input type="text" name="name" className='text-light-color questionType' value={item.name} onChange={(e) => updateDropdown(e.target.value, index)} />
                                 </div>
@@ -41,7 +41,7 @@ const DropDown = ({questionData, sectionIndex, questionIndex}) => {
                 ))
             }
             <div className='d-flex align-items-end mt-3'>
-                <div className="mutiple_option">{questionData?.questionData?.options.length + 1}.</div>
+                <div className="multiple_option">{questionData?.questionData?.options.length + 1}.</div>
                 <div className="w-100 ms-2">
                     <div className='add-option' onClick={() => addDropdown()}>Add Option</div>
                 </div>

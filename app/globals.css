@@ -35,13 +35,9 @@ p {
   border-radius: 50%;
 }
 
-
-
-
 .content {
   padding: 10px;
 }
-
 
 .sidebar {
   position: relative;
@@ -49,7 +45,6 @@ p {
   background-color: black;
   color: white;
   transition: width 0.3s ease;
-
 }
 
 .expanded {
@@ -65,21 +60,17 @@ p {
   border-top-left-radius: 1.5rem
 }
 
-.projectsidebar {
-  background-color: red;
-}
-
 .css-heg063-MuiTabs-flexContainer {
   justify-content: center;
 }
 
-.main-form-haeding {
+.main-form-heading {
   position: relative;
   border-top: rgb(103, 58, 183);
   margin: 30px auto;
 }
 
-.main-form-haeding input {
+.main-form-heading input {
   width: 100%;
   padding: 12px;
   outline: 0;
@@ -134,22 +125,12 @@ p {
   border-right: 1px solid #b4b5b7;
 }
 
-.ligthColor {
+.lightColor {
   color: #5f6368;
 }
 
-/* .optionBar select{
-  padding: 10px 20px;
-  background-color: #fff;
-  border: 1px solid #dadce0;
-} */
 .blackIcon {
   color: red;
-}
-
-.optionBar {
-  outline: 0;
-  border: 0;
 }
 
 .questionType {
@@ -180,12 +161,12 @@ width: 100px;
 height: 100px;
 }
 
-.questionmain-wrap {
+.question-main-wrap {
   margin: 10px;
   position: relative;
 }
 
-.hiden-file {
+.hidden-file {
   /* visibility: hidden; */
   display: none !important;
 }
@@ -224,11 +205,11 @@ height: 100px;
   top: 10%;
 }
 
-.mutiple_option .css-j204z7-MuiFormControlLabel-root {
+.multiple_option .css-j204z7-MuiFormControlLabel-root {
   margin-right: 0px !important;
 }
 
-.mutiple_option .css-vqmohf-MuiButtonBase-root-MuiRadio-root {
+.multiple_option .css-vqmohf-MuiButtonBase-root-MuiRadio-root {
   padding: 0px !important;
   margin-right: 5px;
 }

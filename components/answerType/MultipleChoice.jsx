@@ -38,7 +38,7 @@ const MultipleChoice = ({questionData, sectionIndex, questionIndex}) => {
                         <div className="row mt-2">
                             <div className="col-md-10">
                                 <div className='d-flex align-items-center mt-3'>
-                                    <div className="mutiple_option">
+                                    <div className="multiple_option">
                                         <Radio
                                             checked={false}
                                             value="disabled"
@@ -53,9 +53,9 @@ const MultipleChoice = ({questionData, sectionIndex, questionIndex}) => {
                             </div>
                             <div className="col-md-1 align-self-center">
                                 <div className='upload-main-img' onClick={() => { inputRef?.current.click(); setImgIndex(i)}}>
-                                    <InsertPhotoOutlined className="ligthColor uploadimg" />
+                                    <InsertPhotoOutlined className="lightColor" />
                                 </div>
-                                <input type="file" className='hiden-file' ref={inputRef} onChange={(e) => handleMultipleChoiceImg(e)} />
+                                <input type="file" className='hidden-file' ref={inputRef} onChange={(e) => handleMultipleChoiceImg(e)} />
                             </div>
                             {
                                 (i > 0 || questionData?.questionData?.options.length > 1) &&
@@ -78,7 +78,7 @@ const MultipleChoice = ({questionData, sectionIndex, questionIndex}) => {
                 ))
             }
             <div className='d-flex align-items-end mt-3'>
-                <div className="mutiple_option">
+                <div className="multiple_option">
                     <Radio
                         checked={false}
                         value="disabled"

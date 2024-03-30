@@ -56,7 +56,7 @@ const LinearScale = ({questionData, sectionIndex, questionIndex}) => {
                 <div className="row" >
                     <div className='col-md-4'>
                         <div className='d-flex align-items-center mt-3'>
-                            <div className="mutiple_option">{questionData?.questionData?.startIndex}</div>
+                            <div className="multiple_option">{questionData?.questionData?.startIndex}</div>
                             <div className='w-100 ms-2'>
                                 <input type="text" name="name" placeholder="Label (Optional)" value={questionData?.questionData?.startLabel} onChange={(e) => linearLabelChange(e.target.value, "startLabel")} className='text-light-color questionType' />
                             </div>
@@ -66,7 +66,7 @@ const LinearScale = ({questionData, sectionIndex, questionIndex}) => {
                 <div className="row" >
                     <div className='col-md-4'>
                         <div className='d-flex align-items-center mt-3'>
-                            <div className="mutiple_option">{questionData?.questionData?.endIndex}</div>
+                            <div className="multiple_option">{questionData?.questionData?.endIndex}</div>
                             <div className='w-100 ms-2'>
                                 <input type="text" name="name" placeholder="Label (Optional)" value={questionData?.questionData?.endLabel} onChange={(e) => linearLabelChange(e.target.value, "endLabel")} className='text-light-color questionType' />
                             </div>
