@@ -80,7 +80,7 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
             <div className='d-flex align-items-end mt-3'>
                 <div className="mutiple_option">
                     <FormGroup>
-                        <FormControlLabel disabled control={<Checkbox />} />
+                        <FormControlLabel disabled control= {<Checkbox />} />
                     </FormGroup>
                 </div>
                 <div className="w-100 ms-2">

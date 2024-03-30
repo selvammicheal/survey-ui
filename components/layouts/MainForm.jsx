@@ -6,6 +6,7 @@ import SplitscreenTwoToneIcon from '@mui/icons-material/SplitscreenTwoTone';
 import FloatBar from "./FloatBar";
 import useSection from "@/app/store/section";
 import Question from "./Question";
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 const MainForm = () => {
 
@@ -13,7 +14,7 @@ const MainForm = () => {
     const updateFormData = useSection((state) => state.updateFormData);
     const updateActiveContent = useSection((state) => state.updateActiveContent);
     const updateFormValue = useSection((state) => state.updateFormValue);
-    
+
 
     const updateFormTitle = (value) => {
         updateFormData(value, "formName")
@@ -27,13 +28,13 @@ const MainForm = () => {
         updateActiveContent(false, null, null);
     }
 
-    console.log(formData,"formData.sections")
+    console.log(formData, "formData.sections")
 
     const dragItem = useRef(0)
     const dragOverItem = useRef(0)
- 
+
     const handleSort = (sectionIndex) => {
-        const data  = JSON.parse(JSON.stringify(formData));
+        const data = JSON.parse(JSON.stringify(formData));
         const copyArr = [...data.sections[sectionIndex].questions];
         const temp = copyArr[dragItem.current]
         copyArr[dragItem.current] = copyArr[dragOverItem.current]
@@ -59,7 +60,7 @@ const MainForm = () => {
                     <div>
                         {
                             section.questions.map((question, questionIndex) => (
-                                <div 
+                                <div
                                     draggable="true"
                                     onDragStart={() => dragItem.current = questionIndex}
                                     onDragEnter={() => dragOverItem.current = questionIndex}
@@ -70,6 +71,79 @@ const MainForm = () => {
                                 </div>
                             ))
                         }
+
+                        {/* image */}
+                        {/* <div className="main-form-haeding">
+                            <div className="main-form-wrap">
+                                <div className="row">
+                                    <div className="col-md-7">
+                                        <input type="text" name="name" className='text-heading' value="Image Title" />
+                                    </div>
+                                    <div className=" col-md-1 align-self-center">
+                                        <div className="mainss">
+                                            <DeleteOutlinedIcon />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="questionmain-wrap">
+                                            <img src="" className='questionImages mw-100' />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> */}
+
+                        {/* video */}
+                        {/* <div className="main-form-haeding">
+                            <div className="main-form-wrap">
+                                <div className="row">
+                                    <div className="col-md-7">
+                                        <input type="text" name="name" className='text-light-color dark-text' value="Untitled video" />
+                                    </div>
+                                    <div className=" col-md-1 align-self-center">
+                                        <div className="mainss">
+                                            <DeleteOutlinedIcon />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="questionmain-wrap">
+                                            <img src="" className='questionImages mw-100' />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> */}
+
+                        {/* tt text */}
+                        <div className="main-form-haeding">
+                            <div className="main-form-wrap">
+                                <div className="row">
+                                    <div className="col-md-7">
+                                        <input type="text" name="name" className='text-light-color dark-text' value="Untitled Title" />
+                                    </div>
+                                    <div className=" col-md-1 align-self-center">
+                                        <div className="mainss">
+                                            <DeleteOutlinedIcon />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="questionmain-wrap">
+                                            <input className="text-light-color" type="text" value="Description" name="name" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 ))
             }

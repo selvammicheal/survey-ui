@@ -193,7 +193,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                 <div className="row">
                                     <div className="col-md-12">
                                         <div className="questionmain-wrap">
-                                            <img src={questionData?.questionImgSrc} className='questionImage' />
+                                            <img src={questionData?.questionImgSrc} className='questionImages mw-100' />
                                             <div className="question-setting" id='basic-button'>
                                                 <MoreVertIcon />
                                             </div>
