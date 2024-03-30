@@ -58,8 +58,6 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
         updateActiveContent(true, sectionIndex, questionIndex)
     }
 
-    console.log(questionData,'questionData')
-
     const renderAnswerType = () => {
         switch (questionData?.questionType) {
             case "short":
@@ -211,11 +209,11 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                             <hr />
 
                             <div className="questionSettings">
-                                <div className="d-flex justify-content-end" style={{gap:"0px 25px"}}>
-                                    <div className="text-center align-self-center" onClick={() => console.log("clicked.........")}>
+                                <div className="d-flex justify-content-end align-items-center" style={{gap:"0px 25px"}}>
+                                    <div className="text-center" onClick={() => console.log("clicked.........")}>
                                         <ContentCopyRoundedIcon className="ligthColor" />
                                     </div>
-                                    <div className="align-self-center text-center ">
+                                    <div className="text-center ">
                                         <DeleteOutlinedIcon className="ligthColor" />
                                     </div>
                                     <div className="question-line"></div>
@@ -358,8 +356,8 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                             <div className="question-heading ms-2 mb-3">
                                 {questionData.question}
                             </div>
-                            <div className="mt-2 d-flex justify-content-between mx-4 align-items-center">
-                                <div className='mx-2'>{questionData.questionData.startLabel}</div>
+                            <div className="mt-2 d-flex justify-content-between mx-2 align-items-center">
+                                <div className='me-4' style={{ fontSize: "15px", textAlign: "center" }}>{questionData.questionData.startLabel}</div>
                                 {
                                     [...Array(linearCount).keys()].map((x) => (
                                         <div className="d-flex flex-column align-items-center  text-center">
@@ -377,7 +375,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                         </div>
                                     ))
                                 }
-                                <div className='mx-2'>{questionData.questionData.endLabel}</div>
+                                <div className='ms-4' style={{ fontSize: "15px", textAlign: "center" }}>{questionData.questionData.endLabel}</div>
                             </div>
                         </div>
                     }

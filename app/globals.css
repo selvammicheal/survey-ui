@@ -76,7 +76,6 @@ p {
 .main-form-haeding {
   position: relative;
   border-top: rgb(103, 58, 183);
-  width: 70%;
   margin: 30px auto;
 }
 
@@ -170,6 +169,10 @@ p {
 
 .add-option:hover {
   border-bottom: 1px solid #b4b5b7;
+}
+
+img {
+  object-fit: contain;
 }
 
 .questionImage {

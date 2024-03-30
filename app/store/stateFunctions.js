@@ -1,5 +1,4 @@
 export const updateFormData = (value, field, set) => {
-    console.log("INSIDE",field,value)
     set((state) => (
         {
             formData: {

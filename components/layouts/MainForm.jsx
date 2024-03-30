@@ -28,8 +28,6 @@ const MainForm = () => {
         updateActiveContent(false, null, null);
     }
 
-    console.log(formData, "formData.sections")
-
     const dragItem = useRef(0)
     const dragOverItem = useRef(0)
 
@@ -44,7 +42,7 @@ const MainForm = () => {
     }
 
     return (
-        <div>
+        <div style={{width: "70%", margin: "0px auto"}}>
             <div className="main-form-haeding" onClick={() => updateActiveContentFunc()}>
                 <div className="top-border-form"></div>
                 <div className={`main-form-wrap ${!formData?.formHeadingActive && "left-border-0"}`}>
@@ -121,7 +119,7 @@ const MainForm = () => {
                         </div> */}
 
                         {/* tt text */}
-                        <div className="main-form-haeding">
+                        {/* <div className="main-form-haeding">
                             <div className="main-form-wrap">
                                 <div className="row">
                                     <div className="col-md-7">
@@ -141,7 +139,7 @@ const MainForm = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
 
                     </div>

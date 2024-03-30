@@ -21,23 +21,23 @@ const useSection = create((set, get) => ({
             }
         ]
     },
+
     updateFormData: (value, field) => updateFormData(value, field, set),
-    updateFormValue: (formData) => {
-        updateFormState(set, formData);
-    },
+
+    updateFormValue: (formData) => updateFormState(set, formData),
+
     updateQuestion: (field, value, sectionIndex, questionIndex) => {
-        const updatedFormData = { ...get().formData };
+        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
         if (field === "questionType") {
-            //updating active state for all ques to false
-            updatedFormData.sections.map((section) => section.questions.map((x) => x.active = false));
-            //updating the question data based on questionType
+            //reset question data when option is changed
             updatedFormData.sections[sectionIndex].questions[questionIndex] = { ...QUESTION_TYPE[value] };
         }
         updatedFormData.sections[sectionIndex].questions[questionIndex][field] = value;
         updateFormState(set, updatedFormData);
     },
+
     updateActiveContent: (value, sectionIndex, questionIndex) => {
-        const updatedFormData = { ...get().formData };
+        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
         updatedFormData.sections.map((section) => section.questions.map((x) => x.active = false))
         if (sectionIndex !== null) {
             updatedFormData.sections[sectionIndex].questions[questionIndex].active = value;
@@ -46,20 +46,20 @@ const useSection = create((set, get) => ({
     },
 
     addNewQuestion: (sectionIndex, questionIndex) => {
-        const updatedFormData = { ...get().formData };
-        updatedFormData.sections.map((section) => section.questions.map((x) => x.active = false));
-        const data = { ...QUESTION_TYPE["short"] };
+        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
+        const data = JSON.parse(JSON.stringify(QUESTION_TYPE["short"]));
         if (questionIndex === null) {
-            updateFormState(false, "formHeadingActive", set)
-            updatedFormData.sections[sectionIndex].questions.splice(questionIndex, 0, data);
+            updatedFormData.formHeadingActive = false;
+            updatedFormData.sections[sectionIndex].questions.splice(0, 0, data);
         } else {
+            updatedFormData.sections[sectionIndex].questions[questionIndex].active = false;
             updatedFormData.sections[sectionIndex].questions.splice(questionIndex + 1, 0, data);
         }
         updateFormState(set, updatedFormData);
     },
 
     updateOptions: (type, field, value, sectionIndex, questionIndex, optionIndex) => {
-        const updatedFormData = { ...get().formData };
+        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
         if (type === "update") {
             updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.options[optionIndex][field] = value;
         } else if (type === "delete") {
@@ -75,13 +75,13 @@ const useSection = create((set, get) => ({
     },
 
     updateLinearData: (field, value, sectionIndex, questionIndex) => {
-        const updatedFormData = { ...get().formData };
+        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
         updatedFormData.sections[sectionIndex].questions[questionIndex].questionData[field] = value;
         updateFormState(set, updatedFormData);
     },
 
     updateRowColData: (type, field, value, sectionIndex, questionIndex, index) => {
-        const updatedFormData = { ...get().formData };
+        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
         if (type === "rowData") {
             updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.rowData[index][field] = value;
         } else if (type === "colData") {
@@ -96,7 +96,7 @@ const useSection = create((set, get) => ({
                 name: `Col ${updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.colData.length + 1}`
             }
             updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.colData.push(data)
-        } else if (type === "removeRow"){
+        } else if (type === "removeRow") {
             updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.rowData.splice(index, 1)
         } else if (type === "removeCol") {
             updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.colData.splice(index, 1)

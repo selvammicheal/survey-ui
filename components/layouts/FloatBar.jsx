@@ -10,7 +10,7 @@ const FloatBar = (props) => {
     const addNewQuestion = useSection((state) => state.addNewQuestion);
     return (
         <div className="sideAddMenu">
-            <div onClick={(e) => {addNewQuestion(props.sectionIndex, props.questionIndex)}}><AddCircleOutlineTwoTone /></div>
+            <div onClick={(e) => {e.stopPropagation();addNewQuestion(props.sectionIndex, props.questionIndex)}}><AddCircleOutlineTwoTone /></div>
             <div><TextFieldsTwoTone /></div>
             <div><Image /></div>
             <div><SmartDisplayOutlinedIcon /></div>
