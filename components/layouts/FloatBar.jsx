@@ -4,17 +4,58 @@ import Image from "@mui/icons-material/Image"
 import SplitscreenTwoTone from "@mui/icons-material/SplitscreenTwoTone"
 import TextFieldsTwoTone from "@mui/icons-material/TextFieldsTwoTone"
 import SmartDisplayOutlinedIcon from '@mui/icons-material/SmartDisplayOutlined';
+import { useEffect, useRef } from "react"
 
 const FloatBar = (props) => {
 
+    const inputRef = useRef();
+    const floatBarRef = useRef();
+
     const addNewQuestion = useSection((state) => state.addNewQuestion);
+    const addNewSection = useSection((state) => state.addNewSection);
+
+    const addNewSectionFunc = (e) => {
+        e.stopPropagation();
+        addNewSection(props.sectionIndex, props.questionIndex, props.clickedFrom)
+    }
+
+    const addNewQuestionFunc = (e, type) => {
+        e.stopPropagation();
+        addNewQuestion(type, props.sectionIndex, props.questionIndex, null);
+    }
+
+    const addNewImageQuestion = (e) => {
+        e.stopPropagation();
+        inputRef?.current.click()
+    }
+
+    const handleChange = (e) => {
+        var fileName = e.target.value;
+        var idxDot = fileName.lastIndexOf(".") + 1;
+        var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+        if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
+            addNewQuestion("image", props.sectionIndex, props.questionIndex, URL.createObjectURL(e.target.files[0]));
+        }else{
+            alert("Only jpg/jpeg and png files are allowed!");
+        }   
+    }
+
+    useEffect(() => {
+        floatBarRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "start"
+          })
+    },[props.sectionIndex])
+
     return (
-        <div className="sideAddMenu">
-            <div onClick={(e) => {e.stopPropagation();addNewQuestion(props.sectionIndex, props.questionIndex)}}><AddCircleOutlineTwoTone /></div>
-            <div><TextFieldsTwoTone /></div>
-            <div><Image /></div>
+        <div className="sideAddMenu" ref={floatBarRef}>
+            <div onClick={(e) => addNewQuestionFunc(e, "question")}><AddCircleOutlineTwoTone /></div>
+            <div onClick={(e) => addNewQuestionFunc(e, "title")}><TextFieldsTwoTone /></div>
+            <div onClick={(e) => addNewImageQuestion(e)}><Image /></div>
+            <input type="file" accept="image/*" className='hidden-file' ref={inputRef} onChange={handleChange} />
             <div><SmartDisplayOutlinedIcon /></div>
-            <div><SplitscreenTwoTone /></div>
+            <div onClick={(e) => addNewSectionFunc(e)}><SplitscreenTwoTone /></div>
            
         </div>
     )

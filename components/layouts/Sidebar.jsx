@@ -23,7 +23,7 @@ function Sidebar(props) {
             <button className="toggle-btn" onClick={toggleSidebar}>
                 {isExpanded ? <ArrowBackIosIcon /> : <ArrowForwardIosIcon />}
             </button>
-            <div className="content">
+            <div className="content" style={{paddingLeft: isExpanded ? "25px" : ""}}>
                 {
                     isExpanded ?
                         <div>

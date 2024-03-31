@@ -18,6 +18,18 @@ export const updateFormState = (set, updatedFormData) => {
 }
 
 export const QUESTION_TYPE = {
+    "title" : {
+        questionType: "title",
+        title: "Untitled Title",
+        description: "",
+        active: true,
+    },
+    "image" : {
+        questionType: "image",
+        title: "",
+        questionImgSrc: "",
+        active: true,
+    },
     "short": {
         questionType: "short",
         question: "Untitled Question",
@@ -147,4 +159,11 @@ export const QUESTION_TYPE = {
         active: true,
         answer: ""
     }
+}
+
+export const SECTION = {
+    sectionTitle: "Untitled Section",
+    sectionDesc: "",
+    sectionActive: true,
+    questions: []
 }

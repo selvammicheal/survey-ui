@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
           <CustomSidebar />
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <CustomNavbar />
-            <div className='child-container' style={{ flex: 1, padding: '20px' }}>
+            <div className='child-container' style={{ flex: 1, padding: '20px', paddingBottom: "100px" }}>
               {children}
             </div>
           </div>

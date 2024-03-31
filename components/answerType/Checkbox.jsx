@@ -25,7 +25,14 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
     }
 
     const handleCheckboxImg = (event) => {
-        updateOptions("update", "imgSrc", URL.createObjectURL(event.target.files[0]), sectionIndex, questionIndex, imgIndex);
+        var fileName = event.target?.value;
+        var idxDot = fileName.lastIndexOf(".") + 1;
+        var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+        if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
+            updateOptions("update", "imgSrc", URL.createObjectURL(event.target.files[0]), sectionIndex, questionIndex, imgIndex);
+        }else{
+            alert("Only jpg/jpeg and png files are allowed!");
+        }   
     }
 
     const removeCheckboxImg = (index) => {
@@ -54,7 +61,7 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
                                     <div className='upload-main-img' onClick={() => { inputRef?.current.click(); setImgIndex(index) }}>
                                         <InsertPhotoOutlined className="lightColor" />
                                     </div>
-                                    <input type="file" className='hidden-file' ref={inputRef} onChange={(e) => handleCheckboxImg(e)} />
+                                    <input type="file" accept="image/*" className='hidden-file' ref={inputRef} onChange={(e) => handleCheckboxImg(e)} />
                                 </div>
                                 {
                                     (index > 0 || questionData?.questionData?.options?.length > 1) &&

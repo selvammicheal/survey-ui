@@ -1,19 +1,23 @@
-import { useRef, useState } from "react";
-import AddCircleOutlineTwoToneIcon from '@mui/icons-material/AddCircleOutlineTwoTone';
-import TextFieldsTwoToneIcon from '@mui/icons-material/TextFieldsTwoTone';
-import ImageIcon from '@mui/icons-material/Image';
-import SplitscreenTwoToneIcon from '@mui/icons-material/SplitscreenTwoTone';
+import { useRef } from "react";
 import FloatBar from "./FloatBar";
 import useSection from "@/app/store/section";
 import Question from "./Question";
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import OtherTypeQuestion from "./OtherTypeQuestion";
+import { DeleteOutlined } from "@mui/icons-material";
+import SectionHeader from "./SectionHeader";
 
 const MainForm = () => {
+
+    const dragItem = useRef(0);
+    const dragOverItem = useRef(0);
+
+    const otherTypeQuestions = ["title", "image", "video"];
 
     const formData = useSection((state) => state.formData);
     const updateFormData = useSection((state) => state.updateFormData);
     const updateActiveContent = useSection((state) => state.updateActiveContent);
     const updateFormValue = useSection((state) => state.updateFormValue);
+    const updateSectionData = useSection((state) => state.updateSectionData);
 
 
     const updateFormTitle = (value) => {
@@ -23,13 +27,9 @@ const MainForm = () => {
         updateFormData(value, "formDescription")
     }
 
-    const updateActiveContentFunc = () => {
-        updateFormData(true, "formHeadingActive");
-        updateActiveContent(false, null, null);
+    const updateActiveContentFunc = (type, sectionIndex) => {
+        updateActiveContent(sectionIndex, null, type);
     }
-
-    const dragItem = useRef(0)
-    const dragOverItem = useRef(0)
 
     const handleSort = (sectionIndex) => {
         const data = JSON.parse(JSON.stringify(formData));
@@ -43,19 +43,24 @@ const MainForm = () => {
 
     return (
         <div style={{width: "70%", margin: "0px auto"}}>
-            <div className="main-form-heading" onClick={() => updateActiveContentFunc()}>
-                <div className="top-border-form"></div>
-                <div className={`main-form-wrap ${!formData?.formHeadingActive && "left-border-0"}`}>
+            <div className="main-form-heading" onClick={() => updateActiveContentFunc("formHeader", null)}>
+                <div className={`top-border-form ${formData?.sections.length > 1 ? "active" : ""}`} data-custom={`Section 1 of ${formData?.sections.length}`}></div>
+                <div className={`main-form-wrap top-border-0 ${!formData?.formHeadingActive && "left-border-0"}`}>
                     <input type="text" name="name" className='text-heading' value={formData.formName} onChange={(e) => updateFormTitle(e.target.value)} />
                     <input type="text" name="name" className='text-light-color' value={formData.formDescription} onChange={(e) => updateDescriptionTitle(e.target.value)} />
                 </div>
                 {
-                    formData?.formHeadingActive && <FloatBar sectionIndex={0} questionIndex={null} />
+                    formData?.formHeadingActive && <FloatBar sectionIndex={0} questionIndex={null} clickedFrom={"formHeader"}/>
                 }
             </div>
             {
-                formData.sections.map((section, sectionIndex) => (
+                formData.sections.map((section, sectionIndex) => {
+                return(
                     <div>
+                        {
+                            sectionIndex != 0 && <SectionHeader section={section} sectionIndex={sectionIndex}/>
+                        }
+                        
                         {
                             section.questions.map((question, questionIndex) => (
                                 <div
@@ -65,34 +70,16 @@ const MainForm = () => {
                                     onDragEnd={() => handleSort(sectionIndex)}
                                     onDragOver={(e) => e.preventDefault()}
                                 >
-                                    <Question questionData={question} sectionIndex={sectionIndex} questionIndex={questionIndex} />
+                                    {
+                                        otherTypeQuestions.includes(question.questionType) ? (
+                                            <OtherTypeQuestion questionData={question} sectionIndex={sectionIndex} questionIndex={questionIndex}/>
+                                        ) : (
+                                            <Question questionData={question} sectionIndex={sectionIndex} questionIndex={questionIndex} />
+                                        )
+                                    }
                                 </div>
                             ))
                         }
-
-                        {/* image */}
-                        {/* <div className="main-form-heading">
-                            <div className="main-form-wrap">
-                                <div className="row">
-                                    <div className="col-md-7">
-                                        <input type="text" name="name" className='text-heading' value="Image Title" />
-                                    </div>
-                                    <div className=" col-md-1 align-self-center">
-                                        <div className="mainss">
-                                            <DeleteOutlinedIcon />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div className="question-main-wrap">
-                                            <img src="" className='questionImages mw-100' />
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
 
                         {/* video */}
                         {/* <div className="main-form-heading">
@@ -117,33 +104,8 @@ const MainForm = () => {
                                 </div>
                             </div>
                         </div> */}
-
-                        {/* tt text */}
-                        {/* <div className="main-form-heading">
-                            <div className="main-form-wrap">
-                                <div className="row">
-                                    <div className="col-md-7">
-                                        <input type="text" name="name" className='text-light-color dark-text' value="Untitled Title" />
-                                    </div>
-                                    <div className=" col-md-1 align-self-center">
-                                        <div className="mainss">
-                                            <DeleteOutlinedIcon />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div className="question-main-wrap">
-                                            <input className="text-light-color" type="text" value="Description" name="name" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
-
-
                     </div>
-                ))
+                )})
             }
 
         </div>
