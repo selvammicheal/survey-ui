@@ -335,3 +335,12 @@ body{
   background-color: #6c6c6c;
   width: 1px;
 }
+.preview-icon{
+  text-align: right;
+  padding-right: 50px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.mainPreviewIcon{
+  cursor: pointer;
+}
