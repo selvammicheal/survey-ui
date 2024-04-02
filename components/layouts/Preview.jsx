@@ -1,5 +1,5 @@
 import useSection from '@/app/store/section';
-import React from 'react'
+import React, { useState } from 'react'
 import QuestionPreview from './QuestionPreview';
 
 const Preview = () => {
@@ -23,13 +23,15 @@ const Preview = () => {
                             return (
                                 <div>
                                     {
+                                        sectionIndex == index ?
+
                                         section.questions.map((question, questionIndex) => (
                                             <div className="main-form-heading">
                                                 <div className={`main-form-wrap`}>
                                                     <QuestionPreview questionData={question} preview={true}/>
                                                 </div>
                                             </div>
-                                        ))
+                                        )) : <></>
                                     }
                                 </div>
                             )
