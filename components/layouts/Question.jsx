@@ -15,7 +15,7 @@ import DragIndicatorOutlinedIcon from '@mui/icons-material/DragIndicatorOutlined
 import InsertInvitationOutlinedIcon from '@mui/icons-material/InsertInvitationOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useRef} from 'react';
+import { useRef } from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -30,6 +30,7 @@ import DropDown from '../answerType/DropDown';
 import FloatBar from './FloatBar';
 import useSection from '@/app/store/section';
 import QuestionPreview from './QuestionPreview';
+import CloseRounded from '@mui/icons-material/CloseRounded';
 
 const Question = ({ questionData, questionIndex, sectionIndex }) => {
 
@@ -40,7 +41,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
     const formData = useSection((state) => state.formData);
     const deleteQuestion = useSection((state) => state.deleteQuestion);
 
-    console.log(formData,"formData")
+    console.log(formData, "formData")
 
     const updateQuestionFunc = (value) => {
         updateQuestion("question", value, sectionIndex, questionIndex)
@@ -50,11 +51,11 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
         var fileName = e.target.value;
         var idxDot = fileName.lastIndexOf(".") + 1;
         var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-        if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
+        if (extFile == "jpg" || extFile == "jpeg" || extFile == "png") {
             updateQuestion("questionImgSrc", URL.createObjectURL(e.target.files[0]), sectionIndex, questionIndex)
-        }else{
+        } else {
             alert("Only jpg/jpeg and png files are allowed!");
-        }   
+        }
     }
 
     const updateQuestionType = (value) => {
@@ -69,7 +70,9 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
         e.stopPropagation();
         deleteQuestion(sectionIndex, questionIndex);
     }
-
+    const removeQuestionImg = () => {
+        updateQuestion("questionImgSrc", null, sectionIndex, questionIndex)
+    }
     const renderAnswerType = () => {
         switch (questionData?.questionType) {
             case "short": {
@@ -251,8 +254,8 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                     <div className="col-md-12">
                                         <div className="question-main-wrap">
                                             <img src={questionData?.questionImgSrc} className='mw-100' />
-                                            <div className="question-setting" id='basic-button'>
-                                                <MoreVertIcon />
+                                            <div className="question-setting" id='basic-button' onClick={() => removeQuestionImg()}>
+                                                <CloseRounded />
                                             </div>
                                         </div>
                                     </div>
@@ -269,7 +272,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
 
                             <div className="questionSettings">
                                 <div className="d-flex justify-content-end align-items-center" style={{ gap: "0px 25px" }}>
-                                    <div className="text-center" style={{cursor: "pointer"}} onClick={(e) => deleteQuestionFunc(e)}>
+                                    <div className="text-center" style={{ cursor: "pointer" }} onClick={(e) => deleteQuestionFunc(e)}>
                                         <DeleteOutlinedIcon className="lightColor" />
                                     </div>
                                     <div className="question-line"></div>
@@ -281,7 +284,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                             </div>
                         </> :
 
-                        <QuestionPreview questionData={questionData} preview={false}/>
+                        <QuestionPreview questionData={questionData} preview={false} />
                     }
                 </>
                 {

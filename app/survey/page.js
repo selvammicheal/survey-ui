@@ -14,8 +14,7 @@ function page(props) {
     // console.log(preview)
     const previewChange = () => {
         //    const previewdata = preview
-        setPreview((prv) => !prv)
-        console.log(preview, !preview)
+        setPreview(!preview)
     }
     return (
         <div>
