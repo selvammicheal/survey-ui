@@ -30,6 +30,12 @@ export const QUESTION_TYPE = {
         questionImgSrc: "",
         active: true,
     },
+    "video" : {
+        questionType: "video",
+        title: "",
+        questionVideoSrc: "",
+        active: true,
+    },
     "short": {
         questionType: "short",
         question: "Untitled Question",

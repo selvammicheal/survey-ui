@@ -10,6 +10,8 @@ const FloatBar = (props) => {
 
     const inputRef = useRef();
     const floatBarRef = useRef();
+    const inputRefVideo = useRef();
+    
 
     const addNewQuestion = useSection((state) => state.addNewQuestion);
     const addNewSection = useSection((state) => state.addNewSection);
@@ -27,6 +29,18 @@ const FloatBar = (props) => {
     const addNewImageQuestion = (e) => {
         e.stopPropagation();
         inputRef?.current.click()
+    }
+
+    const addNewVideoQuestion = (e) => {
+        e.stopPropagation();
+        inputRefVideo?.current.click()
+    }
+
+    const handleVideoChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        // setVideoSrc(URL.createObjectURL(file));
+        addNewQuestion("video", props.sectionIndex, props.questionIndex, URL.createObjectURL(e.target.files[0]));
     }
 
     const handleChange = (e) => {
@@ -54,7 +68,8 @@ const FloatBar = (props) => {
             <div onClick={(e) => addNewQuestionFunc(e, "title")}><TextFieldsTwoTone /></div>
             <div onClick={(e) => addNewImageQuestion(e)}><Image /></div>
             <input type="file" accept="image/*" className='hidden-file' ref={inputRef} onChange={handleChange} />
-            <div><SmartDisplayOutlinedIcon /></div>
+            <div onClick={(e) => addNewVideoQuestion(e)}><SmartDisplayOutlinedIcon /></div>
+            <input type="file" accept="video/*" className='hidden-file' ref={inputRefVideo} onChange={handleVideoChange} />
             <div onClick={(e) => addNewSectionFunc(e)}><SplitscreenTwoTone /></div>
            
         </div>

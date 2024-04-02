@@ -1,11 +1,12 @@
-import { Checkbox, FormControlLabel, FormGroup, Radio } from "@mui/material"
+import { Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup } from "@mui/material"
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers"
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo"
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-const QuestionPreview = ({questionData}) => {
+const QuestionPreview = ({ questionData, preview }) => {
 
     let linearCount = questionData?.questionData?.startIndex == 0 ? questionData?.questionData?.endIndex + 1 : questionData?.questionData?.endIndex
-    
+
     const renderQuestionPreview = () => {
         switch (questionData?.questionType) {
             case "short": {
@@ -15,7 +16,7 @@ const QuestionPreview = ({questionData}) => {
                             {questionData.question}
                         </div>
                         <div className="question-field">
-                            <input type='text' value={"Short answer text"} disabled={true} />
+                            <input type='text' placeholder="Short answer text" disabled={preview ? false : true} />
                         </div>
                     </div>
                 )
@@ -27,7 +28,7 @@ const QuestionPreview = ({questionData}) => {
                             {questionData.question}
                         </div>
                         <div className="question-field">
-                            <input type='text' value={"Long answer text"} disabled={true} />
+                            <input type='text' placeholder="Long answer text" disabled={preview ? false : true} />
                         </div>
                     </div>
                 )
@@ -43,19 +44,9 @@ const QuestionPreview = ({questionData}) => {
                                 <div className="question-field">
                                     <div className="row mt-2">
                                         <div className="col-md-10">
-                                            <div className='d-flex align-items-center mt-3'>
-                                                <div className="multiple_option">
-                                                    <Radio
-                                                        checked={false}
-                                                        value="disabled"
-                                                        disabled
-                                                        name="radio-buttons"
-                                                    />
+                                                <div className="multiple_option mt-3">
+                                                    <FormControlLabel control={<Radio disabled={preview ? false : true}/>} label={option.name} />
                                                 </div>
-                                                <div className="w-100 ms-2 multiple-choice">
-                                                    {option.name}
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     {
@@ -78,15 +69,8 @@ const QuestionPreview = ({questionData}) => {
                                 <div className="question-field">
                                     <div className="row mt-2">
                                         <div className="col-md-10">
-                                            <div className='d-flex align-items-center mt-3'>
-                                                <div className="multiple_option">
-                                                    <FormGroup>
-                                                        <FormControlLabel disabled control={<Checkbox />} />
-                                                    </FormGroup>
-                                                </div>
-                                                <div className="w-100 ms-2 multiple-choice">
-                                                    {option.name}
-                                                </div>
+                                            <div className="multiple_option">
+                                                <FormControlLabel label={option.name} control={<Checkbox disabled={preview ? false : true}/>} />
                                             </div>
                                         </div>
                                     </div>
@@ -106,6 +90,25 @@ const QuestionPreview = ({questionData}) => {
                             {questionData.question}
                         </div>
                         {
+                            preview ? 
+                            questionData?.questionData?.options.map((option, index) => (
+
+                                <div className="question-field">
+                                    <div className="row mt-2">
+                                        <div className="col-md-10">
+                                            <div className='d-flex align-items-center mt-3'>
+                                                <div className="multiple_option">
+                                                    {index + 1}.
+                                                </div>
+                                                <div className="w-100 ms-2 multiple-choice">
+                                                    {option.name}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                            :
                             questionData?.questionData?.options.map((option, index) => (
 
                                 <div className="question-field">
@@ -142,12 +145,7 @@ const QuestionPreview = ({questionData}) => {
                                             {questionData?.questionData?.startIndex == 0 ? x : x + 1}
                                         </div>
                                         <div className="">
-                                            <Radio
-                                                checked={false}
-                                                value="disabled"
-                                                disabled
-                                                name="radio-buttons"
-                                            />
+                                            <Radio disabled={preview ? false : true}/>
                                         </div>
                                     </div>
                                 ))
@@ -192,9 +190,8 @@ const QuestionPreview = ({questionData}) => {
                                                             questionData.questionData.rowData.map((x) => (
                                                                 <div className="multiple_option mt-3 ">
                                                                     <Radio
-                                                                        checked={false}
+                                                                        disabled={preview ? false : true}
                                                                         value="disabled"
-                                                                        disabled
                                                                         name="radio-buttons"
                                                                     />
                                                                 </div>
@@ -245,9 +242,7 @@ const QuestionPreview = ({questionData}) => {
                                                         {
                                                             questionData.questionData.rowData.map((x) => (
                                                                 <div className="multiple_option mt-3 ">
-                                                                    <FormGroup>
-                                                                        <FormControlLabel disabled control={<Checkbox />} />
-                                                                    </FormGroup>
+                                                                    <Checkbox disabled={preview ? false : true}/>
                                                                 </div>
                                                             ))
                                                         }
@@ -271,7 +266,7 @@ const QuestionPreview = ({questionData}) => {
                         <div className="question-field">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Month, day, year" disabled={true} />
+                                    <DatePicker label="Month, day, year" disabled={preview ? false : true} />
                                 </DemoContainer>
                             </LocalizationProvider>
                         </div>
@@ -287,7 +282,7 @@ const QuestionPreview = ({questionData}) => {
                         <div className="question-field">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['TimePicker']}>
-                                    <TimePicker label="Time" disabled={true} />
+                                    <TimePicker label="Time" disabled={preview ? false : true} />
                                 </DemoContainer>
                             </LocalizationProvider>
                         </div>
@@ -297,7 +292,7 @@ const QuestionPreview = ({questionData}) => {
         }
     }
 
-    return(
+    return (
         <>
             {
                 renderQuestionPreview()

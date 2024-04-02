@@ -80,7 +80,7 @@ const useSection = create((set, get) => ({
         updateFormState(set, updatedFormData);
     },
 
-    addNewQuestion: (type, sectionIndex, questionIndex, imgSrc) => {
+    addNewQuestion: (type, sectionIndex, questionIndex, src) => {
         const updatedFormData = JSON.parse(JSON.stringify(get().formData));
         let data = {};
         if(type === "question"){
@@ -89,7 +89,10 @@ const useSection = create((set, get) => ({
             data = JSON.parse(JSON.stringify(QUESTION_TYPE["title"]));
         } else if (type === "image"){
             data = JSON.parse(JSON.stringify(QUESTION_TYPE["image"]));
-            data.questionImgSrc = imgSrc
+            data.questionImgSrc = src
+        } else if (type === "video") {
+            data = JSON.parse(JSON.stringify(QUESTION_TYPE["video"]));
+            data.questionVideoSrc = src
         }
         if (questionIndex === null) {
             updatedFormData.formHeadingActive = false;

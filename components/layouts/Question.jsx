@@ -40,6 +40,8 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
     const formData = useSection((state) => state.formData);
     const deleteQuestion = useSection((state) => state.deleteQuestion);
 
+    console.log(formData,"formData")
+
     const updateQuestionFunc = (value) => {
         updateQuestion("question", value, sectionIndex, questionIndex)
     }
@@ -279,7 +281,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                             </div>
                         </> :
 
-                        <QuestionPreview questionData={questionData}/>
+                        <QuestionPreview questionData={questionData} preview={false}/>
                     }
                 </>
                 {

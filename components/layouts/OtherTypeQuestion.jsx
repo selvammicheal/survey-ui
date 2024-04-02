@@ -88,6 +88,36 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
                     </>
                 )
             }
+            case "video": {
+                return(
+                    <>
+                        <div className="row">
+                            <div className="col-md-11">
+                                <input 
+                                    type="text" 
+                                    className='text-light-color dark-text' 
+                                    placeholder="Image Title" 
+                                    autoFocus={true} 
+                                    value={questionData?.title} 
+                                    onChange={(e) => updateQuestionFunc(e.target.value, "title")}
+                                />
+                            </div>
+                            <div className="col-md-1 align-self-center" style={{cursor: "pointer"}} onClick={(e) => deleteQuestionFunc(e)}>
+                                <div className="mainss">
+                                    <DeleteOutlined />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="question-main-wrap">
+                                    <video src={questionData?.questionVideoSrc} controls className='mw-100' />
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            }
         }
     }
 
@@ -116,6 +146,23 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
                             <div className="col-md-12">
                                 <div className="question-main-wrap">
                                     <img src={questionData?.questionImgSrc} className='mw-100' />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+            case "video": {
+                return(
+                    <div className='w-100'>
+                        <div className="question-heading ms-2 mb-2">
+                            {questionData.title}
+                        </div>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="question-main-wrap">
+                                    {/* <img src={questionData?.questionImgSrc} className='mw-100' /> */}
+                                    <video src={questionData?.questionVideoSrc} className='mw-100'></video>
                                 </div>
                             </div>
                         </div>
