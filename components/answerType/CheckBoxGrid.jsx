@@ -38,7 +38,7 @@ const CheckBoxGrid = ({questionData, sectionIndex, questionIndex}) => {
                 {
                     questionData?.questionData?.rowData.map((item, index) => (
 
-                        <div className="row mt-2">
+                        <div className="row mt-2" key={index}>
 
                             <div className='d-flex align-items-center'>
                                 <div className="multiple_option">{index + 1}.</div>
@@ -73,7 +73,7 @@ const CheckBoxGrid = ({questionData, sectionIndex, questionIndex}) => {
                 <div className="multipleHeading mt-2">Columns</div>
                 {
                     questionData?.questionData?.colData.map((item, index) => (
-                        <div className="row mt-2">
+                        <div className="row mt-2" key={index}>
                             <div className='d-flex align-items-center'>
                                 <div className="multiple_option">
                                     <FormGroup>

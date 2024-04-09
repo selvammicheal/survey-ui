@@ -42,8 +42,8 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
         <>
             {
                 questionData?.questionData?.options?.map((item, index) => {
-                    return (
-                        <>
+                    return ( 
+                        <div key={index}>
                             <div className="row mt-2">
                                 <div className='col-md-10'>
                                     <div className='d-flex align-items-center mt-3'>
@@ -79,7 +79,7 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
                                     <img className="mt-3 ms-4" style={{ height: "100px", width: "100px" }} src={item.imgSrc} alt="" />
                                 </div>
                             }
-                        </>
+                        </div>
                     )
                 })
 

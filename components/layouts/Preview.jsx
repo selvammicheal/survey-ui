@@ -37,12 +37,12 @@ const Preview = () => {
                             {
                                 formData?.sections.map((section, index) => {
                                     return (
-                                        <div>
+                                        <div key={index}>
                                             {
                                                 sectionIndex == index ?
 
                                                     section.questions.map((question, questionIndex) => (
-                                                        <div className={`main-form-heading ${(index > 0 && questionIndex == 0) && "preview-active"}`} data-custom={section?.sectionTitle}>
+                                                        <div key={questionIndex} className={`main-form-heading ${(index > 0 && questionIndex == 0) && "preview-active"}`} data-custom={section?.sectionTitle}>
                                                             <div className={`main-form-wrap left-border-0`}>
                                                                 <QuestionPreview questionData={question} preview={true} />
                                                             </div>

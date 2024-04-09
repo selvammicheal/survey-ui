@@ -71,7 +71,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                         }
                         {
                             questionData?.questionData?.options.map((option, index) => (
-                                <div className="question-field">
+                                <div className="question-field" key={index}>
                                     <div className="row mt-2">
                                         <div className="col-md-10">
                                             <div className="d-flex align-items-center mt-1">
@@ -106,7 +106,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                         }
                         {
                             questionData?.questionData?.options.map((option, index) => (
-                                <div className="question-field">
+                                <div className="question-field" key={index}>
                                     <div className="row mt-2">
                                         <div className="col-md-10">
                                             <div className="multiple_option my-2">
@@ -152,7 +152,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                                     >
                                         {
                                             questionData?.questionData?.options.map((option, index) => (
-                                                <MenuItem value={option.name}>
+                                                <MenuItem value={option.name} key={index}>
                                                     <span className="ms-3">{option.name}</span>
                                                 </MenuItem>
                                             ))
@@ -164,7 +164,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                                 :
                                 questionData?.questionData?.options.map((option, index) => (
 
-                                    <div className="question-field">
+                                    <div className="question-field" key={index}>
                                         <div className="row mt-2">
                                             <div className="col-md-10">
                                                 <div className='d-flex align-items-center mt-3'>
@@ -202,8 +202,8 @@ const QuestionPreview = ({ questionData, preview }) => {
                         <div className="mt-2 d-flex justify-content-between mx-2 align-items-center">
                             <div className='me-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.questionData.startLabel}</div>
                             {
-                                [...Array(linearCount).keys()].map((x) => (
-                                    <div className="d-flex flex-column align-items-center  text-center">
+                                [...Array(linearCount).keys()].map((x, index) => (
+                                    <div className="d-flex flex-column align-items-center  text-center" key={index}>
                                         <div className="mb-2">
                                             {questionData?.questionData?.startIndex == 0 ? x : x + 1}
                                         </div>
@@ -242,8 +242,8 @@ const QuestionPreview = ({ questionData, preview }) => {
                                             Row
                                         </div>
                                         {
-                                            questionData.questionData.rowData.map((x) => (
-                                                <div className="multiple_option ms-3 mt-3">
+                                            questionData.questionData.rowData.map((x, index) => (
+                                                <div className="multiple_option ms-3 mt-3" key={index}>
                                                     {x.name}
                                                 </div>
                                             ))
@@ -254,14 +254,14 @@ const QuestionPreview = ({ questionData, preview }) => {
                                     <div className='d-grid overflow-auto' style={{ whiteSpace: "nowrap" }}>
                                         <div className="d-flex justify-content-between align-items-center" >
                                             {
-                                                questionData.questionData.colData.map((x) => (
-                                                    <div className="d-flex flex-column align-items-center w-100">
+                                                questionData.questionData.colData.map((x, index) => (
+                                                    <div className="d-flex flex-column align-items-center w-100" key={index}>
                                                         <div className="multiple_option">
                                                             {x.name}
                                                         </div>
                                                         {
-                                                            questionData.questionData.rowData.map((x) => (
-                                                                <div className="multiple_option mt-3 ">
+                                                            questionData.questionData.rowData.map((x, index) => (
+                                                                <div className="multiple_option mt-3 " key={index}>
                                                                     <Radio
                                                                         disabled={preview ? false : true}
                                                                         value="disabled"
@@ -305,8 +305,8 @@ const QuestionPreview = ({ questionData, preview }) => {
                                             Row
                                         </div>
                                         {
-                                            questionData.questionData.rowData.map((x) => (
-                                                <div className="multiple_option ms-3 mt-3">
+                                            questionData.questionData.rowData.map((x, index) => (
+                                                <div className="multiple_option ms-3 mt-3" key={index}>
                                                     {x.name}
                                                 </div>
                                             ))
@@ -317,14 +317,14 @@ const QuestionPreview = ({ questionData, preview }) => {
                                     <div className='d-grid overflow-auto' style={{ whiteSpace: "nowrap" }}>
                                         <div className="d-flex justify-content-between align-items-center" >
                                             {
-                                                questionData.questionData.colData.map((x) => (
-                                                    <div className="d-flex flex-column align-items-center w-100">
+                                                questionData.questionData.colData.map((x, index) => (
+                                                    <div className="d-flex flex-column align-items-center w-100" key={index}>
                                                         <div className="multiple_option">
                                                             {x.name}
                                                         </div>
                                                         {
-                                                            questionData.questionData.rowData.map((x) => (
-                                                                <div className="multiple_option mt-3 ">
+                                                            questionData.questionData.rowData.map((x, index) => (
+                                                                <div className="multiple_option mt-3 " key={index}>
                                                                     <Checkbox disabled={preview ? false : true} />
                                                                 </div>
                                                             ))

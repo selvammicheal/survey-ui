@@ -41,7 +41,7 @@ const MultipleChoice = ({questionData, sectionIndex, questionIndex}) => {
         <div>
             {
                 questionData?.questionData?.options?.map((x, i) => (
-                    <>
+                    <div key={i}>
                         <div className="row mt-2">
                             <div className="col-md-10">
                                 <div className='d-flex align-items-center mt-3'>
@@ -81,7 +81,7 @@ const MultipleChoice = ({questionData, sectionIndex, questionIndex}) => {
                             </div>
                         }
 
-                    </>
+                    </div>
                 ))
             }
             <div className='d-flex align-items-end mt-3'>

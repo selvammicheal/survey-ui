@@ -43,8 +43,8 @@ const LinearScale = ({questionData, sectionIndex, questionIndex}) => {
                     onChange={(e) => linearOnChange(e.target.value, "endIndex")}
                 >
                     {
-                        [2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-                            <MenuItem value={item}>
+                        [2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => (
+                            <MenuItem value={item} key={index}>
                                 <span className="ms-3">{item}</span>
                             </MenuItem>
                         ))

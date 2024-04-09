@@ -23,6 +23,7 @@ const MainForm = () => {
     const updateFormTitle = (value) => {
         updateFormData(value, "formName")
     }
+    
     const updateDescriptionTitle = (value) => {
         updateFormData(value, "formDescription")
     }
@@ -56,7 +57,7 @@ const MainForm = () => {
             {
                 formData.sections.map((section, sectionIndex) => {
                 return(
-                    <div>
+                    <div key={sectionIndex}>
                         {
                             sectionIndex != 0 && <SectionHeader section={section} sectionIndex={sectionIndex}/>
                         }
@@ -64,6 +65,7 @@ const MainForm = () => {
                         {
                             section.questions.map((question, questionIndex) => (
                                 <div
+                                    key={questionIndex}
                                     draggable="true"
                                     onDragStart={() => dragItem.current = questionIndex}
                                     onDragEnter={() => dragOverItem.current = questionIndex}
@@ -80,30 +82,6 @@ const MainForm = () => {
                                 </div>
                             ))
                         }
-
-                        {/* video */}
-                        {/* <div className="main-form-heading">
-                            <div className="main-form-wrap">
-                                <div className="row">
-                                    <div className="col-md-7">
-                                        <input type="text" name="name" className='text-light-color dark-text' value="Untitled video" />
-                                    </div>
-                                    <div className=" col-md-1 align-self-center">
-                                        <div className="mainss">
-                                            <DeleteOutlinedIcon />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div className="question-main-wrap">
-                                            <img src="" className='questionImages mw-100' />
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
                     </div>
                 )})
             }

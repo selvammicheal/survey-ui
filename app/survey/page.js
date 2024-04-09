@@ -6,6 +6,7 @@ import { Box } from '@mui/material';
 import BasicTabs from '@/components/layouts/Tab';
 import { VisibilityOutlined } from '@mui/icons-material';
 import Preview from '@/components/layouts/Preview';
+import MainForm from '@/components/layouts/MainForm';
 
 
 
@@ -25,7 +26,7 @@ function page(props) {
                 preview ?
                     <Preview />
                     :
-                    <BasicTabs />
+                    <MainForm />
             }
         </div>
     );
