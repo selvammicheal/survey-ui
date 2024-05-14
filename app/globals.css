@@ -144,7 +144,6 @@ p {
 }
 
 .questionSettings {
-  padding: 10px 0px 0px 0px;
   width: 45%;
   margin-left: auto;
 }
@@ -359,6 +358,7 @@ body{
   cursor: pointer;
 }
 
-.preview-dropdown .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+.preview-dropdown .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input,
+.question-dropdown .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 10px 14px !important;
 }

@@ -5,7 +5,7 @@ import { Checkbox, FormControlLabel } from "@mui/material"
 import { useRef, useState } from "react"
 import { FormGroup } from "react-bootstrap"
 
-const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
+const CheckBox = ({question, sectionIndex, questionIndex}) => {
 
     const [imgIndex, setImgIndex] = useState();
     const inputRef = useRef();
@@ -41,10 +41,10 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
     return (
         <>
             {
-                questionData?.questionData?.options?.map((item, index) => {
+                question?.question_data?.map((item, index) => {
                     return ( 
                         <div key={index}>
-                            <div className="row mt-2">
+                            <div className="row">
                                 <div className='col-md-10'>
                                     <div className='d-flex align-items-center mt-3'>
                                         <div className="multiple_option">
@@ -64,7 +64,7 @@ const CheckBox = ({questionData, sectionIndex, questionIndex}) => {
                                     <input type="file" accept="image/*" className='hidden-file' ref={inputRef} onChange={(e) => handleCheckboxImg(e)} />
                                 </div>
                                 {
-                                    (index > 0 || questionData?.questionData?.options?.length > 1) &&
+                                    (index > 0 || question?.question_data?.length > 1) &&
                                     <div className="col-md-1 align-self-center close-btn" onClick={() => removeCheckbox(index)}>
                                         <CloseRounded />
                                     </div>

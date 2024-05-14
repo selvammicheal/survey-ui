@@ -1,29 +1,26 @@
 import { create } from "zustand";
-import { QUESTION_TYPE, SECTION, updateFormData, updateFormState } from "./stateFunctions";
+import { QUESTION_TYPE, SECTION, updateActiveSlide, updateFormData, updateFormState } from "./stateFunctions";
 
 const useSection = create((set, get) => ({
     formData: {
-        formName: "Untitled form",
-        formDescription: "Form description",
         formHeadingActive: false,
         sections: [
             {
-                sectionTitle: null,
-                sectionDesc: null,
                 sectionActive: false,
                 questions: [
                     {
-                        questionType: "short",
-                        question: "Untitled Question",
-                        questionImgSrc: "",
-                        questionData: null,
-                        active: true,
-                        answer: ""
+                        active: true
                     },
                 ]
             }
         ]
     },
+    activeContent: {
+        sectionIndex: 0,
+        questionIndex: 0
+    },
+
+    updateActiveSlide: (sectionIndex, questionIndex) => updateActiveSlide(sectionIndex, questionIndex, set),
 
     updateFormData: (value, field) => updateFormData(value, field, set),
 
@@ -45,25 +42,25 @@ const useSection = create((set, get) => ({
         updateFormState(set, updatedFormData);
     },
 
-    updateActiveContent: ( sectionIndex, questionIndex, type) => {
-        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
+    // updateActiveContent: ( sectionIndex, questionIndex, type) => {
+    //     const updatedFormData = JSON.parse(JSON.stringify(get().formData));
 
-        //updating active status to false for formHeader
-        updatedFormData.formHeadingActive = false;
-        //updating active status to false for questions
-        updatedFormData.sections.map((section) => section.questions.map((x) => x.active = false));
-        //updating active status to false for sections
-        updatedFormData.sections.map((section) => section.sectionActive = false);
+    //     //updating active status to false for formHeader
+    //     updatedFormData.formHeadingActive = false;
+    //     //updating active status to false for questions
+    //     updatedFormData.sections.map((section) => section.questions.map((x) => x.active = false));
+    //     //updating active status to false for sections
+    //     updatedFormData.sections.map((section) => section.sectionActive = false);
         
-        if (type === "question") {
-            updatedFormData.sections[sectionIndex].questions[questionIndex].active = true;
-        } else if (type === "formHeader") {
-            updatedFormData.formHeadingActive = true;
-        } else if (type === "section"){
-            updatedFormData.sections[sectionIndex].sectionActive = true;
-        }
-        updateFormState(set, updatedFormData);
-    },
+    //     if (type === "question") {
+    //         updatedFormData.sections[sectionIndex].questions[questionIndex].active = true;
+    //     } else if (type === "formHeader") {
+    //         updatedFormData.formHeadingActive = true;
+    //     } else if (type === "section"){
+    //         updatedFormData.sections[sectionIndex].sectionActive = true;
+    //     }
+    //     updateFormState(set, updatedFormData);
+    // },
 
     addNewSection: (sectionIndex, questionIndex, type) => {
         const updatedFormData = JSON.parse(JSON.stringify(get().formData));

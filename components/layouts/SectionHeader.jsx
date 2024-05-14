@@ -1,12 +1,13 @@
 import useSection from "@/app/store/section";
 import { DeleteOutlined } from "@mui/icons-material";
 import FloatBar from "./FloatBar";
+import { useState } from "react";
 
 const SectionHeader = ({ section, sectionIndex }) => {
 
     const formData = useSection((state) => state.formData);
-    const updateActiveContent = useSection((state) => state.updateActiveContent);
     const updateSectionData = useSection((state) => state.updateSectionData);
+    const [isPreview, setIsPreview] = useState(false);
 
     const renderHeader = () => {
         return(
@@ -16,7 +17,7 @@ const SectionHeader = ({ section, sectionIndex }) => {
                         <input
                             type="text"
                             className='text-light-color dark-text'
-                            value={section?.sectionTitle}
+                            value={section?.name}
                             autoFocus={true}
                             onChange={(e) => updateSectionData(e.target.value, "sectionTitle", sectionIndex)}
                         />
@@ -34,7 +35,7 @@ const SectionHeader = ({ section, sectionIndex }) => {
                             style={{ fontSize: "15px" }}
                             type="text"
                             placeholder="Description"
-                            value={section?.sectionDesc}
+                            value={section?.description}
                             onChange={(e) => updateSectionData(e.target.value, "sectionDesc", sectionIndex)}
                         />
                     </div>
@@ -48,10 +49,10 @@ const SectionHeader = ({ section, sectionIndex }) => {
             <>
                 <div className='short-question'>
                     <div className="question-heading ms-2 mb-2">
-                        {section.sectionTitle}
+                        {section.name}
                     </div>
                     <div className="ms-2 mt-3 text-light-color" style={{ fontSize: "15px" }}>
-                        {section.sectionDesc     ? section.sectionDesc   : "Description(optional)"
+                        {section.description     ? section.description   : "Description(optional)"
                         }
                     </div>
                 </div>
@@ -60,14 +61,14 @@ const SectionHeader = ({ section, sectionIndex }) => {
     }
 
     const updateActiveContentFunc = (type, sectionIndex) => {
-        updateActiveContent(sectionIndex, null, type);
+        // updateActiveContent(sectionIndex, null, type);
     }
 
     return (
         <div className={`main-form-heading ${formData?.sections.length > 1 ? "active" : ""}`} data-custom={`Section ${sectionIndex + 1} of ${formData?.sections.length}`} style={{ marginTop: "150px" }}>
             <div className={`main-form-wrap ${!section?.sectionActive && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveContentFunc("section", sectionIndex)}>
                 {
-                    section?.sectionActive ? renderHeader() : renderHeaderPreview()
+                    isPreview ? renderHeaderPreview() : renderHeader()
                 }
                 
                 {

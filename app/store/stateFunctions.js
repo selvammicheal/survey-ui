@@ -1,3 +1,14 @@
+export const updateActiveSlide = (sectionIndex, questionIndex, set) => {
+    set((state) => (
+        {
+            activeContent: {
+                sectionIndex: sectionIndex,
+                questionIndex: questionIndex
+            }
+        }
+    ))
+}
+
 export const updateFormData = (value, field, set) => {
     set((state) => (
         {

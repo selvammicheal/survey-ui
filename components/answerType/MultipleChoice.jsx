@@ -3,7 +3,7 @@ import { CloseRounded, InsertPhotoOutlined } from "@mui/icons-material";
 import { Radio } from "@mui/material";
 import { useRef, useState } from "react";
 
-const MultipleChoice = ({questionData, sectionIndex, questionIndex}) => {
+const MultipleChoice = ({question, sectionIndex, questionIndex}) => {
 
     const [imgIndex, setImgIndex] = useState();
     const inputRef = useRef();
@@ -40,9 +40,9 @@ const MultipleChoice = ({questionData, sectionIndex, questionIndex}) => {
     return (
         <div>
             {
-                questionData?.questionData?.options?.map((x, i) => (
+                question?.question_data?.map((x, i) => (
                     <div key={i}>
-                        <div className="row mt-2">
+                        <div className="row">
                             <div className="col-md-10">
                                 <div className='d-flex align-items-center mt-3'>
                                     <div className="multiple_option">
@@ -65,7 +65,7 @@ const MultipleChoice = ({questionData, sectionIndex, questionIndex}) => {
                                 <input type="file" accept="image/*" className='hidden-file' ref={inputRef} onChange={(e) => handleMultipleChoiceImg(e)} />
                             </div>
                             {
-                                (i > 0 || questionData?.questionData?.options.length > 1) &&
+                                (i > 0 || question?.question_data?.length > 1) &&
                                 <div className="col-md-1 align-self-center close-btn" onClick={() => removeMultipleChoice(i)}>
                                     <CloseRounded />
                                 </div>

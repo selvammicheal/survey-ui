@@ -31,17 +31,18 @@ import FloatBar from './FloatBar';
 import useSection from '@/app/store/section';
 import QuestionPreview from './QuestionPreview';
 import CloseRounded from '@mui/icons-material/CloseRounded';
+import { QUESTION_TYPE } from '@/app/utils/questionType.enum';
 
 const Question = ({ questionData, questionIndex, sectionIndex }) => {
+    console.log(questionData,"Question")
 
     const inputRef = useRef();
 
-    const updateQuestion = useSection((state) => state.updateQuestion);
-    const updateActiveContent = useSection((state) => state.updateActiveContent);
-    const formData = useSection((state) => state.formData);
-    const deleteQuestion = useSection((state) => state.deleteQuestion);
+    const activeContent = useSection((state) => state.activeContent);
+    const updateActiveSlide = useSection((state) => state.updateActiveSlide);
 
-    console.log(formData, "formData")
+    const updateQuestion = useSection((state) => state.updateQuestion);
+    const deleteQuestion = useSection((state) => state.deleteQuestion);
 
     const updateQuestionFunc = (value) => {
         updateQuestion("question", value, sectionIndex, questionIndex)
@@ -63,7 +64,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
     }
 
     const updateActiveContentFunc = () => {
-        updateActiveContent(sectionIndex, questionIndex, "question")
+        // updateActiveContent(sectionIndex, questionIndex, "question")
     }
 
     const deleteQuestionFunc = (e) => {
@@ -73,11 +74,12 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
     const removeQuestionImg = () => {
         updateQuestion("questionImgSrc", null, sectionIndex, questionIndex)
     }
+    
     const renderAnswerType = () => {
-        switch (questionData?.questionType) {
-            case "short": {
+        switch (questionData?.question_type_id) {
+            case QUESTION_TYPE.SHORT_ANSWER: {
                 return (
-                    <div className="col-md-6 mb-5">
+                    <div className="col-md-6">
                         <input
                             type="text"
                             className='text-light-color questionType'
@@ -87,9 +89,9 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                     </div>
                 )
             }
-            case "paragraph": {
+            case QUESTION_TYPE.PARAGRAPH: {
                 return (
-                    <div className="col-md-7 mb-5">
+                    <div className="col-md-7">
                         <input
                             type="text"
                             className='text-light-color questionType'
@@ -99,61 +101,61 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                     </div>
                 )
             }
-            case "multiple-choice": {
+            case QUESTION_TYPE.MULTIPLE_CHOICE: {
                 return (
                     <MultipleChoice
-                        questionData={questionData}
+                        question={questionData}
                         sectionIndex={sectionIndex}
                         questionIndex={questionIndex}
                     />
                 )
             }
-            case "checkboxes": {
+            case QUESTION_TYPE.CHECKBOX: {
                 return (
                     <CheckBox
-                        questionData={questionData}
+                        question={questionData}
                         sectionIndex={sectionIndex}
                         questionIndex={questionIndex}
                     />
                 )
             }
-            case "dropdown": {
+            case QUESTION_TYPE.DROPDOWN: {
                 return (
                     <DropDown
-                        questionData={questionData}
+                        question={questionData}
                         sectionIndex={sectionIndex}
                         questionIndex={questionIndex}
                     />
                 )
             }
-            case "linear": {
+            case QUESTION_TYPE.LINEAR_SCALE: {
                 return (
                     <LinearScale
-                        questionData={questionData}
+                        question={questionData}
                         sectionIndex={sectionIndex}
                         questionIndex={questionIndex}
                     />
                 )
             }
-            case "multiple-choice-grid": {
+            case QUESTION_TYPE.MULTIPLE_CHOICE_GRID: {
                 return (
                     <MultiChoiceGrid
-                        questionData={questionData}
+                        question={questionData}
                         sectionIndex={sectionIndex}
                         questionIndex={questionIndex}
                     />
                 )
             }
-            case "checkbox-grid": {
+            case QUESTION_TYPE.CHECKBOX_GRID: {
                 return (
                     <CheckBoxGrid
-                        questionData={questionData}
+                        question={questionData}
                         sectionIndex={sectionIndex}
                         questionIndex={questionIndex}
                     />
                 )
             }
-            case "date": {
+            case QUESTION_TYPE.DATE: {
                 return (
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker']}>
@@ -162,7 +164,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                     </LocalizationProvider>
                 )
             }
-            case "time": {
+            case QUESTION_TYPE.TIME: {
                 return (
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['TimePicker']}>
@@ -174,14 +176,16 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
         }
     }
 
+    const activeQuestion = activeContent?.sectionIndex === sectionIndex && activeContent?.questionIndex === questionIndex
+
     return (
         <div className="main-form-heading">
-            <div className={`main-form-wrap ${!questionData?.active && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveContentFunc()}>
+            <div className={`main-form-wrap ${!activeQuestion && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveSlide(sectionIndex, questionIndex)}>
                 <>
-                    {questionData?.active ?
+                    {activeQuestion ?
                         <>
                             <div className="row">
-                                <div className="col-md-7">
+                                <div className="col-md-7 mb-3">
                                     <input type="text" name="name" className='text-light-color dark-text' autoFocus={true} autoComplete='off' value={questionData.question} onChange={(e) => updateQuestionFunc(e.target.value)} />
                                 </div>
                                 <div className="col-md-1 align-self-center">
@@ -191,55 +195,55 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                     <input type="file" accept="image/*" className='hidden-file' ref={inputRef} onChange={handleChange} />
                                 </div>
                                 <div className="col-md-4">
-                                    <div>
+                                    <div className='question-dropdown'>
                                         <FormControl fullWidth>
                                             <Select
                                                 labelId="icon-select-label"
                                                 defaultValue="short"
                                                 label="Icon Select"
-                                                value={questionData.questionType}
+                                                value={questionData.question_type_id}
                                                 onChange={(e) => updateQuestionType(e.target.value)}
                                             >
-                                                <MenuItem value="short">
+                                                <MenuItem value={QUESTION_TYPE.SHORT_ANSWER}>
                                                     <ShortTextIcon />
                                                     <span className="ms-3">Short answer</span>
                                                 </MenuItem>
-                                                <MenuItem value="paragraph">
+                                                <MenuItem value={QUESTION_TYPE.PARAGRAPH}>
                                                     <ReorderSharpIcon />
                                                     <span className="ms-3">Paragraph</span>
                                                 </MenuItem>
                                                 <hr />
-                                                <MenuItem value="multiple-choice">
+                                                <MenuItem value={QUESTION_TYPE.MULTIPLE_CHOICE}>
                                                     <AdjustSharpIcon />
                                                     <span className="ms-3">Multiple choice</span>
                                                 </MenuItem>
-                                                <MenuItem value="checkboxes">
+                                                <MenuItem value={QUESTION_TYPE.CHECKBOX}>
                                                     <CheckBoxOutlinedIcon />
                                                     <span className="ms-3">Checkboxes</span>
                                                 </MenuItem>
-                                                <MenuItem value="dropdown">
+                                                <MenuItem value={QUESTION_TYPE.DROPDOWN}>
                                                     <ArrowDropDownCircleOutlinedIcon />
                                                     <span className="ms-3">Dropdown</span>
                                                 </MenuItem>
                                                 <hr />
-                                                <MenuItem value="linear">
+                                                <MenuItem value={QUESTION_TYPE.LINEAR_SCALE}>
                                                     <LinearScaleOutlinedIcon />
                                                     <span className="ms-3">Linear scale</span>
                                                 </MenuItem>
-                                                <MenuItem value="multiple-choice-grid">
+                                                <MenuItem value={QUESTION_TYPE.MULTIPLE_CHOICE_GRID}>
                                                     <DragIndicatorOutlinedIcon />
                                                     <span className="ms-3">Multiple choice grid</span>
                                                 </MenuItem>
-                                                <MenuItem value="checkbox-grid">
+                                                <MenuItem value={QUESTION_TYPE.CHECKBOX_GRID}>
                                                     <AppsOutlinedIcon />
                                                     <span className="ms-3">Checkbox grid</span>
                                                 </MenuItem>
                                                 <hr />
-                                                <MenuItem value="date">
+                                                <MenuItem value={QUESTION_TYPE.DATE}>
                                                     <InsertInvitationOutlinedIcon />
                                                     <span className="ms-3">Date</span>
                                                 </MenuItem>
-                                                <MenuItem value="time">
+                                                <MenuItem value={QUESTION_TYPE.TIME}>
                                                     <AccessTimeOutlinedIcon />
                                                     <span className="ms-3">Time</span>
                                                 </MenuItem>
@@ -249,11 +253,11 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                                 </div>
                             </div>
                             {
-                                questionData?.questionImgSrc &&
+                                questionData?.question_img_src &&
                                 <div className="row">
                                     <div className="col-md-12">
                                         <div className="question-main-wrap">
-                                            <img src={questionData?.questionImgSrc} className='mw-100' />
+                                            <img src={questionData?.question_img_src} className='mw-100' />
                                             <div className="question-setting" id='basic-button' onClick={() => removeQuestionImg()}>
                                                 <CloseRounded />
                                             </div>
@@ -288,7 +292,7 @@ const Question = ({ questionData, questionIndex, sectionIndex }) => {
                     }
                 </>
                 {
-                    (!formData?.formHeadingActive && questionData?.active) && <FloatBar sectionIndex={sectionIndex} questionIndex={questionIndex} clickedFrom={"question"} />
+                    activeQuestion && <FloatBar sectionIndex={sectionIndex} questionIndex={questionIndex} clickedFrom={"question"} />
                 }
             </div>
         </div>

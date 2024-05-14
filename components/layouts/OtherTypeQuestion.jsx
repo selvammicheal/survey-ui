@@ -5,7 +5,6 @@ import FloatBar from "./FloatBar";
 const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
 
     const formData = useSection((state) => state.formData);
-    const updateActiveContent = useSection((state) => state.updateActiveContent);
     const updateQuestion = useSection((state) => state.updateQuestion);
     const deleteQuestion = useSection((state) => state.deleteQuestion);
 
@@ -14,7 +13,7 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
     }
 
     const updateActiveContentFunc = () => {
-        updateActiveContent(sectionIndex, questionIndex, "question")
+        // updateActiveContent(sectionIndex, questionIndex, "question")
     }
 
     const deleteQuestionFunc = (e) => {

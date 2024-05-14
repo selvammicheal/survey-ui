@@ -2,25 +2,26 @@ import { Checkbox, FormControl, FormControlLabel, FormGroup, MenuItem, Radio, Ra
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers"
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo"
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { QUESTION_TYPE } from "@/app/utils/questionType.enum";
 
 const QuestionPreview = ({ questionData, preview }) => {
 
-    let linearCount = questionData?.questionData?.startIndex == 0 ? questionData?.questionData?.endIndex + 1 : questionData?.questionData?.endIndex
+    let linearCount = questionData?.question_data?.startIndex == 0 ? questionData?.question_data?.endIndex + 1 : questionData?.question_data?.endIndex
 
     const renderQuestionPreview = () => {
-        switch (questionData?.questionType) {
-            case "short": {
+        switch (questionData?.question_type_id) {
+            case QUESTION_TYPE.SHORT_ANSWER: {
                 return (
                     <div className='short-question'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
@@ -31,18 +32,18 @@ const QuestionPreview = ({ questionData, preview }) => {
                     </div>
                 )
             }
-            case "paragraph": {
+            case QUESTION_TYPE.PARAGRAPH: {
                 return (
                     <div className='short-question'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
@@ -53,28 +54,28 @@ const QuestionPreview = ({ questionData, preview }) => {
                     </div>
                 )
             }
-            case "multiple-choice": {
+            case QUESTION_TYPE.MULTIPLE_CHOICE: {
                 return (
                     <div className='short-question'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
                         }
                         {
-                            questionData?.questionData?.options.map((option, index) => (
+                            questionData?.question_data?.map((option, index) => (
                                 <div className="question-field" key={index}>
                                     <div className="row mt-2">
                                         <div className="col-md-10">
-                                            <div className="d-flex align-items-center mt-1">
+                                            <div className="d-flex align-items-center mt-1 ms-2">
                                                 <FormControlLabel control={<Radio disabled={preview ? false : true} />} label={option.name} />
                                             </div>
                                         </div>
@@ -88,28 +89,28 @@ const QuestionPreview = ({ questionData, preview }) => {
                     </div>
                 )
             }
-            case "checkboxes": {
+            case QUESTION_TYPE.CHECKBOX: {
                 return (
                     <div className='short-question'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
                         }
                         {
-                            questionData?.questionData?.options.map((option, index) => (
+                            questionData?.question_data.map((option, index) => (
                                 <div className="question-field" key={index}>
                                     <div className="row mt-2">
                                         <div className="col-md-10">
-                                            <div className="multiple_option my-2">
+                                            <div className="multiple_option my-2 ms-2">
                                                 <FormControlLabel label={option.name} control={<Checkbox disabled={preview ? false : true} />} />
                                             </div>
                                         </div>
@@ -123,18 +124,18 @@ const QuestionPreview = ({ questionData, preview }) => {
                     </div>
                 )
             }
-            case "dropdown": {
+            case QUESTION_TYPE.DROPDOWN: {
                 return (
                     <div className='short-question'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
@@ -162,12 +163,12 @@ const QuestionPreview = ({ questionData, preview }) => {
                                 </div>
                             </div>
                                 :
-                                questionData?.questionData?.options.map((option, index) => (
+                                questionData?.question_data?.map((option, index) => (
 
                                     <div className="question-field" key={index}>
                                         <div className="row mt-2">
                                             <div className="col-md-10">
-                                                <div className='d-flex align-items-center mt-3'>
+                                                <div className='d-flex align-items-center mt-3 ms-2'>
                                                     <div className="multiple_option">
                                                         {index + 1}.
                                                     </div>
@@ -183,29 +184,29 @@ const QuestionPreview = ({ questionData, preview }) => {
                     </div>
                 )
             }
-            case "linear": {
+            case QUESTION_TYPE.LINEAR_SCALE: {
                 return (
                     <div className='short-questions'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
                         }
                         <div className="mt-2 d-flex justify-content-between mx-2 align-items-center">
-                            <div className='me-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.questionData.startLabel}</div>
+                            <div className='me-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.question_data.startLabel}</div>
                             {
                                 [...Array(linearCount).keys()].map((x, index) => (
                                     <div className="d-flex flex-column align-items-center  text-center" key={index}>
                                         <div className="mb-2">
-                                            {questionData?.questionData?.startIndex == 0 ? x : x + 1}
+                                            {questionData?.question_data?.startIndex == 0 ? x : x + 1}
                                         </div>
                                         <div className="">
                                             <Radio disabled={preview ? false : true} />
@@ -213,23 +214,23 @@ const QuestionPreview = ({ questionData, preview }) => {
                                     </div>
                                 ))
                             }
-                            <div className='ms-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.questionData.endLabel}</div>
+                            <div className='ms-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.question_data.endLabel}</div>
                         </div>
                     </div>
                 )
             }
-            case "multiple-choice-grid": {
+            case QUESTION_TYPE.MULTIPLE_CHOICE_GRID: {
                 return (
                     <div className='short-questions'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
@@ -242,7 +243,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                                             Row
                                         </div>
                                         {
-                                            questionData.questionData.rowData.map((x, index) => (
+                                            questionData.question_data.rowData.map((x, index) => (
                                                 <div className="multiple_option ms-3 mt-3" key={index}>
                                                     {x.name}
                                                 </div>
@@ -254,13 +255,13 @@ const QuestionPreview = ({ questionData, preview }) => {
                                     <div className='d-grid overflow-auto' style={{ whiteSpace: "nowrap" }}>
                                         <div className="d-flex justify-content-between align-items-center" >
                                             {
-                                                questionData.questionData.colData.map((x, index) => (
+                                                questionData.question_data.colData.map((x, index) => (
                                                     <div className="d-flex flex-column align-items-center w-100" key={index}>
                                                         <div className="multiple_option">
                                                             {x.name}
                                                         </div>
                                                         {
-                                                            questionData.questionData.rowData.map((x, index) => (
+                                                            questionData.question_data.rowData.map((x, index) => (
                                                                 <div className="multiple_option mt-3 " key={index}>
                                                                     <Radio
                                                                         disabled={preview ? false : true}
@@ -281,18 +282,18 @@ const QuestionPreview = ({ questionData, preview }) => {
                     </div>
                 )
             }
-            case "checkbox-grid": {
+            case QUESTION_TYPE.CHECKBOX_GRID: {
                 return (
                     <div className='short-questions'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
@@ -305,7 +306,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                                             Row
                                         </div>
                                         {
-                                            questionData.questionData.rowData.map((x, index) => (
+                                            questionData.question_data.rowData.map((x, index) => (
                                                 <div className="multiple_option ms-3 mt-3" key={index}>
                                                     {x.name}
                                                 </div>
@@ -317,13 +318,13 @@ const QuestionPreview = ({ questionData, preview }) => {
                                     <div className='d-grid overflow-auto' style={{ whiteSpace: "nowrap" }}>
                                         <div className="d-flex justify-content-between align-items-center" >
                                             {
-                                                questionData.questionData.colData.map((x, index) => (
+                                                questionData.question_data.colData.map((x, index) => (
                                                     <div className="d-flex flex-column align-items-center w-100" key={index}>
                                                         <div className="multiple_option">
                                                             {x.name}
                                                         </div>
                                                         {
-                                                            questionData.questionData.rowData.map((x, index) => (
+                                                            questionData.question_data.rowData.map((x, index) => (
                                                                 <div className="multiple_option mt-3 " key={index}>
                                                                     <Checkbox disabled={preview ? false : true} />
                                                                 </div>
@@ -340,23 +341,23 @@ const QuestionPreview = ({ questionData, preview }) => {
                     </div>
                 )
             }
-            case "date": {
+            case QUESTION_TYPE.DATE: {
                 return (
                     <div className='short-question'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
                         }
-                        <div className="question-field">
+                        <div className="question-field ms-2">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['DatePicker']}>
                                     <DatePicker label="Month, day, year" disabled={preview ? false : true} />
@@ -366,23 +367,23 @@ const QuestionPreview = ({ questionData, preview }) => {
                     </div>
                 )
             }
-            case "time": {
+            case QUESTION_TYPE.TIME: {
                 return (
                     <div className='short-question'>
                         <div className="question-heading ms-2 mb-3">
                             {questionData.question}
                         </div>
                         {
-                            questionData.questionImgSrc &&
+                            questionData.question_img_src &&
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="question-main-wrap">
-                                        <img src={questionData?.questionImgSrc} className='mw-100' />
+                                        <img src={questionData?.question_img_src} className='mw-100' />
                                     </div>
                                 </div>
                             </div>
                         }
-                        <div className="question-field">
+                        <div className="question-field ms-2">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['TimePicker']}>
                                     <TimePicker label="Time" disabled={preview ? false : true} />

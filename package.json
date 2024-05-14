@@ -15,6 +15,7 @@
     "@mui/material": "^5.15.13",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@mui/x-date-pickers": "^7.0.0",
+    "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "dayjs": "^1.11.10",
@@ -25,5 +26,9 @@
     "sass": "^1.72.0",
     "styled-components": "^6.1.8",
     "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "20.12.12",
+    "typescript": "5.4.5"
   }
 }
