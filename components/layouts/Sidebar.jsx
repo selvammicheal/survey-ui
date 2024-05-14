@@ -19,7 +19,9 @@ function Sidebar(props) {
     };
 
     return (
-        <div className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}>
+        <div className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'}`} style={{position: "sticky",
+            height: "100vh",
+            top: "0px"}}>
             <button className="toggle-btn" onClick={toggleSidebar}>
                 {isExpanded ? <ArrowBackIosIcon /> : <ArrowForwardIosIcon />}
             </button>

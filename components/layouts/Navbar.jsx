@@ -3,7 +3,7 @@ import Profile from '../../public/images/profile.svg'
 
 const CustomNavbar = () => {
     return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-black">
+      <nav className="navbar navbar-expand-lg navbar-light bg-black" style={{position: "fixed", width: "100%", zIndex: 1}}>
         <a className="navbar-brand text-white" href="#">Dashboard</a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>

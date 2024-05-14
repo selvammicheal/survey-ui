@@ -152,7 +152,7 @@ const useSection = create((set, get) => ({
     },
 
     deleteQuestion: (sectionIndex, questionIndex) => {
-        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
+        const updatedFormData = JSON.parse(JSON.stringify(get().formData)); //to cut the reference of the obj
         if(updatedFormData.sections[sectionIndex].questions.length == 1){
             if(sectionIndex == 0) {
                 updatedFormData.formHeadingActive = true;
