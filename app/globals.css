@@ -81,7 +81,7 @@ p {
 .main-form-wrap {
   background-color: #fff;
   padding: 20px;
-  border-left: 6px solid #4285f4 !important;
+  border-left: 6px solid #000 !important;
   box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
   transition: box-shadow .28s cubic-bezier(.4, 0, .2, 1);
   border: 1px solid rgb(218, 220, 224);
@@ -89,7 +89,7 @@ p {
 }
 
 .top-border-form {
-  background-color: #673ab7;
+  background-color: #000;
   height: 12px;
   border-radius: 5px 5px 0px 0px;
 }
