@@ -28,10 +28,10 @@ import MultipleChoice from '../answerType/MultipleChoice';
 import CheckBox from '../answerType/Checkbox';
 import DropDown from '../answerType/DropDown';
 import FloatBar from './FloatBar';
-import useSection from '@/app/store/section';
+import useSection from '../../app/store/section';
 import QuestionPreview from './QuestionPreview';
 import CloseRounded from '@mui/icons-material/CloseRounded';
-import { QUESTION_TYPE } from '@/app/utils/questionType.enum';
+import { QUESTION_TYPE } from '../../app/utils/questionType.enum';
 
 const Question = ({ questionData, questionIndex, sectionIndex }) => {
     console.log(questionData,"Question")

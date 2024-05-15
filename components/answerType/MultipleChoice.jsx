@@ -1,4 +1,4 @@
-import useSection from "@/app/store/section";
+import useSection from "../../app/store/section";
 import { CloseRounded, InsertPhotoOutlined } from "@mui/icons-material";
 import { Radio } from "@mui/material";
 import { useRef, useState } from "react";

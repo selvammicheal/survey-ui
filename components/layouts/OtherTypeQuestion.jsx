@@ -1,4 +1,4 @@
-import useSection from "@/app/store/section";
+import useSection from "../../app/store/section";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import FloatBar from "./FloatBar";
 

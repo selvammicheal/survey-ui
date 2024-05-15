@@ -1,4 +1,4 @@
-import useSection from "@/app/store/section";
+import useSection from "../../app/store/section";
 import { DeleteOutlined } from "@mui/icons-material";
 import FloatBar from "./FloatBar";
 import { useState } from "react";

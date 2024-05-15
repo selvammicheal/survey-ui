@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import CustomNavbar from "@/components/layouts/Navbar";
-import CustomSidebar from '@/components/layouts/Sidebar';
+import CustomNavbar from "../components/layouts/Navbar";
+import CustomSidebar from '../components/layouts/Sidebar';
 
 const inter = Inter({ subsets: ["latin"] });
 

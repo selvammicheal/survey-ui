@@ -1,4 +1,4 @@
-import useSection from "@/app/store/section"
+import useSection from "../../app/store/section"
 import AddCircleOutlineTwoTone from "@mui/icons-material/AddCircleOutlineTwoTone"
 import Image from "@mui/icons-material/Image"
 import SplitscreenTwoTone from "@mui/icons-material/SplitscreenTwoTone"

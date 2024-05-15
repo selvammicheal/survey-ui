@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import FloatBar from "./FloatBar";
-import useSection from "@/app/store/section";
+import useSection from "../../app/store/section";
 import Question from "./Question";
 import OtherTypeQuestion from "./OtherTypeQuestion";
 import { DeleteOutlined } from "@mui/icons-material";
 import SectionHeader from "./SectionHeader";
-import { getFormData, updateFormData } from "@/services/api";
+import { getFormData, updateFormData } from "../../services/api";
 
 const MainForm = () => {
 

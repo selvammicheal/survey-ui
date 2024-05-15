@@ -2,7 +2,7 @@ import { Checkbox, FormControl, FormControlLabel, FormGroup, MenuItem, Radio, Ra
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers"
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo"
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { QUESTION_TYPE } from "@/app/utils/questionType.enum";
+import { QUESTION_TYPE } from "../../app/utils/questionType.enum";
 
 const QuestionPreview = ({ questionData, preview }) => {
 

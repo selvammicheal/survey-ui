@@ -1,4 +1,4 @@
-import useSection from '@/app/store/section';
+import useSection from '../../app/store/section';
 import React, { useState } from 'react'
 import QuestionPreview from './QuestionPreview';
 import Button from '@mui/material/Button';

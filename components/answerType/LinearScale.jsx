@@ -1,4 +1,4 @@
-import useSection from "@/app/store/section";
+import useSection from "../../app/store/section";
 import { useState } from "react"
 
 const { Select, MenuItem } = require("@mui/material")

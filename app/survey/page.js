@@ -1,12 +1,8 @@
 "use client"
 import React, { useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { Box } from '@mui/material';
-import BasicTabs from '@/components/layouts/Tab';
 import { VisibilityOutlined } from '@mui/icons-material';
-import Preview from '@/components/layouts/Preview';
-import MainForm from '@/components/layouts/MainForm';
+import Preview from '../../components/layouts/Preview';
+import MainForm from '../../components/layouts/MainForm';
 
 
 
