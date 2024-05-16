@@ -20,7 +20,7 @@ const useSection = create((set, get) => ({
         questionIndex: 0
     },
 
-    updateActiveSlide: (sectionIndex, questionIndex) => updateActiveSlide(sectionIndex, questionIndex, set),
+    updateActiveSlide: (sectionIndex, questionIndex, from) => updateActiveSlide(sectionIndex, questionIndex, set, from ),
 
     updateFormData: (value, field) => updateFormData(value, field, set),
 

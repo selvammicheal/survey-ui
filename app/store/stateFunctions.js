@@ -1,4 +1,5 @@
-export const updateActiveSlide = (sectionIndex, questionIndex, set) => {
+export const updateActiveSlide = (sectionIndex, questionIndex, set, from) => {
+    console.log(sectionIndex, questionIndex, from);
     set((state) => (
         {
             activeContent: {

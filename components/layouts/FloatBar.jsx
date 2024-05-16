@@ -26,10 +26,13 @@ const FloatBar = (props) => {
             description: null
         }
         const section = await createSection(payload);
+        section["questions"] = []
 
         let data = JSON.parse(JSON.stringify(props.formInfo));
         data.sections.push(section)
         props.setFormInfo(data);
+
+        updateActiveSlide(props.formInfo.sections.length, null)
 
         // addNewSection(props.sectionIndex, props.questionIndex, props.clickedFrom)
     }
@@ -52,7 +55,7 @@ const FloatBar = (props) => {
         data.sections[props.sectionIndex].questions.push(question)
         props.setFormInfo(data);
 
-        updateActiveSlide(props.sectionIndex, props.formInfo.sections[props.sectionIndex].questions.length)
+        updateActiveSlide(props.sectionIndex, props.formInfo.sections[props.sectionIndex]["questions"].length ?? 0)
 
         // addNewQuestion(type, props.sectionIndex, props.questionIndex, null);
     }

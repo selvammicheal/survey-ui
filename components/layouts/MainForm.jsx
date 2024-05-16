@@ -20,6 +20,8 @@ const MainForm = () => {
     const activeContent = useSection((state) => state.activeContent);
     const updateActiveSlide = useSection((state) => state.updateActiveSlide);
 
+    console.log(activeContent,"activeContent")
+
 
     const updateFormTitle = (value) => {
         //update local state
@@ -75,7 +77,7 @@ const MainForm = () => {
                     <input type="text" name="name" className='text-light-color' value={formInfo?.description} onChange={(e) => updateFormDescription(e.target.value)} />
                 </div>
                 {
-                    formHeadingActive && <FloatBar sectionIndex={0} questionIndex={null} clickedFrom={"formHeader"} questionTypes={questionTypes}/>
+                    formHeadingActive && <FloatBar sectionIndex={0} questionIndex={null} clickedFrom={"formHeader"} questionTypes={questionTypes} formInfo={formInfo} setFormInfo={setFormInfo}/>
                 }
             </div>
             {

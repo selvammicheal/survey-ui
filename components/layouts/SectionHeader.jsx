@@ -10,9 +10,11 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
     // const updateSectionData = useSection((state) => state.updateSectionData);
     const [isPreview, setIsPreview] = useState(false);
 
+    
     const activeContent = useSection((state) => state.activeContent);
     const updateActiveSlide = useSection((state) => state.updateActiveSlide);
-
+    
+    console.log(activeContent,"activeContent")
     const updateSectionDetails = (value, field) => {
         //update local state
         const data = {...formInfo};
@@ -26,7 +28,20 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
         updateSectionData(payload, section._id);
     }
 
-    const deleteSection = () => {
+    const changeActiveSlideOnDelete = () => {
+        console.log(formInfo,"formInfo", formInfo?.sections.length === 2)
+        if(formInfo?.sections.length <= 2){
+            console.log("INSIDE IF")
+            updateActiveSlide(null, null);
+        } else {
+            console.log("INSIDE ELSE")
+            updateActiveSlide(sectionIndex - 1 , null)
+        }
+    }
+
+    const deleteSection = (e) => {
+        e.stopPropagation();
+
         // update local state 
         const data = JSON.parse(JSON.stringify(formInfo));
         data.sections.splice(sectionIndex,1);
@@ -34,6 +49,8 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
 
         // api-call 
         deleteSectionData(section?._id);
+
+        changeActiveSlideOnDelete()
     }
 
     const renderHeader = () => {
@@ -51,7 +68,7 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
                         />
                     </div>
                     <div className=" col-md-1 align-self-center">
-                        <div style={{cursor: "pointer"}} onClick={() => deleteSection()}>
+                        <div style={{cursor: "pointer"}} onClick={(e) => deleteSection(e)}>
                             <DeleteOutlined />
                         </div>
                     </div>
