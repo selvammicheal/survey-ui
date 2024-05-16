@@ -2,15 +2,42 @@ import useSection from "../../app/store/section";
 import { DeleteOutlined } from "@mui/icons-material";
 import FloatBar from "./FloatBar";
 import { useState } from "react";
+import { deleteSectionData, updateSectionData } from "../../services/api";
 
-const SectionHeader = ({ section, sectionIndex }) => {
+const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionTypes }) => {
 
     const formData = useSection((state) => state.formData);
-    const updateSectionData = useSection((state) => state.updateSectionData);
+    // const updateSectionData = useSection((state) => state.updateSectionData);
     const [isPreview, setIsPreview] = useState(false);
 
+    const activeContent = useSection((state) => state.activeContent);
+    const updateActiveSlide = useSection((state) => state.updateActiveSlide);
+
+    const updateSectionDetails = (value, field) => {
+        //update local state
+        const data = {...formInfo};
+        data.sections[sectionIndex][field] = value;
+        setFormInfo(data)
+
+        // api-call
+        const payload = {
+            [field]: value
+        }
+        updateSectionData(payload, section._id);
+    }
+
+    const deleteSection = () => {
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        data.sections.splice(sectionIndex,1);
+        setFormInfo(data);
+
+        // api-call 
+        deleteSectionData(section?._id);
+    }
+
     const renderHeader = () => {
-        return(
+        return (
             <>
                 <div className="row">
                     <div className="col-md-11">
@@ -19,11 +46,12 @@ const SectionHeader = ({ section, sectionIndex }) => {
                             className='text-light-color dark-text'
                             value={section?.name}
                             autoFocus={true}
-                            onChange={(e) => updateSectionData(e.target.value, "sectionTitle", sectionIndex)}
+                            placeholder="Untitled Section"
+                            onChange={(e) => updateSectionDetails(e.target.value, "name")}
                         />
                     </div>
                     <div className=" col-md-1 align-self-center">
-                        <div className="mainss">
+                        <div style={{cursor: "pointer"}} onClick={() => deleteSection()}>
                             <DeleteOutlined />
                         </div>
                     </div>
@@ -36,7 +64,7 @@ const SectionHeader = ({ section, sectionIndex }) => {
                             type="text"
                             placeholder="Description"
                             value={section?.description}
-                            onChange={(e) => updateSectionData(e.target.value, "sectionDesc", sectionIndex)}
+                            onChange={(e) => updateSectionDetails(e.target.value, "description")}
                         />
                     </div>
                 </div>
@@ -52,7 +80,7 @@ const SectionHeader = ({ section, sectionIndex }) => {
                         {section.name}
                     </div>
                     <div className="ms-2 mt-3 text-light-color" style={{ fontSize: "15px" }}>
-                        {section.description     ? section.description   : "Description(optional)"
+                        {section.description ? section.description : "Description(optional)"
                         }
                     </div>
                 </div>
@@ -60,19 +88,25 @@ const SectionHeader = ({ section, sectionIndex }) => {
         )
     }
 
-    const updateActiveContentFunc = (type, sectionIndex) => {
-        // updateActiveContent(sectionIndex, null, type);
-    }
+    const sectionActive = activeContent?.sectionIndex === sectionIndex && activeContent?.questionIndex === null
 
     return (
         <div className={`main-form-heading ${formData?.sections.length > 1 ? "active" : ""}`} data-custom={`Section ${sectionIndex + 1} of ${formData?.sections.length}`} style={{ marginTop: "150px" }}>
-            <div className={`main-form-wrap ${!section?.sectionActive && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveContentFunc("section", sectionIndex)}>
+            <div className={`main-form-wrap ${!sectionActive && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveSlide(sectionIndex, null)}>
                 {
                     isPreview ? renderHeaderPreview() : renderHeader()
                 }
-                
+
                 {
-                    section.sectionActive ? <FloatBar sectionIndex={sectionIndex} questionIndex={null} clickedFrom={"section"} /> : <></>
+                    sectionActive ?
+                        <FloatBar
+                            sectionIndex={sectionIndex}
+                            questionIndex={null}
+                            clickedFrom={"section"}
+                            questionTypes={questionTypes}
+                            formInfo={formInfo}
+                            setFormInfo={setFormInfo} />
+                        : <></>
                 }
             </div>
         </div>

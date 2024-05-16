@@ -4,45 +4,75 @@ import InsertPhotoOutlined from "@mui/icons-material/InsertPhotoOutlined"
 import { Checkbox, FormControlLabel } from "@mui/material"
 import { useRef, useState } from "react"
 import { FormGroup } from "react-bootstrap"
+import { updateQuestionData } from "../../services/api"
 
-const CheckBox = ({question, sectionIndex, questionIndex}) => {
+const CheckBox = ({ question, sectionIndex, questionIndex, formInfo, setFormInfo }) => {
 
     const [imgIndex, setImgIndex] = useState();
     const inputRef = useRef();
 
-    const updateOptions = useSection((state) => state.updateOptions);
+    const updateCheckBox = (value, index, field) => {
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        data.sections[sectionIndex].questions[questionIndex].question_data[index][field] = value;
+        setFormInfo(data);
 
-    const updatecheckBox = (value, index) => {
-        updateOptions("update", "name", value, sectionIndex, questionIndex, index)
+        if (field === "imgSrc") return;
+
+        // api-call 
+        const updateQuestionPayload = {
+            question_data: data.sections[sectionIndex].questions[questionIndex].question_data
+        }
+        updateQuestionData(updateQuestionPayload, question?._id);
     }
 
     const removeCheckbox = (index) => {
-        updateOptions("delete", null, null, sectionIndex, questionIndex, index)
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        data.sections[sectionIndex].questions[questionIndex].question_data.splice(index, 1)
+        setFormInfo(data);
+
+        // api-call 
+        const updateQuestionPayload = {
+            question_data: data.sections[sectionIndex].questions[questionIndex].question_data
+        }
+        updateQuestionData(updateQuestionPayload, question?._id);
     }
 
     const addCheckbox = () => {
-        updateOptions("add", null, null, sectionIndex, questionIndex, null)
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        const questionInfo = data.sections[sectionIndex].questions[questionIndex].question_data
+        questionInfo.push({ name: `Option ${questionInfo.length + 1}`, imgSrc: "" });
+        setFormInfo(data);
+
+        // api-call 
+        const updateQuestionPayload = {
+            question_data: questionInfo
+        }
+        updateQuestionData(updateQuestionPayload, question?._id);
     }
 
     const handleCheckboxImg = (event) => {
         var fileName = event.target?.value;
         var idxDot = fileName.lastIndexOf(".") + 1;
         var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-        if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
-            updateOptions("update", "imgSrc", URL.createObjectURL(event.target.files[0]), sectionIndex, questionIndex, imgIndex);
-        }else{
+        if (extFile == "jpg" || extFile == "jpeg" || extFile == "png") {
+            updateCheckBox(URL.createObjectURL(event.target.files[0]), imgIndex, "imgSrc")
+        } else {
             alert("Only jpg/jpeg and png files are allowed!");
-        }   
+        }
     }
 
     const removeCheckboxImg = (index) => {
-        updateOptions("update", "imgSrc", null, sectionIndex, questionIndex, index);
+        updateCheckBox("", index, "imgSrc")
     }
+    
     return (
         <>
             {
                 question?.question_data?.map((item, index) => {
-                    return ( 
+                    return (
                         <div key={index}>
                             <div className="row">
                                 <div className='col-md-10'>
@@ -53,7 +83,7 @@ const CheckBox = ({question, sectionIndex, questionIndex}) => {
                                             </FormGroup>
                                         </div>
                                         <div className='w-100'>
-                                            <input type="text" name="name" className='text-light-color questionType' value={item.name} onChange={(e) => updatecheckBox(e.target.value, index)} />
+                                            <input type="text" name="name" className='text-light-color questionType' value={item.name} onChange={(e) => updateCheckBox(e.target.value, index, "name")} />
                                         </div>
                                     </div>
                                 </div>
@@ -87,7 +117,7 @@ const CheckBox = ({question, sectionIndex, questionIndex}) => {
             <div className='d-flex align-items-end mt-3'>
                 <div className="multiple_option">
                     <FormGroup>
-                        <FormControlLabel disabled control= {<Checkbox />} />
+                        <FormControlLabel disabled control={<Checkbox />} />
                     </FormGroup>
                 </div>
                 <div className="w-100 ms-2">

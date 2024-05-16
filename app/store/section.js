@@ -118,36 +118,6 @@ const useSection = create((set, get) => ({
         updateFormState(set, updatedFormData);
     },
 
-    updateLinearData: (field, value, sectionIndex, questionIndex) => {
-        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
-        updatedFormData.sections[sectionIndex].questions[questionIndex].questionData[field] = value;
-        updateFormState(set, updatedFormData);
-    },
-
-    updateRowColData: (type, field, value, sectionIndex, questionIndex, index) => {
-        const updatedFormData = JSON.parse(JSON.stringify(get().formData));
-        if (type === "rowData") {
-            updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.rowData[index][field] = value;
-        } else if (type === "colData") {
-            updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.colData[index][field] = value;
-        } else if (type === "addRow") {
-            let data = {
-                name: `Row ${updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.rowData.length + 1}`
-            }
-            updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.rowData.push(data)
-        } else if (type === "addCol") {
-            let data = {
-                name: `Col ${updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.colData.length + 1}`
-            }
-            updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.colData.push(data)
-        } else if (type === "removeRow") {
-            updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.rowData.splice(index, 1)
-        } else if (type === "removeCol") {
-            updatedFormData.sections[sectionIndex].questions[questionIndex].questionData.colData.splice(index, 1)
-        }
-        updateFormState(set, updatedFormData);
-    },
-
     deleteQuestion: (sectionIndex, questionIndex) => {
         const updatedFormData = JSON.parse(JSON.stringify(get().formData)); //to cut the reference of the obj
         if(updatedFormData.sections[sectionIndex].questions.length == 1){

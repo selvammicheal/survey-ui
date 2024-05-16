@@ -2,24 +2,53 @@ import useSection from "../../app/store/section";
 import { CloseRounded, InsertPhotoOutlined } from "@mui/icons-material";
 import { Radio } from "@mui/material";
 import { useRef, useState } from "react";
+import { updateQuestionData } from "../../services/api";
 
-const MultipleChoice = ({question, sectionIndex, questionIndex}) => {
+const MultipleChoice = ({question, sectionIndex, questionIndex, setFormInfo, formInfo}) => {
 
     const [imgIndex, setImgIndex] = useState();
     const inputRef = useRef();
 
-    const updateOptions = useSection((state) => state.updateOptions);
+    const updateMultipleChoice = (value, index, field) => {
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        data.sections[sectionIndex].questions[questionIndex].question_data[index][field] = value;
+        setFormInfo(data);
 
-    const updateMultipleChoice = (value, index) => {
-        updateOptions("update", "name", value, sectionIndex, questionIndex, index)
+        if(field === "imgSrc") return;
+
+        // api-call 
+        const updateQuestionPayload = {
+            question_data: data.sections[sectionIndex].questions[questionIndex].question_data
+        }
+        updateQuestionData(updateQuestionPayload, question?._id);
     }
 
     const removeMultipleChoice = (index) => {
-        updateOptions("delete", null, null, sectionIndex, questionIndex, index)
+       // update local state 
+       const data = JSON.parse(JSON.stringify(formInfo));
+       data.sections[sectionIndex].questions[questionIndex].question_data.splice(index, 1)
+       setFormInfo(data);
+
+       // api-call 
+       const updateQuestionPayload = {
+           question_data: data.sections[sectionIndex].questions[questionIndex].question_data
+       }
+       updateQuestionData(updateQuestionPayload, question?._id);
     }
 
     const addMultipleChoiceOption = () => {
-        updateOptions("add", null, null, sectionIndex, questionIndex, null)
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        const questionInfo = data.sections[sectionIndex].questions[questionIndex].question_data
+        questionInfo.push({name: `Option ${questionInfo.length+1}`, imgSrc: ""});
+        setFormInfo(data);
+
+        // api-call 
+        const updateQuestionPayload = {
+            question_data: questionInfo
+        }
+        updateQuestionData(updateQuestionPayload, question?._id);
     }
 
     const handleMultipleChoiceImg = (event) => {
@@ -27,14 +56,14 @@ const MultipleChoice = ({question, sectionIndex, questionIndex}) => {
         var idxDot = fileName.lastIndexOf(".") + 1;
         var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
         if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
-            updateOptions("update", "imgSrc", URL.createObjectURL(event.target.files[0]), sectionIndex, questionIndex, imgIndex);
+            updateMultipleChoice(URL.createObjectURL(event.target.files[0]), imgIndex, "imgSrc")
         }else{
             alert("Only jpg/jpeg and png files are allowed!");
         }   
     }
 
     const removeMultipleChoiceImg = (index) => {
-        updateOptions("update", "imgSrc", null, sectionIndex, questionIndex, index);
+        updateMultipleChoice("", index, "imgSrc")
     }
 
     return (
@@ -54,7 +83,7 @@ const MultipleChoice = ({question, sectionIndex, questionIndex}) => {
                                         />
                                     </div>
                                     <div className="w-100">
-                                        <input type="text" name="name" className='text-light-color questionType' value={x.name} onChange={(e) => updateMultipleChoice(e.target.value, i)} />
+                                        <input type="text" name="name" className='text-light-color questionType' value={x.name} onChange={(e) => updateMultipleChoice(e.target.value, i, "name")} />
                                     </div>
                                 </div>
                             </div>
@@ -73,11 +102,11 @@ const MultipleChoice = ({question, sectionIndex, questionIndex}) => {
                         </div>
                         {
                             x.imgSrc &&
-                            <div className="multiple-img-close">
+                            <div className="multiple-img-close ms-4 mt-3">
                                 <div className="col-md-1 align-self-center close-btn" onClick={() => removeMultipleChoiceImg(i)}>
                                     <CloseRounded />
                                 </div>
-                                <img className="mt-3 ms-4" style={{ height: "100px", width: "100px" }} src={x.imgSrc} alt="" />
+                                <img className="" style={{ height: "100px", width: "100px" }} src={x.imgSrc} alt="" />
                             </div>
                         }
 

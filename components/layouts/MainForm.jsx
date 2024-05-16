@@ -5,11 +5,12 @@ import Question from "./Question";
 import OtherTypeQuestion from "./OtherTypeQuestion";
 import { DeleteOutlined } from "@mui/icons-material";
 import SectionHeader from "./SectionHeader";
-import { getFormData, updateFormData } from "../../services/api";
+import { getAllQuestionType, getFormData, updateFormData } from "../../services/api";
 
 const MainForm = () => {
 
     const [formInfo, setFormInfo] = useState(null);
+    const [questionTypes, setQuestionTypes] = useState([]);
 
     const dragItem = useRef(0);
     const dragOverItem = useRef(0);
@@ -21,23 +22,23 @@ const MainForm = () => {
 
 
     const updateFormTitle = (value) => {
+        //update local state
+        const data = {...formInfo};
+        data.name = value;
+        setFormInfo(data)
+
+        // api-call
         const payload = {
             name: value
         }
-        updateFormData(payload).then(async() => {
-            const formDataResponse = await getFormData();
-            setFormInfo(formDataResponse);
-        });
+        updateFormData(payload, formInfo._id);
     }
 
     const updateFormDescription = (value) => {
         const payload = {
             description: value
         }
-        updateFormData(payload).then(async() => {
-            const formDataResponse = await getFormData();
-            setFormInfo(formDataResponse);
-        });
+        updateFormData(payload, formInfo._id)
     }
 
     // const handleSort = (sectionIndex) => {
@@ -54,9 +55,14 @@ const MainForm = () => {
         async function fetchData() {
             const formDataResponse = await getFormData();
             setFormInfo(formDataResponse);
+
+            const questionTypeResponse = await getAllQuestionType();
+            setQuestionTypes(questionTypeResponse);
         }
         fetchData();
     }, [])
+
+    console.log(formInfo, "LLLLLLLLL")
 
     const formHeadingActive = activeContent.sectionIndex === null && activeContent.questionIndex === null
 
@@ -69,7 +75,7 @@ const MainForm = () => {
                     <input type="text" name="name" className='text-light-color' value={formInfo?.description} onChange={(e) => updateFormDescription(e.target.value)} />
                 </div>
                 {
-                    formHeadingActive && <FloatBar sectionIndex={0} questionIndex={null} clickedFrom={"formHeader"} />
+                    formHeadingActive && <FloatBar sectionIndex={0} questionIndex={null} clickedFrom={"formHeader"} questionTypes={questionTypes}/>
                 }
             </div>
             {
@@ -77,11 +83,11 @@ const MainForm = () => {
                     return (
                         <div key={sectionIndex}>
                             {
-                                sectionIndex != 0 && <SectionHeader section={section} sectionIndex={sectionIndex} />
+                                sectionIndex != 0 && <SectionHeader section={section} sectionIndex={sectionIndex} formInfo={formInfo} setFormInfo={setFormInfo} questionTypes={questionTypes}/>
                             }
 
                             {
-                                section.questions.map((question, questionIndex) => (
+                                section?.questions?.map((question, questionIndex) => (
                                     <div
                                         key={questionIndex}
                                         // draggable="true"
@@ -94,7 +100,14 @@ const MainForm = () => {
                                             otherTypeQuestions.includes(question?.question_type_id) ? (
                                                 <OtherTypeQuestion questionData={question} sectionIndex={sectionIndex} questionIndex={questionIndex} />
                                             ) : (
-                                                <Question questionData={question} sectionIndex={sectionIndex} questionIndex={questionIndex} />
+                                                <Question 
+                                                    questionData={question} 
+                                                    sectionIndex={sectionIndex} 
+                                                    questionIndex={questionIndex} 
+                                                    formInfo={formInfo} 
+                                                    setFormInfo={setFormInfo}
+                                                    questionTypes={questionTypes}
+                                                />
                                             )
                                         }
                                     </div>

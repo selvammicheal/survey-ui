@@ -1,24 +1,49 @@
 import useSection from "../../app/store/section";
 import CloseRounded from "@mui/icons-material/CloseRounded";
 import { useState } from "react";
+import { updateQuestionData } from "../../services/api";
 
-const DropDown = ({question, sectionIndex, questionIndex}) => {
-
-    const updateOptions = useSection((state) => state.updateOptions);
+const DropDown = ({question, sectionIndex, questionIndex, formInfo, setFormInfo}) => {
 
     const updateDropdown = (value, index) => {
-        updateOptions("update", "name", value, sectionIndex, questionIndex, index)
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        data.sections[sectionIndex].questions[questionIndex].question_data[index].name = value;
+        setFormInfo(data);
+
+        // api-call 
+        const updateQuestionPayload = {
+            question_data: data.sections[sectionIndex].questions[questionIndex].question_data
+        }
+        updateQuestionData(updateQuestionPayload, question?._id);
     }
 
     const dropDownRemoveValue = (index) => {
-        updateOptions("delete", null, null, sectionIndex, questionIndex, index)
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        data.sections[sectionIndex].questions[questionIndex].question_data.splice(index, 1)
+        setFormInfo(data);
+
+        // api-call 
+        const updateQuestionPayload = {
+            question_data: data.sections[sectionIndex].questions[questionIndex].question_data
+        }
+        updateQuestionData(updateQuestionPayload, question?._id);
     }
 
     const addDropdown = () => {
-        updateOptions("add", null, null, sectionIndex, questionIndex, null)
-    }
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        const questionInfo = data.sections[sectionIndex].questions[questionIndex].question_data
+        questionInfo.push({ name: `Option ${questionInfo.length + 1}`, imgSrc: "" });
+        setFormInfo(data);
 
-    console.log(question,"questionquestion")
+        // api-call 
+        const updateQuestionPayload = {
+            question_data: questionInfo
+        }
+        updateQuestionData(updateQuestionPayload, question?._id);
+    }
 
     return (
         <>

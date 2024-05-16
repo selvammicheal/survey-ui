@@ -5,6 +5,7 @@ import SplitscreenTwoTone from "@mui/icons-material/SplitscreenTwoTone"
 import TextFieldsTwoTone from "@mui/icons-material/TextFieldsTwoTone"
 import SmartDisplayOutlinedIcon from '@mui/icons-material/SmartDisplayOutlined';
 import { useEffect, useRef } from "react"
+import { createQuestion, createSection } from "../../services/api"
 
 const FloatBar = (props) => {
 
@@ -12,18 +13,48 @@ const FloatBar = (props) => {
     const floatBarRef = useRef();
     const inputRefVideo = useRef();
     
+    const updateActiveSlide = useSection((state) => state.updateActiveSlide);
 
     const addNewQuestion = useSection((state) => state.addNewQuestion);
     const addNewSection = useSection((state) => state.addNewSection);
 
-    const addNewSectionFunc = (e) => {
+    const addNewSectionFunc = async (e) => {
         e.stopPropagation();
-        addNewSection(props.sectionIndex, props.questionIndex, props.clickedFrom)
+        const payload = {
+            survey_id: props.formInfo._id,
+            name: null,
+            description: null
+        }
+        const section = await createSection(payload);
+
+        let data = JSON.parse(JSON.stringify(props.formInfo));
+        data.sections.push(section)
+        props.setFormInfo(data);
+
+        // addNewSection(props.sectionIndex, props.questionIndex, props.clickedFrom)
     }
 
-    const addNewQuestionFunc = (e, type) => {
+    const addNewQuestionFunc = async(e, type) => {
         e.stopPropagation();
-        addNewQuestion(type, props.sectionIndex, props.questionIndex, null);
+
+        const payload = {
+            question: null,
+            question_type_id: props?.questionTypes[0]._id,
+            question_img_src: "",
+            option: null,
+            section_id: props.formInfo.sections[props.sectionIndex]._id,
+            survey_id: props.formInfo._id,
+            mandatory: false
+        }
+        const question = await createQuestion(payload);
+ 
+        let data = JSON.parse(JSON.stringify(props.formInfo));
+        data.sections[props.sectionIndex].questions.push(question)
+        props.setFormInfo(data);
+
+        updateActiveSlide(props.sectionIndex, props.formInfo.sections[props.sectionIndex].questions.length)
+
+        // addNewQuestion(type, props.sectionIndex, props.questionIndex, null);
     }
 
     const addNewImageQuestion = (e) => {
@@ -64,8 +95,8 @@ const FloatBar = (props) => {
 
     return (
         <div className="sideAddMenu" ref={floatBarRef}>
-            <div onClick={(e) => addNewQuestionFunc(e, "question")}><AddCircleOutlineTwoTone /></div>
-            <div onClick={(e) => addNewQuestionFunc(e, "title")}><TextFieldsTwoTone /></div>
+            <div onClick={(e) => addNewQuestionFunc(e)}><AddCircleOutlineTwoTone /></div>
+            <div onClick={(e) => addNewQuestionFunc(e)}><TextFieldsTwoTone /></div>
             <div onClick={(e) => addNewImageQuestion(e)}><Image /></div>
             <input type="file" accept="image/*" className='hidden-file' ref={inputRef} onChange={handleChange} />
             <div onClick={(e) => addNewVideoQuestion(e)}><SmartDisplayOutlinedIcon /></div>
