@@ -2,10 +2,29 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:5000/"
 
-export const getFormData = async () => {
+export const getAllForms = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}survey/get-survey/663f0c1daa8c637f5b0d37e4`);
+        const response = await axios.get(`${BASE_URL}survey/get-all-survey`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const getFormData = async (survey_id) => {
+    try {
+        const response = await axios.get(`${BASE_URL}survey/get-survey/${survey_id}`);
+        console.log(response,"response")
         return response.data[0];
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const createSurvey = async (data) => {
+    try {
+        const response = await axios.post(`${BASE_URL}survey/create-survey`, data);
+        return response.data;
     } catch (error) {
         console.error(error);
     }

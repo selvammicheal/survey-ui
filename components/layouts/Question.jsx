@@ -41,6 +41,8 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
 
     const activeContent = useSection((state) => state.activeContent);
     const updateActiveSlide = useSection((state) => state.updateActiveSlide);
+    const isPreview = useSection((state) => state.isPreview);
+    const togglePreview = useSection((state) => state.togglePreview);
 
     const updateQuestionFunc = async (value, field) => {
         // updateQuestion("question", value, sectionIndex, questionIndex)
@@ -117,10 +119,6 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
 
     const removeQuestionImg = () => {
         updateQuestionFunc(null, "question_img_src")
-    }
-
-    const updateMandatoryField = (checked) => {
-
     }
 
     const renderAnswerType = () => {
@@ -246,7 +244,7 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
                         <>
                             <div className="row mb-3">
                                 <div className="col-md-7">
-                                    <input type="text" name="name" className='text-light-color dark-text' autoFocus={true} autoComplete='off' value={questionData.question} onChange={(e) => updateQuestionFunc(e.target.value, "question")} />
+                                    <input type="text" name="name" className='text-light-color dark-text' placeholder='Question' autoComplete='off' value={questionData.question} onChange={(e) => updateQuestionFunc(e.target.value, "question")} />
                                 </div>
                                 <div className="col-md-1 align-self-center">
                                     <div className='upload-main-img' onClick={() => inputRef?.current.click()}>

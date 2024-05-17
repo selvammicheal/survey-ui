@@ -1,31 +1,54 @@
 "use client"
-import React, { useState } from 'react';
-import { VisibilityOutlined } from '@mui/icons-material';
-import Preview from '../../components/layouts/Preview';
-import MainForm from '../../components/layouts/MainForm';
+import React, { useEffect, useState } from 'react';
+import { createSurvey, getAllForms } from '../../services/api';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
+function page() {
 
+    const [forms, setForms] = useState([]);
+    const router = useRouter()
 
-function page(props) {
-    const [preview, setPreview] = useState(false)
-    // console.log(preview)
-    const previewChange = () => {
-        //    const previewdata = preview
-        setPreview(!preview)
+    useEffect(() => {
+        async function fetchData() {
+            const allFormsResponse = await getAllForms();
+            setForms(allFormsResponse);
+        }
+        fetchData();
+    }, [])
+
+    const createNewSurvey = async () => {
+        const survey = {
+            name: "Untitled form",
+            description: "Form description"
+        }
+
+        const surveyRes = await createSurvey(survey);
+        router.push(`survey/create-survey/${surveyRes?._id}`)
+
     }
+
+    console.log(forms, "forms")
+
     return (
-        <div>
-            <div className='preview-icon' onClick={() => previewChange()}>
-                <VisibilityOutlined className='mainPreviewIcon' />
+        <div className='form-screen ms-4'>
+            <div className='d-flex align-items-center justify-content-between mb-4'>
+                <div className="survey-list-label">List of survey's</div>
+                <div className='create-survey-btn' onClick={() => createNewSurvey()}>Create Survey</div>
             </div>
+
             {
-                preview ?
-                    <Preview />
-                    :
-                    <MainForm />
+
+                forms?.map((form) => (
+                    <Link href={`survey/create-survey/${form?._id}`}>
+                        <div className='form-item'>
+                            {form.name}
+                        </div>
+                    </Link>
+                ))
             }
         </div>
-    );
+    )
 }
 
 export default page;

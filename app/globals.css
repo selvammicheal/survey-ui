@@ -119,7 +119,7 @@ p {
   font-size: 15px;
   color: white;
   padding: 10px 20px;
-  background-color: #673ab7;
+  background-color: #000;
 }
 
 .text-light-color {
@@ -316,9 +316,7 @@ height: 100px;
 .sideAddMenu div {
   margin: 12px;
 }
-body{
-  background-color: #f0ebf8 !important;
-}
+
 .question-heading {
   font-weight: 500;
   color: #202124;
@@ -361,4 +359,45 @@ body{
 .preview-dropdown .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input,
 .question-dropdown .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 10px 14px !important;
+}
+
+.create-survey-btn{
+  width: fit-content;
+  padding: 10px;
+  background: black;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.survey-list-label {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.form-item {
+  margin-top: 20px;
+  font-weight: 500;
+  border: 1px solid grey;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-decoration: none;
+  color: black;
+}
+
+.form-item:hover {
+  background-color: rgb(238 238 238);
+}
+
+.form-screen a:-webkit-any-link {
+  text-decoration: none;
+}
+
+.css-1hpqosy-MuiFormControlLabel-root {
+  margin: 0 4px;
+}
+
+.question-field .css-14lo706 {
+  display: block !important;
 }

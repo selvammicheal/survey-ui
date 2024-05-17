@@ -6,6 +6,7 @@ import { QUESTION_TYPE } from "../../app/utils/questionType.enum";
 
 const QuestionPreview = ({ questionData, preview }) => {
 
+    console.log(questionData, "questionData")
     let linearCount = questionData?.question_data?.startIndex == 0 ? questionData?.question_data?.endIndex + 1 : questionData?.question_data?.endIndex
 
     const renderQuestionPreview = () => {
@@ -70,22 +71,27 @@ const QuestionPreview = ({ questionData, preview }) => {
                                 </div>
                             </div>
                         }
-                        {
-                            questionData?.question_data?.map((option, index) => (
-                                <div className="question-field" key={index}>
-                                    <div className="row mt-2">
-                                        <div className="col-md-10">
-                                            <div className="d-flex align-items-center mt-1 ms-2">
-                                                <FormControlLabel control={<Radio disabled={preview ? false : true} />} label={option.name} />
+                        <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            name="radio-buttons-group"
+                        >
+                            {
+                                questionData?.question_data?.map((option, index) => (
+                                    <div className="question-field" key={index}>
+                                        <div className="row mt-2">
+                                            <div className="col-md-10">
+                                                <div className="d-flex align-items-center mt-1 ms-2">
+                                                    <FormControlLabel control={<Radio value={option.name} disabled={preview ? false : true} />} label={option.name} />
+                                                </div>
                                             </div>
                                         </div>
+                                        {
+                                            option.imgSrc && <img src={option.imgSrc} className='questionImage mt-3 ms-4' alt="" />
+                                        }
                                     </div>
-                                    {
-                                        option.imgSrc && <img src={option.imgSrc} className='questionImage mt-3 ms-4' alt="" />
-                                    }
-                                </div>
-                            ))
-                        }
+                                ))
+                            }
+                        </RadioGroup>
                     </div>
                 )
             }
@@ -142,26 +148,26 @@ const QuestionPreview = ({ questionData, preview }) => {
                         }
                         {
                             preview ?
-                            <div className="row">
-                                <div className="col-5 preview-dropdown">
-                                <FormControl fullWidth>
-                                    <Select
-                                        labelId="icon-select-label"
-                                        label="Icon Select"
-                                        placeholder="Select"
-                                        defaultValue= {questionData?.questionData?.options[0].name}
-                                    >
-                                        {
-                                            questionData?.questionData?.options.map((option, index) => (
-                                                <MenuItem value={option.name} key={index}>
-                                                    <span className="ms-3">{option.name}</span>
-                                                </MenuItem>
-                                            ))
-                                        }
-                                    </Select>
-                                </FormControl>
+                                <div className="row">
+                                    <div className="col-5 preview-dropdown">
+                                        <FormControl fullWidth>
+                                            <Select
+                                                labelId="icon-select-label"
+                                                label="Icon Select"
+                                                placeholder="Select"
+                                                defaultValue={questionData?.question_data[0]?.name}
+                                            >
+                                                {
+                                                    questionData?.question_data?.map((option, index) => (
+                                                        <MenuItem value={option.name} key={index}>
+                                                            <span className="ms-3">{option.name}</span>
+                                                        </MenuItem>
+                                                    ))
+                                                }
+                                            </Select>
+                                        </FormControl>
+                                    </div>
                                 </div>
-                            </div>
                                 :
                                 questionData?.question_data?.map((option, index) => (
 
@@ -202,18 +208,23 @@ const QuestionPreview = ({ questionData, preview }) => {
                         }
                         <div className="mt-2 d-flex justify-content-between mx-2 align-items-center">
                             <div className='me-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.question_data.startLabel}</div>
+                            <RadioGroup
+                                className="d-flex flex-row align-items-center text-center"
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio-buttons-group"
+                            >
                             {
                                 [...Array(linearCount).keys()].map((x, index) => (
-                                    <div className="d-flex flex-column align-items-center  text-center" key={index}>
-                                        <div className="mb-2">
-                                            {questionData?.question_data?.startIndex == 0 ? x : x + 1}
-                                        </div>
-                                        <div className="">
-                                            <Radio disabled={preview ? false : true} />
-                                        </div>
+                                    <div className="d-flex flex-column align-items-center text-center" key={index}>
+                                        <FormControlLabel 
+                                            control={<Radio value={index} disabled={preview ? false : true} />} 
+                                            labelPlacement="top" 
+                                            label={questionData?.question_data?.startIndex == 0 ? x : x + 1}
+                                        />
                                     </div>
                                 ))
                             }
+                            </RadioGroup>
                             <div className='ms-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.question_data.endLabel}</div>
                         </div>
                     </div>

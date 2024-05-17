@@ -1,11 +1,18 @@
-export const updateActiveSlide = (sectionIndex, questionIndex, set, from) => {
-    console.log(sectionIndex, questionIndex, from);
+export const updateActiveSlide = (sectionIndex, questionIndex, set) => {
     set((state) => (
         {
             activeContent: {
                 sectionIndex: sectionIndex,
                 questionIndex: questionIndex
             }
+        }
+    ))
+}
+
+export const togglePreview = (value, set) => {
+    set((state) => (
+        {
+            isPreview: value
         }
     ))
 }

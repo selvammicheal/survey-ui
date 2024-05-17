@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { QUESTION_TYPE, SECTION, updateActiveSlide, updateFormData, updateFormState } from "./stateFunctions";
+import { QUESTION_TYPE, SECTION, togglePreview, updateActiveSlide, updateFormData, updateFormState } from "./stateFunctions";
 
 const useSection = create((set, get) => ({
     formData: {
@@ -19,6 +19,9 @@ const useSection = create((set, get) => ({
         sectionIndex: 0,
         questionIndex: 0
     },
+    isPreview: false,
+
+    togglePreview: (value) => togglePreview(value, set),
 
     updateActiveSlide: (sectionIndex, questionIndex, from) => updateActiveSlide(sectionIndex, questionIndex, set, from ),
 

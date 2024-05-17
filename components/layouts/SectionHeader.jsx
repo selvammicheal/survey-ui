@@ -34,8 +34,7 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
             console.log("INSIDE IF")
             updateActiveSlide(null, null);
         } else {
-            console.log("INSIDE ELSE")
-            updateActiveSlide(sectionIndex - 1 , null)
+            updateActiveSlide(sectionIndex , null)
         }
     }
 
