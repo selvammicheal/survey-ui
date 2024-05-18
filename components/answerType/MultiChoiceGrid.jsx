@@ -1,7 +1,5 @@
-import useSection from "../../app/store/section";
 import CloseRounded from "@mui/icons-material/CloseRounded";
 import { Radio } from "@mui/material";
-import { useState } from "react";
 import { updateQuestionData } from "../../services/api";
 
 const MultiChoiceGrid = ({question, sectionIndex, questionIndex, formInfo, setFormInfo}) => {

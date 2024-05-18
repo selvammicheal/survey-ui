@@ -390,7 +390,7 @@ height: 100px;
   background-color: rgb(238 238 238);
 }
 
-.form-screen a:-webkit-any-link {
+.form-screen a {
   text-decoration: none;
 }
 

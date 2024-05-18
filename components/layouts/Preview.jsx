@@ -1,13 +1,8 @@
-import useSection from '../../app/store/section';
 import React, { useState } from 'react'
 import QuestionPreview from './QuestionPreview';
 import Button from '@mui/material/Button';
 
 const Preview = ({formInfo, setFormInfo}) => {
-
-    const formData = useSection((state) => state.formData);
-
-    console.log(formInfo,"formInfoformInfoformInfo")
 
     const [sectionIndex, setSectionIndex] = useState(0);
     const [formSubmitted, setFormSubmited] = useState(false);

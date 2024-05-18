@@ -6,8 +6,9 @@ import TextFieldsTwoTone from "@mui/icons-material/TextFieldsTwoTone"
 import SmartDisplayOutlinedIcon from '@mui/icons-material/SmartDisplayOutlined';
 import { useEffect, useRef } from "react"
 import { createQuestion, createSection } from "../../services/api"
+import { QUESTION_TYPE } from "../../app/utils/questionType.enum"
 
-const FloatBar = (props) => {
+const FloatBar = ({formInfo, setFormInfo, sectionIndex, questionIndex}) => {
 
     const inputRef = useRef();
     const floatBarRef = useRef();
@@ -15,49 +16,49 @@ const FloatBar = (props) => {
     
     const updateActiveSlide = useSection((state) => state.updateActiveSlide);
 
-    const addNewQuestion = useSection((state) => state.addNewQuestion);
-    const addNewSection = useSection((state) => state.addNewSection);
-
     const addNewSectionFunc = async (e) => {
         e.stopPropagation();
         const payload = {
-            survey_id: props.formInfo._id,
+            survey_id: formInfo._id,
             name: null,
             description: null
         }
         const section = await createSection(payload);
         section["questions"] = []
 
-        let data = JSON.parse(JSON.stringify(props.formInfo));
+        let data = JSON.parse(JSON.stringify(formInfo));
         data.sections.push(section)
-        props.setFormInfo(data);
+        setFormInfo(data);
 
-        updateActiveSlide(props.formInfo.sections.length, null)
-
-        // addNewSection(props.sectionIndex, props.questionIndex, props.clickedFrom)
+        updateActiveSlide(formInfo.sections.length, null)
     }
 
-    const addNewQuestionFunc = async(e, type) => {
-        e.stopPropagation();
-
+    const addNewQuestionFunc = async({questionTypeId, event = null, src = null}) => {
+        if(event){
+            console.log(event,"event")
+            event.stopPropagation();
+        }
+        
         const payload = {
-            question: null,
-            question_type_id: props?.questionTypes[0]._id,
+            question_type_id: questionTypeId,
             question_img_src: "",
             option: null,
-            section_id: props.formInfo.sections[props.sectionIndex]._id,
-            survey_id: props.formInfo._id,
+            section_id: formInfo.sections[sectionIndex]._id,
+            survey_id: formInfo._id,
             mandatory: false
         }
         const question = await createQuestion(payload);
  
-        let data = JSON.parse(JSON.stringify(props.formInfo));
-        data.sections[props.sectionIndex].questions.push(question)
-        props.setFormInfo(data);
+        if(src){
+            question.question_data = src;
+        }
 
-        updateActiveSlide(props.sectionIndex, props.formInfo.sections[props.sectionIndex]["questions"].length ?? 0)
+        let data = JSON.parse(JSON.stringify(formInfo));
+        data.sections[sectionIndex].questions.push(question)
+        setFormInfo(data);
 
-        // addNewQuestion(type, props.sectionIndex, props.questionIndex, null);
+        updateActiveSlide(sectionIndex, formInfo.sections[sectionIndex]["questions"].length ?? 0)
+
     }
 
     const addNewImageQuestion = (e) => {
@@ -73,8 +74,7 @@ const FloatBar = (props) => {
     const handleVideoChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        // setVideoSrc(URL.createObjectURL(file));
-        addNewQuestion("video", props.sectionIndex, props.questionIndex, URL.createObjectURL(e.target.files[0]));
+        addNewQuestionFunc({questionTypeId: QUESTION_TYPE.VIDEO, src: URL.createObjectURL(e.target.files[0]) })
     }
 
     const handleChange = (e) => {
@@ -82,7 +82,7 @@ const FloatBar = (props) => {
         var idxDot = fileName.lastIndexOf(".") + 1;
         var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
         if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
-            addNewQuestion("image", props.sectionIndex, props.questionIndex, URL.createObjectURL(e.target.files[0]));
+            addNewQuestionFunc({questionTypeId: QUESTION_TYPE.IMAGE, src: URL.createObjectURL(e.target.files[0]) })
         }else{
             alert("Only jpg/jpeg and png files are allowed!");
         }   
@@ -94,12 +94,12 @@ const FloatBar = (props) => {
             block: "center",
             inline: "start"
           })
-    },[props.sectionIndex])
+    },[sectionIndex])
 
     return (
         <div className="sideAddMenu" ref={floatBarRef}>
-            <div onClick={(e) => addNewQuestionFunc(e)}><AddCircleOutlineTwoTone /></div>
-            <div onClick={(e) => addNewQuestionFunc(e)}><TextFieldsTwoTone /></div>
+            <div onClick={(e) => addNewQuestionFunc({questionTypeId: QUESTION_TYPE.SHORT_ANSWER, event: e})}><AddCircleOutlineTwoTone /></div>
+            <div onClick={(e) => addNewQuestionFunc({questionTypeId: QUESTION_TYPE.TITLE, event: e})}><TextFieldsTwoTone /></div>
             <div onClick={(e) => addNewImageQuestion(e)}><Image /></div>
             <input type="file" accept="image/*" className='hidden-file' ref={inputRef} onChange={handleChange} />
             <div onClick={(e) => addNewVideoQuestion(e)}><SmartDisplayOutlinedIcon /></div>

@@ -5,17 +5,14 @@ import { useState } from "react";
 import { deleteSectionData, updateSectionData } from "../../services/api";
 
 const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionTypes }) => {
-
-    const formData = useSection((state) => state.formData);
-    // const updateSectionData = useSection((state) => state.updateSectionData);
-    const [isPreview, setIsPreview] = useState(false);
-
     
     const activeContent = useSection((state) => state.activeContent);
     const updateActiveSlide = useSection((state) => state.updateActiveSlide);
     
-    console.log(activeContent,"activeContent")
     const updateSectionDetails = (value, field) => {
+
+        if(field === "name" && value === "") value = null;
+
         //update local state
         const data = {...formInfo};
         data.sections[sectionIndex][field] = value;
@@ -29,9 +26,7 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
     }
 
     const changeActiveSlideOnDelete = () => {
-        console.log(formInfo,"formInfo", formInfo?.sections.length === 2)
         if(formInfo?.sections.length <= 2){
-            console.log("INSIDE IF")
             updateActiveSlide(null, null);
         } else {
             updateActiveSlide(sectionIndex , null)
@@ -96,8 +91,7 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
                         {section.name}
                     </div>
                     <div className="ms-2 mt-3 text-light-color" style={{ fontSize: "15px" }}>
-                        {section.description ? section.description : "Description(optional)"
-                        }
+                        {section.description ? section.description : "Description(optional)"}
                     </div>
                 </div>
             </>
@@ -107,10 +101,10 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
     const sectionActive = activeContent?.sectionIndex === sectionIndex && activeContent?.questionIndex === null
 
     return (
-        <div className={`main-form-heading ${formData?.sections.length > 1 ? "active" : ""}`} data-custom={`Section ${sectionIndex + 1} of ${formData?.sections.length}`} style={{ marginTop: "150px" }}>
+        <div className={`main-form-heading ${formInfo?.sections.length > 1 ? "active" : ""}`} data-custom={`Section ${sectionIndex + 1} of ${formInfo?.sections.length}`} style={{ marginTop: "150px" }}>
             <div className={`main-form-wrap ${!sectionActive && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveSlide(sectionIndex, null)}>
                 {
-                    isPreview ? renderHeaderPreview() : renderHeader()
+                    !sectionActive ? renderHeaderPreview() : renderHeader()
                 }
 
                 {

@@ -1,4 +1,3 @@
-import useSection from "../../app/store/section";
 import CloseRounded from "@mui/icons-material/CloseRounded";
 import { useState } from "react";
 import { updateQuestionData } from "../../services/api";

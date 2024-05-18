@@ -93,5 +93,17 @@ export const QUESTION_DATA = {
     // Time
     [QUESTION_TYPE.TIME]: {
         questionData: null
-    }
+    },
+    // Title
+    [QUESTION_TYPE.TITLE]: {
+
+    },
+    // Image
+    [QUESTION_TYPE.IMAGE]: {
+
+    },
+    // Video
+    [QUESTION_TYPE.VIDEO]: {
+
+    },
 }

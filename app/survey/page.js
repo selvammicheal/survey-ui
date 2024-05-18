@@ -19,12 +19,11 @@ function page() {
 
     const createNewSurvey = async () => {
         const survey = {
-            name: "Untitled form",
-            description: "Form description"
+            description: null
         }
 
         const surveyRes = await createSurvey(survey);
-        router.push(`survey/create-survey/${surveyRes?._id}`)
+        router.push(`survey/${surveyRes?._id}`)
 
     }
 
@@ -40,9 +39,9 @@ function page() {
             {
 
                 forms?.map((form) => (
-                    <Link href={`survey/create-survey/${form?._id}`}>
+                    <Link href={`survey/${form?._id}`}>
                         <div className='form-item'>
-                            {form.name}
+                            {form?.name ? form?.name : "Untitled form"}
                         </div>
                     </Link>
                 ))

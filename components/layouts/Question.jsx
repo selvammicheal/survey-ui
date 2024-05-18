@@ -35,17 +35,14 @@ import { QUESTION_TYPE } from '../../app/utils/questionType.enum';
 import { deleteQuestion, getAllQuestionType, updateQuestionData, updateQuestionTypeData } from '../../services/api';
 import { QUESTION_DATA } from '../../app/utils/question.enum';
 
-const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setFormInfo, questionTypes }) => {
+const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setFormInfo }) => {
 
     const inputRef = useRef();
 
     const activeContent = useSection((state) => state.activeContent);
     const updateActiveSlide = useSection((state) => state.updateActiveSlide);
-    const isPreview = useSection((state) => state.isPreview);
-    const togglePreview = useSection((state) => state.togglePreview);
 
     const updateQuestionFunc = async (value, field) => {
-        // updateQuestion("question", value, sectionIndex, questionIndex)
         if (field === "question_type_id") {
             // update local state 
             let data = JSON.parse(JSON.stringify(formInfo));
@@ -56,6 +53,7 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
             // api-call 
             updateQuestionTypeData(value, questionData?._id);
         } else {
+            if(field === "question" && value === "") value = null;
             // update local state 
             const data = JSON.parse(JSON.stringify(formInfo));
             data.sections[sectionIndex].questions[questionIndex][field] = value;
@@ -65,11 +63,6 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
 
             // api-call 
             const updateQuestionPayload = {
-                mandatory: questionData?.mandatory,
-                question: questionData.question,
-                question_data: questionData?.question_data,
-                question_img_src: questionData?.question_img_src,
-                question_type_id: questionData?.question_type_id,
                 [field]: value
             }
             updateQuestionData(updateQuestionPayload, questionData?._id);
@@ -81,7 +74,6 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
         var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
         if (extFile == "jpg" || extFile == "jpeg" || extFile == "png") {
             updateQuestionFunc(URL.createObjectURL(e.target.files[0]), "question_img_src")
-            // updateQuestion("questionImgSrc", URL.createObjectURL(e.target.files[0]), sectionIndex, questionIndex)
         } else {
             alert("Only jpg/jpeg and png files are allowed!");
         }
@@ -234,7 +226,7 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
         }
     }
 
-    const activeQuestion = activeContent?.sectionIndex === sectionIndex && activeContent?.questionIndex === questionIndex
+    const activeQuestion = activeContent?.sectionIndex === sectionIndex && activeContent?.questionIndex === questionIndex;
 
     return (
         <div className="main-form-heading">
@@ -244,7 +236,16 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
                         <>
                             <div className="row mb-3">
                                 <div className="col-md-7">
-                                    <input type="text" name="name" className='text-light-color dark-text' placeholder='Question' autoComplete='off' value={questionData.question} onChange={(e) => updateQuestionFunc(e.target.value, "question")} />
+                                    <input 
+                                        type="text" 
+                                        name="name" 
+                                        className='text-light-color dark-text' 
+                                        placeholder='Question' 
+                                        autoComplete='off' 
+                                        onFocus={(e) => e.target.select()}
+                                        value={questionData.question} 
+                                        onChange={(e) => updateQuestionFunc(e.target.value, "question")} 
+                                    />
                                 </div>
                                 <div className="col-md-1 align-self-center">
                                     <div className='upload-main-img' onClick={() => inputRef?.current.click()}>
@@ -354,8 +355,7 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
                         <FloatBar 
                             sectionIndex={sectionIndex} 
                             questionIndex={questionIndex} 
-                            clickedFrom={"question"} 
-                            questionTypes={questionTypes}
+                            clickedFrom={"question"}
                             formInfo={formInfo}
                             setFormInfo={setFormInfo}
                         />

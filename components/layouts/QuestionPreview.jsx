@@ -404,20 +404,19 @@ const QuestionPreview = ({ questionData, preview }) => {
                     </div>
                 )
             }
-            case "title": {
+            case QUESTION_TYPE.TITLE: {
                 return (
                     <div className='w-100'>
                         <div className="question-heading ms-2 mb-2">
-                            {questionData.title}
+                            {questionData.question}
                         </div>
                         <div className="ms-2 mt-3 text-light-color" style={{ fontSize: "15px" }}>
-                            {questionData.description ? questionData.description : "Description(optional)"
-                            }
+                            {questionData.description ? questionData.description : "Description(optional)"}
                         </div>
                     </div>
                 )
             }
-            case "image": {
+            case QUESTION_TYPE.IMAGE: {
                 return (
                     <div className='w-100'>
                         <div className="question-heading ms-2 mb-2">
@@ -434,7 +433,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                 )
 
             }
-            case "video": {
+            case QUESTION_TYPE.VIDEO: {
                 return (
                     <div className='w-100'>
                         <div className="question-heading ms-2 mb-2">

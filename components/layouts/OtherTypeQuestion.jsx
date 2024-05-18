@@ -1,29 +1,67 @@
 import useSection from "../../app/store/section";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import FloatBar from "./FloatBar";
+import { QUESTION_TYPE } from "../../app/utils/questionType.enum";
+import { deleteQuestion, updateQuestionData } from "../../services/api";
 
-const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
+const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex, formInfo, setFormInfo }) => {
 
-    const formData = useSection((state) => state.formData);
-    const updateQuestion = useSection((state) => state.updateQuestion);
-    const deleteQuestion = useSection((state) => state.deleteQuestion);
+    const activeContent = useSection((state) => state.activeContent);
+    const updateActiveSlide = useSection((state) => state.updateActiveSlide);
 
-    const updateQuestionFunc = (value, field) => {
-        updateQuestion(field, value, sectionIndex, questionIndex)
+    console.log(questionData,"questionDataquestionData")
+
+    const updateQuestionFunc = async (value, field) => {
+        
+        if(field === "question" && value === "") value = null;
+
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        data.sections[sectionIndex].questions[questionIndex][field] = value;
+        setFormInfo(data);
+
+        if (field === "question_img_src") return;
+
+        // api-call 
+        const updateQuestionPayload = {
+            [field]: value
+        }
+        updateQuestionData(updateQuestionPayload, questionData?._id);
     }
 
-    const updateActiveContentFunc = () => {
-        // updateActiveContent(sectionIndex, questionIndex, "question")
+    const changeActiveSlideOnDelete = () => {
+        if(formInfo?.sections[sectionIndex].questions?.length == 1){
+            if(sectionIndex == 0) {
+                updateActiveSlide(null, null)
+            } else {
+                updateActiveSlide(sectionIndex, null)
+            }
+        } else {
+            if(questionIndex == 0){
+                updateActiveSlide(sectionIndex, questionIndex)
+            } else {
+                updateActiveSlide(sectionIndex, questionIndex - 1)
+            }
+        }
     }
 
     const deleteQuestionFunc = (e) => {
         e.stopPropagation();
-        deleteQuestion(sectionIndex, questionIndex);
+
+        // update local state 
+        const data = JSON.parse(JSON.stringify(formInfo));
+        data.sections[sectionIndex].questions.splice(questionIndex,1);
+        setFormInfo(data);
+
+        // api-call 
+        deleteQuestion(questionData?._id);
+        
+        changeActiveSlideOnDelete();
     }
 
     const renderQuestions = () => {
-        switch (questionData?.questionType) {
-            case "title": {
+        switch (questionData?.question_type_id) {
+            case QUESTION_TYPE.TITLE: {
                 return (
                     <>
                         <div className="row">
@@ -31,9 +69,9 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
                                 <input
                                     type="text"
                                     className='text-light-color dark-text'
-                                    value={questionData?.title}
-                                    autoFocus={true}
-                                    onChange={(e) => updateQuestionFunc(e.target.value, "title")}
+                                    value={questionData?.question}
+                                    onFocus={(e) => e.target.select()}
+                                    onChange={(e) => updateQuestionFunc(e.target.value, "question")}
                                 />
                             </div>
                             <div className=" col-md-1 align-self-center" style={{cursor: "pointer"}} onClick={(e) => deleteQuestionFunc(e)}>
@@ -49,15 +87,16 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
                                     style={{ fontSize: "15px" }}
                                     type="text"
                                     placeholder="Description"
-                                    value={questionData?.description}
-                                    onChange={(e) => updateQuestionFunc(e.target.value, "description")}
+                                    onFocus={(e) => e.target.select()}
+                                    value={questionData?.question_data}
+                                    onChange={(e) => updateQuestionFunc(e.target.value, "question_data")}
                                 />
                             </div>
                         </div>
                     </>
                 )
             }
-            case "image": {
+            case QUESTION_TYPE.IMAGE: {
                 return(
                     <>
                         <div className="row">
@@ -66,9 +105,9 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
                                     type="text" 
                                     className='text-light-color dark-text' 
                                     placeholder="Image Title" 
-                                    autoFocus={true} 
-                                    value={questionData?.title} 
-                                    onChange={(e) => updateQuestionFunc(e.target.value, "title")}
+                                    onFocus={(e) => e.target.select()}
+                                    value={questionData?.question} 
+                                    onChange={(e) => updateQuestionFunc(e.target.value, "question")}
                                 />
                             </div>
                             <div className="col-md-1 align-self-center" style={{cursor: "pointer"}} onClick={(e) => deleteQuestionFunc(e)}>
@@ -80,14 +119,14 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="question-main-wrap">
-                                    <img src={questionData?.questionImgSrc} className='mw-100' />
+                                    <img src={questionData?.question_data} className='mw-100' />
                                 </div>
                             </div>
                         </div>
                     </>
                 )
             }
-            case "video": {
+            case QUESTION_TYPE.VIDEO: {
                 return(
                     <>
                         <div className="row">
@@ -96,9 +135,9 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
                                     type="text" 
                                     className='text-light-color dark-text' 
                                     placeholder="Image Title" 
-                                    autoFocus={true} 
-                                    value={questionData?.title} 
-                                    onChange={(e) => updateQuestionFunc(e.target.value, "title")}
+                                    onFocus={(e) => e.target.select()}
+                                    value={questionData?.question} 
+                                    onChange={(e) => updateQuestionFunc(e.target.value, "question")}
                                 />
                             </div>
                             <div className="col-md-1 align-self-center" style={{cursor: "pointer"}} onClick={(e) => deleteQuestionFunc(e)}>
@@ -110,7 +149,7 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="question-main-wrap">
-                                    <video src={questionData?.questionVideoSrc} controls className='mw-100' />
+                                    <video src={questionData?.question_data} controls className='mw-100' />
                                 </div>
                             </div>
                         </div>
@@ -121,47 +160,47 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
     }
 
     const renderPreviews = () => {
-        switch (questionData?.questionType) {
-            case "title": {
+        switch (questionData?.question_type_id) {
+            case QUESTION_TYPE.TITLE: {
                 return (
                     <div className='w-100'>
                         <div className="question-heading ms-2 mb-2">
-                            {questionData.title}
+                            {questionData?.question}
                         </div>
                         <div className="ms-2 mt-3 text-light-color" style={{ fontSize: "15px" }}>
-                            {questionData.description ? questionData.description : "Description(optional)"
+                            {questionData?.question_data ? questionData.question_data : "Description(optional)"
                             }
                         </div>
                     </div>
                 )
             }
-            case "image": {
+            case QUESTION_TYPE.IMAGE: {
                 return(
                     <div className='w-100'>
                         <div className="question-heading ms-2 mb-2">
-                            {questionData.title}
+                            {questionData.question}
                         </div>
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="question-main-wrap">
-                                    <img src={questionData?.questionImgSrc} className='mw-100' />
+                                    <img src={questionData?.question_data} className='mw-100' />
                                 </div>
                             </div>
                         </div>
                     </div>
                 )
             }
-            case "video": {
+            case QUESTION_TYPE.VIDEO: {
                 return(
                     <div className='w-100'>
                         <div className="question-heading ms-2 mb-2">
-                            {questionData.title}
+                            {questionData.question}
                         </div>
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="question-main-wrap">
                                     {/* <img src={questionData?.questionImgSrc} className='mw-100' /> */}
-                                    <video src={questionData?.questionVideoSrc} className='mw-100'></video>
+                                    <video src={questionData?.question_data} className='mw-100'></video>
                                 </div>
                             </div>
                         </div>
@@ -171,14 +210,16 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex }) => {
         }
     }
 
+    const activeQuestion = activeContent?.sectionIndex === sectionIndex && activeContent?.questionIndex === questionIndex;
+
     return (
         <div className="main-form-heading">
-            <div className={`main-form-wrap ${!questionData?.active && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveContentFunc()}>
+            <div className={`main-form-wrap ${!activeQuestion && "left-border-0"}`} style={{ position: "relative" }} onClick={() => updateActiveSlide(sectionIndex, questionIndex)}>
                 {
-                    questionData?.active ? renderQuestions() : renderPreviews()
+                    activeQuestion ? renderQuestions() : renderPreviews()
                 }
                 {
-                    (!formData?.formHeadingActive && questionData?.active) && <FloatBar sectionIndex={sectionIndex} questionIndex={questionIndex} clickedFrom={"question"}/>
+                    activeQuestion && <FloatBar sectionIndex={sectionIndex} questionIndex={questionIndex} formInfo={formInfo} setFormInfo={setFormInfo}/>
                 }
             </div>
         </div>

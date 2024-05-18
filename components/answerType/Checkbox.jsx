@@ -1,4 +1,3 @@
-import useSection from "../../app/store/section"
 import CloseRounded from "@mui/icons-material/CloseRounded"
 import InsertPhotoOutlined from "@mui/icons-material/InsertPhotoOutlined"
 import { Checkbox, FormControlLabel } from "@mui/material"
@@ -67,7 +66,7 @@ const CheckBox = ({ question, sectionIndex, questionIndex, formInfo, setFormInfo
     const removeCheckboxImg = (index) => {
         updateCheckBox("", index, "imgSrc")
     }
-    
+
     return (
         <>
             {

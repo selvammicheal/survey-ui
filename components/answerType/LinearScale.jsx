@@ -1,5 +1,3 @@
-import useSection from "../../app/store/section";
-import { useState } from "react"
 import { updateQuestionData } from "../../services/api";
 
 const { Select, MenuItem } = require("@mui/material")
