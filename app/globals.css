@@ -401,3 +401,9 @@ height: 100px;
 .question-field .css-14lo706 {
   display: block !important;
 }
+
+.required::after {
+  content: "*";
+  color: red;
+  margin-left:4px;
+}

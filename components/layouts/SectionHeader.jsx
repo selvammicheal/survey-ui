@@ -55,7 +55,7 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
                         <input
                             type="text"
                             className='text-light-color dark-text'
-                            value={section?.name}
+                            value={section?.name ? section?.name : ""}
                             autoFocus={true}
                             placeholder="Untitled Section"
                             onChange={(e) => updateSectionDetails(e.target.value, "name")}
@@ -74,7 +74,7 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
                             style={{ fontSize: "15px" }}
                             type="text"
                             placeholder="Description"
-                            value={section?.description}
+                            value={section?.description ? section?.description : ""}
                             onChange={(e) => updateSectionDetails(e.target.value, "description")}
                         />
                     </div>
@@ -88,10 +88,10 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
             <>
                 <div className='short-question'>
                     <div className="question-heading ms-2 mb-2">
-                        {section.name}
+                        {section?.name}
                     </div>
                     <div className="ms-2 mt-3 text-light-color" style={{ fontSize: "15px" }}>
-                        {section.description ? section.description : "Description(optional)"}
+                        {section?.description}
                     </div>
                 </div>
             </>
@@ -111,9 +111,6 @@ const SectionHeader = ({ section, sectionIndex, formInfo, setFormInfo, questionT
                     sectionActive ?
                         <FloatBar
                             sectionIndex={sectionIndex}
-                            questionIndex={null}
-                            clickedFrom={"section"}
-                            questionTypes={questionTypes}
                             formInfo={formInfo}
                             setFormInfo={setFormInfo} />
                         : <></>

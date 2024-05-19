@@ -3,18 +3,61 @@ import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-picker
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo"
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { QUESTION_TYPE } from "../../app/utils/questionType.enum";
+import dayjs, { Dayjs } from 'dayjs';
 
-const QuestionPreview = ({ questionData, preview }) => {
+const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyResponse }) => {
 
-    console.log(questionData, "questionData")
-    let linearCount = questionData?.question_data?.startIndex == 0 ? questionData?.question_data?.endIndex + 1 : questionData?.question_data?.endIndex
+    let linearCount = questionData?.question_data?.startIndex == 0 ? questionData?.question_data?.endIndex + 1 : questionData?.question_data?.endIndex;
+
+    const updateSurveyResponse = (value = null, index = null, e = null) => {
+        const responseData = JSON.parse(JSON.stringify(surveyResponse))
+        const questionResponse = responseData?.find((x) => x.question_id === questionData?._id);
+
+        const directTypeValue = [QUESTION_TYPE.SHORT_ANSWER, QUESTION_TYPE.PARAGRAPH, QUESTION_TYPE.LINEAR_SCALE, QUESTION_TYPE.DATE, QUESTION_TYPE.TIME];
+        const optionTypeValue = [QUESTION_TYPE.MULTIPLE_CHOICE, QUESTION_TYPE.CHECKBOX, QUESTION_TYPE.DROPDOWN];
+
+        let userValue = null;
+        if (directTypeValue.includes(questionData?.question_type_id)) {
+            userValue = value;
+        } else if (optionTypeValue.includes(questionData?.question_type_id)) {
+            userValue = questionData.question_data[index]
+        } else if (questionData?.question_type_id === QUESTION_TYPE.MULTIPLE_CHOICE_GRID) {
+            questionData.question_data.rowData[index]["checked"] = value;
+            userValue = questionData.question_data.rowData;
+        } else if (questionData?.question_type_id === QUESTION_TYPE.CHECKBOX_GRID) {
+            let checkedValue = questionData.question_data.rowData[index]["checked"] ?? [];
+            if (e.target.checked) {
+                checkedValue = [...checkedValue, value];
+            } else {
+                checkedValue = checkedValue.filter((i) => i !== value);
+            }
+            questionData.question_data.rowData[index]["checked"] = checkedValue
+            userValue = questionData.question_data.rowData;
+        }
+
+        if (questionResponse) {
+            questionResponse.question_response = userValue;
+        } else {
+            const response = {
+                user_email: "abc@adglobal360.com",
+                survey_id: questionData?.survey_id,
+                section_id: questionData?.section_id,
+                question_id: questionData?._id,
+                question: questionData?.question,
+                question_response: userValue
+            }
+            responseData.push(response);
+        }
+        setSurveyResponse(responseData)
+
+    }
 
     const renderQuestionPreview = () => {
         switch (questionData?.question_type_id) {
             case QUESTION_TYPE.SHORT_ANSWER: {
                 return (
                     <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -28,7 +71,12 @@ const QuestionPreview = ({ questionData, preview }) => {
                             </div>
                         }
                         <div className="question-field">
-                            <input type='text' placeholder="Short answer text" disabled={preview ? false : true} />
+                            <input
+                                type='text'
+                                placeholder="Short answer text"
+                                disabled={preview ? false : true}
+                                onChange={(e) => updateSurveyResponse(e.target.value)}
+                            />
                         </div>
                     </div>
                 )
@@ -50,7 +98,12 @@ const QuestionPreview = ({ questionData, preview }) => {
                             </div>
                         }
                         <div className="question-field">
-                            <input type='text' placeholder="Long answer text" disabled={preview ? false : true} />
+                            <input
+                                type='text'
+                                placeholder="Long answer text"
+                                disabled={preview ? false : true}
+                                onChange={(e) => updateSurveyResponse(e.target.value)}
+                            />
                         </div>
                     </div>
                 )
@@ -81,7 +134,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                                         <div className="row mt-2">
                                             <div className="col-md-10">
                                                 <div className="d-flex align-items-center mt-1 ms-2">
-                                                    <FormControlLabel control={<Radio value={option.name} disabled={preview ? false : true} />} label={option.name} />
+                                                    <FormControlLabel control={<Radio value={option.name} disabled={preview ? false : true} />} label={option.name} onChange={() => updateSurveyResponse(null, index)} />
                                                 </div>
                                             </div>
                                         </div>
@@ -117,7 +170,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                                     <div className="row mt-2">
                                         <div className="col-md-10">
                                             <div className="multiple_option my-2 ms-2">
-                                                <FormControlLabel label={option.name} control={<Checkbox disabled={preview ? false : true} />} />
+                                                <FormControlLabel label={option.name} control={<Checkbox disabled={preview ? false : true} onChange={() => updateSurveyResponse(null, index)} />} />
                                             </div>
                                         </div>
                                     </div>
@@ -159,7 +212,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                                             >
                                                 {
                                                     questionData?.question_data?.map((option, index) => (
-                                                        <MenuItem value={option.name} key={index}>
+                                                        <MenuItem value={option.name} key={index} onClick={() => updateSurveyResponse(null, index)}>
                                                             <span className="ms-3">{option.name}</span>
                                                         </MenuItem>
                                                     ))
@@ -213,17 +266,17 @@ const QuestionPreview = ({ questionData, preview }) => {
                                 aria-labelledby="demo-radio-buttons-group-label"
                                 name="radio-buttons-group"
                             >
-                            {
-                                [...Array(linearCount).keys()].map((x, index) => (
-                                    <div className="d-flex flex-column align-items-center text-center" key={index}>
-                                        <FormControlLabel 
-                                            control={<Radio value={index} disabled={preview ? false : true} />} 
-                                            labelPlacement="top" 
-                                            label={questionData?.question_data?.startIndex == 0 ? x : x + 1}
-                                        />
-                                    </div>
-                                ))
-                            }
+                                {
+                                    [...Array(linearCount).keys()].map((x, index) => (
+                                        <div className="d-flex flex-column align-items-center text-center" key={index}>
+                                            <FormControlLabel
+                                                control={<Radio value={index} disabled={preview ? false : true} onClick={() => updateSurveyResponse(questionData?.question_data?.startIndex == 0 ? x : x + 1, null)} />}
+                                                labelPlacement="top"
+                                                label={questionData?.question_data?.startIndex == 0 ? x : x + 1}
+                                            />
+                                        </div>
+                                    ))
+                                }
                             </RadioGroup>
                             <div className='ms-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.question_data.endLabel}</div>
                         </div>
@@ -231,6 +284,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                 )
             }
             case QUESTION_TYPE.MULTIPLE_CHOICE_GRID: {
+                console.log(questionData)
                 return (
                     <div className='short-questions'>
                         <div className="question-heading ms-2 mb-3">
@@ -250,7 +304,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                             <div className="row mt-4">
                                 <div className="col-md-2">
                                     <div className='align-items-center'>
-                                        <div className="multiple_option visible-hide ms-3">
+                                        <div className="multiple_option visible-hide ms-3 mt-2">
                                             Row
                                         </div>
                                         {
@@ -268,24 +322,37 @@ const QuestionPreview = ({ questionData, preview }) => {
                                             {
                                                 questionData.question_data.colData.map((x, index) => (
                                                     <div className="d-flex flex-column align-items-center w-100" key={index}>
-                                                        <div className="multiple_option">
+                                                        <div className="multiple_option mt-2">
                                                             {x.name}
                                                         </div>
-                                                        {
-                                                            questionData.question_data.rowData.map((x, index) => (
-                                                                <div className="multiple_option mt-3 " key={index}>
-                                                                    <Radio
-                                                                        disabled={preview ? false : true}
-                                                                        value="disabled"
-                                                                        name="radio-buttons"
-                                                                    />
-                                                                </div>
-                                                            ))
-                                                        }
                                                     </div>
                                                 ))
                                             }
                                         </div>
+                                        {
+                                            questionData.question_data.rowData.map((row, rowIndex) => (
+                                                <RadioGroup
+                                                    row
+                                                    className="d-flex align-items-center justify-content-around w-100"
+                                                    aria-labelledby="demo-row-radio-buttons-group-label"
+                                                    name="row-radio-buttons-group"
+                                                >
+                                                    {
+                                                        questionData.question_data.colData.map((x, index) => (
+                                                            <div className="multiple_option" style={{ marginTop: "14px" }} key={index}>
+                                                                <Radio
+                                                                    disabled={preview ? false : true}
+                                                                    value={index}
+                                                                    name="radio-buttons"
+                                                                    onClick={() => updateSurveyResponse(index, rowIndex)}
+                                                                // checked={index == 2 ? true : false }
+                                                                />
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </RadioGroup>
+                                            ))
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -313,7 +380,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                             <div className="row mt-4">
                                 <div className="col-md-2">
                                     <div className='align-items-center'>
-                                        <div className="multiple_option visible-hide ms-3">
+                                        <div className="multiple_option visible-hide ms-3 mt-2">
                                             Row
                                         </div>
                                         {
@@ -331,20 +398,28 @@ const QuestionPreview = ({ questionData, preview }) => {
                                             {
                                                 questionData.question_data.colData.map((x, index) => (
                                                     <div className="d-flex flex-column align-items-center w-100" key={index}>
-                                                        <div className="multiple_option">
+                                                        <div className="multiple_option mt-2">
                                                             {x.name}
                                                         </div>
-                                                        {
-                                                            questionData.question_data.rowData.map((x, index) => (
-                                                                <div className="multiple_option mt-3 " key={index}>
-                                                                    <Checkbox disabled={preview ? false : true} />
-                                                                </div>
-                                                            ))
-                                                        }
                                                     </div>
                                                 ))
                                             }
                                         </div>
+                                        {
+                                            questionData.question_data.rowData.map((row, rowIndex) => (
+                                                <div
+                                                    className="d-flex align-items-center justify-content-around w-100"
+                                                >
+                                                    {
+                                                        questionData.question_data.colData.map((x, index) => (
+                                                            <div className="multiple_option" style={{ marginTop: "14px" }} key={index}>
+                                                                <Checkbox disabled={preview ? false : true} onClick={(e) => updateSurveyResponse(index, rowIndex, e)} />
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+                                            ))
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -371,7 +446,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                         <div className="question-field ms-2">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Month, day, year" disabled={preview ? false : true} />
+                                    <DatePicker label="Month, day, year" disabled={preview ? false : true} onChange={(e) => updateSurveyResponse(dayjs(e).format('DD/MM/YYYY'), null)} />
                                 </DemoContainer>
                             </LocalizationProvider>
                         </div>
@@ -397,7 +472,7 @@ const QuestionPreview = ({ questionData, preview }) => {
                         <div className="question-field ms-2">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['TimePicker']}>
-                                    <TimePicker label="Time" disabled={preview ? false : true} />
+                                    <TimePicker label="Time" disabled={preview ? false : true} onChange={(e) => updateSurveyResponse(dayjs(e).format('h:mm A'), null)} />
                                 </DemoContainer>
                             </LocalizationProvider>
                         </div>
@@ -420,12 +495,12 @@ const QuestionPreview = ({ questionData, preview }) => {
                 return (
                     <div className='w-100'>
                         <div className="question-heading ms-2 mb-2">
-                            {questionData.title}
+                            {questionData.question}
                         </div>
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="question-main-wrap">
-                                    <img src={questionData?.questionImgSrc} className='mw-100' />
+                                    <img src={questionData?.question_data} className='mw-100' />
                                 </div>
                             </div>
                         </div>
@@ -437,13 +512,13 @@ const QuestionPreview = ({ questionData, preview }) => {
                 return (
                     <div className='w-100'>
                         <div className="question-heading ms-2 mb-2">
-                            {questionData.title}
+                            {questionData.question}
                         </div>
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="question-main-wrap">
                                     {/* <img src={questionData?.questionImgSrc} className='mw-100' /> */}
-                                    <video src={questionData?.questionVideoSrc} className='mw-100'></video>
+                                    <video src={questionData?.question_data} className='mw-100'></video>
                                 </div>
                             </div>
                         </div>

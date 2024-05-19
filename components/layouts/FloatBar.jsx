@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react"
 import { createQuestion, createSection } from "../../services/api"
 import { QUESTION_TYPE } from "../../app/utils/questionType.enum"
 
-const FloatBar = ({formInfo, setFormInfo, sectionIndex, questionIndex}) => {
+const FloatBar = ({formInfo, setFormInfo, sectionIndex}) => {
 
     const inputRef = useRef();
     const floatBarRef = useRef();
@@ -35,7 +35,6 @@ const FloatBar = ({formInfo, setFormInfo, sectionIndex, questionIndex}) => {
 
     const addNewQuestionFunc = async({questionTypeId, event = null, src = null}) => {
         if(event){
-            console.log(event,"event")
             event.stopPropagation();
         }
         

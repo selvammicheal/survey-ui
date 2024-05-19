@@ -27,8 +27,6 @@ function page() {
 
     }
 
-    console.log(forms, "forms")
-
     return (
         <div className='form-screen ms-4'>
             <div className='d-flex align-items-center justify-content-between mb-4'>
@@ -38,8 +36,8 @@ function page() {
 
             {
 
-                forms?.map((form) => (
-                    <Link href={`survey/${form?._id}`}>
+                forms?.map((form, index) => (
+                    <Link href={`survey/${form?._id}`} key={index}>
                         <div className='form-item'>
                             {form?.name ? form?.name : "Untitled form"}
                         </div>

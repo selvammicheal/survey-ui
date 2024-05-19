@@ -9,8 +9,6 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex, formInfo
     const activeContent = useSection((state) => state.activeContent);
     const updateActiveSlide = useSection((state) => state.updateActiveSlide);
 
-    console.log(questionData,"questionDataquestionData")
-
     const updateQuestionFunc = async (value, field) => {
         
         if(field === "question" && value === "") value = null;
@@ -219,7 +217,7 @@ const OtherTypeQuestion = ({ questionData, questionIndex, sectionIndex, formInfo
                     activeQuestion ? renderQuestions() : renderPreviews()
                 }
                 {
-                    activeQuestion && <FloatBar sectionIndex={sectionIndex} questionIndex={questionIndex} formInfo={formInfo} setFormInfo={setFormInfo}/>
+                    activeQuestion && <FloatBar sectionIndex={sectionIndex} formInfo={formInfo} setFormInfo={setFormInfo}/>
                 }
             </div>
         </div>

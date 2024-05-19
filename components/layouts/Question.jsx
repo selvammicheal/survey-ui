@@ -353,9 +353,7 @@ const Question = ({ questionData, questionIndex, sectionIndex, formInfo, setForm
                 {
                     activeQuestion && 
                         <FloatBar 
-                            sectionIndex={sectionIndex} 
-                            questionIndex={questionIndex} 
-                            clickedFrom={"question"}
+                            sectionIndex={sectionIndex}
                             formInfo={formInfo}
                             setFormInfo={setFormInfo}
                         />

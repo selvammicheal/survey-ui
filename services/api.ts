@@ -14,7 +14,6 @@ export const getAllForms = async () => {
 export const getFormData = async (survey_id) => {
     try {
         const response = await axios.get(`${BASE_URL}survey/get-survey/${survey_id}`);
-        console.log(response,"response")
         return response.data[0];
     } catch (error) {
         console.error(error);
@@ -108,6 +107,15 @@ export const updateSectionData = async (data, section_id) => {
 export const deleteSectionData = async (section_id) => {
     try {
         const response = await axios.delete(`${BASE_URL}section/delete-section/${section_id}`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const submitSurvey = async (data) => {
+    try {
+        const response = await axios.post(`${BASE_URL}survey-response/submit-response`, data);
         return response.data;
     } catch (error) {
         console.error(error);

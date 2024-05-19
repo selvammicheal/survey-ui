@@ -47,15 +47,16 @@ const MainForm = ({surveyId, formInfo, setFormInfo}) => {
         updateFormData(payload, formInfo._id)
     }
 
-    // const handleSort = (sectionIndex) => {
-    //     const data = JSON.parse(JSON.stringify(formData));
-    //     const copyArr = [...data.sections[sectionIndex].questions];
-    //     const temp = copyArr[dragItem.current]
-    //     copyArr[dragItem.current] = copyArr[dragOverItem.current]
-    //     copyArr[dragOverItem.current] = temp
-    //     data.sections[sectionIndex].questions = [...copyArr];
-    //     updateFormValue(data)
-    // }
+    const handleSort = (sectionIndex) => {
+        const data = JSON.parse(JSON.stringify(formInfo));
+        const copyArr = [...data.sections[sectionIndex].questions];
+        const temp = copyArr[dragItem.current]
+        copyArr[dragItem.current] = copyArr[dragOverItem.current]
+        copyArr[dragOverItem.current] = temp
+        data.sections[sectionIndex].questions = [...copyArr];
+        // updateFormValue(data)
+        setFormInfo(data)
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -81,7 +82,7 @@ const MainForm = ({surveyId, formInfo, setFormInfo}) => {
                         placeholder="Untitled form"
                         className='text-heading' 
                         onFocus={(e) => e.target.select()}
-                        value={formInfo?.name} 
+                        value={formInfo?.name ? formInfo?.name : ""} 
                         onChange={(e) => updateFormTitle(e.target.value)} 
                     />
                     <input 
@@ -89,12 +90,12 @@ const MainForm = ({surveyId, formInfo, setFormInfo}) => {
                         name="form-description" 
                         className='text-light-color' 
                         placeholder="Form description"
-                        value={formInfo?.description} 
+                        value={formInfo?.description ? formInfo?.description : ""} 
                         onChange={(e) => updateFormDescription(e.target.value)} 
                     />
                 </div>
                 {
-                    formHeadingActive && <FloatBar sectionIndex={0} questionIndex={null} clickedFrom={"formHeader"} questionTypes={questionTypes} formInfo={formInfo} setFormInfo={setFormInfo} />
+                    formHeadingActive && <FloatBar sectionIndex={0} formInfo={formInfo} setFormInfo={setFormInfo} />
                 }
             </div>
             {
@@ -109,11 +110,11 @@ const MainForm = ({surveyId, formInfo, setFormInfo}) => {
                                 section?.questions?.map((question, questionIndex) => (
                                     <div
                                         key={questionIndex}
-                                        // draggable="true"
-                                        // onDragStart={() => dragItem.current = questionIndex}
-                                        // onDragEnter={() => dragOverItem.current = questionIndex}
-                                        // onDragEnd={() => handleSort(sectionIndex)}
-                                        // onDragOver={(e) => e.preventDefault()}
+                                        draggable="true"
+                                        onDragStart={() => dragItem.current = questionIndex}
+                                        onDragEnter={() => dragOverItem.current = questionIndex}
+                                        onDragEnd={() => handleSort(sectionIndex)}
+                                        onDragOver={(e) => e.preventDefault()}
                                     >
                                         {
                                             otherTypeQuestions.includes(question?.question_type_id) ? (
