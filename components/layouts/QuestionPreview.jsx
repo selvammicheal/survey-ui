@@ -4,6 +4,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo"
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { QUESTION_TYPE } from "../../app/utils/questionType.enum";
 import dayjs from 'dayjs';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyResponse, missingIds }) => {
 
@@ -23,11 +24,11 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
             userValue = value === "" ? null : value;
         } else if (optionTypeValue.includes(questionData?.question_type_id)) {
             userValue = questionData.question_data[index]
-        }else if (questionData?.question_type_id === QUESTION_TYPE.CHECKBOX) {
+        } else if (questionData?.question_type_id === QUESTION_TYPE.CHECKBOX) {
             let checkedValue = questionResponse?.question_response?.length > 0 ? JSON.parse(JSON.stringify(questionResponse?.question_response)) : [];
 
             if (e.target.checked) {
-                checkedValue.push({...questionData.question_data[value], id: value})
+                checkedValue.push({ ...questionData.question_data[value], id: value })
             } else {
                 checkedValue = checkedValue.filter((x) => x.id != value);
             }
@@ -105,8 +106,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             />
                         </div>
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )
@@ -137,8 +142,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             />
                         </div>
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )
@@ -165,25 +174,30 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                         >
                             {
                                 questionData?.question_data?.map((option, index) => {
-                                return(
-                                    <div className="question-field" key={index}>
-                                        <div className="row mt-2">
-                                            <div className="col-md-10">
-                                                <div className="d-flex align-items-center mt-1 ms-2">
-                                                    <FormControlLabel control={<Radio value={option.name} checked={questionRes?.question_response?.name===option.name} disabled={preview ? false : true} />} label={option.name} onChange={() => updateSurveyResponse(null, index)} />
+                                    return (
+                                        <div className="question-field" key={index}>
+                                            <div className="row mt-2">
+                                                <div className="col-md-10">
+                                                    <div className="d-flex align-items-center mt-1 ms-2">
+                                                        <FormControlLabel control={<Radio value={option.name} checked={questionRes?.question_response?.name === option.name} disabled={preview ? false : true} />} label={option.name} onChange={() => updateSurveyResponse(null, index)} />
+                                                    </div>
                                                 </div>
                                             </div>
+                                            {
+                                                option.imgSrc && <img src={option.imgSrc} className='questionImage mt-3 ms-4' alt="" />
+                                            }
                                         </div>
-                                        {
-                                            option.imgSrc && <img src={option.imgSrc} className='questionImage mt-3 ms-4' alt="" />
-                                        }
-                                    </div>
-                                )})
+                                    )
+                                })
                             }
                         </RadioGroup>
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )
@@ -210,7 +224,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                     <div className="row mt-2">
                                         <div className="col-md-10">
                                             <div className="multiple_option my-2 ms-2">
-                                                <FormControlLabel label={option.name} control={<Checkbox disabled={preview ? false : true} checked={questionRes?.question_response?.map((x)=>x.id)?.includes(index)} onChange={(e) => updateSurveyResponse(index,  null, e)} />} />
+                                                <FormControlLabel label={option.name} control={<Checkbox disabled={preview ? false : true} checked={questionRes?.question_response?.map((x) => x.id)?.includes(index)} onChange={(e) => updateSurveyResponse(index, null, e)} />} />
                                             </div>
                                         </div>
                                     </div>
@@ -221,8 +235,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             ))
                         }
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )
@@ -289,8 +307,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                 ))
                         }
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )
@@ -322,7 +344,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                     [...Array(linearCount).keys()].map((x, index) => (
                                         <div className="d-flex flex-column align-items-center text-center" key={index}>
                                             <FormControlLabel
-                                                control={<Radio value={index} disabled={preview ? false : true} checked={(questionRes?.question_response) == index +1} onClick={() => updateSurveyResponse(questionData?.question_data?.startIndex == 0 ? x : x + 1, null)} />}
+                                                control={<Radio value={index} disabled={preview ? false : true} checked={(questionRes?.question_response) == index + 1} onClick={() => updateSurveyResponse(questionData?.question_data?.startIndex == 0 ? x : x + 1, null)} />}
                                                 labelPlacement="top"
                                                 label={questionData?.question_data?.startIndex == 0 ? x : x + 1}
                                             />
@@ -333,8 +355,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             <div className='ms-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.question_data.endLabel}</div>
                         </div>
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )
@@ -400,7 +426,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                                                     value={index}
                                                                     name="radio-buttons"
                                                                     onClick={() => updateSurveyResponse(index, rowIndex)}
-                                                                    checked={row?.checked == index ? true : false }
+                                                                    checked={row?.checked == index ? true : false}
                                                                 />
                                                             </div>
                                                         ))
@@ -413,8 +439,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             </div>
                         </div>
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )
@@ -484,8 +514,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             </div>
                         </div>
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )
@@ -514,8 +548,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             </LocalizationProvider>
                         </div>
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )
@@ -544,8 +582,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             </LocalizationProvider>
                         </div>
                         {
-                            missingIds?.includes(questionData?._id) ? 
-                                <div className="error-field">This is a required field</div> : <></>
+                            missingIds?.includes(questionData?._id) ?
+                                <div className="error-field">
+                                    <InfoOutlinedIcon />
+                                    <div className="ms-2">This is a required field</div>
+                                </div> :
+                                <></>
                         }
                     </div>
                 )

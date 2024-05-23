@@ -16,8 +16,27 @@ const Preview = ({ formInfo, setFormInfo }) => {
     const [surveyResponse, setSurveyResponse] = useState([]);
 
     const submitResponse = async () => {
-        await submitSurvey(surveyResponse).then(() => setFormSubmitted(true));
-        setSurveyResponse([]);
+        setValidate(true)
+
+        const missingIdsData = mandatoryQuesId.filter(data => {
+            const answered = surveyResponse.some(formResponse => formResponse.question_id === data.questionId)
+            if (data.questionTypeId === QUESTION_TYPE.CHECKBOX_GRID && answered) {
+                return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked?.length > 0)
+                // return true
+            } else if (data.questionTypeId === QUESTION_TYPE.MULTIPLE_CHOICE_GRID && answered) {
+                return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked !== null)
+            } else {
+                return !answered
+            }
+        });
+
+        setMissingIds(missingIdsData.map((x) => x.questionId))
+
+        if (missingIdsData.length === 0) {
+            await submitSurvey(surveyResponse).then(() => setFormSubmitted(true));
+            setValidate(false);
+            setSurveyResponse([]);
+        }
     }
 
     useEffect(() => {
@@ -36,7 +55,7 @@ const Preview = ({ formInfo, setFormInfo }) => {
                     return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked?.length > 0)
                     // return true
                 } else if (data.questionTypeId === QUESTION_TYPE.MULTIPLE_CHOICE_GRID && answered) {
-                    return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked !== null) 
+                    return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked !== null)
                 } else {
                     return !answered
                 }
@@ -56,7 +75,7 @@ const Preview = ({ formInfo, setFormInfo }) => {
                 return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked?.length > 0)
                 // return true
             } else if (data.questionTypeId === QUESTION_TYPE.MULTIPLE_CHOICE_GRID && answered) {
-                return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked !== null) 
+                return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked !== null)
             } else {
                 return !answered
             }
@@ -65,7 +84,8 @@ const Preview = ({ formInfo, setFormInfo }) => {
         setMissingIds(missingIdsData.map((x) => x.questionId))
 
         if (missingIdsData.length === 0) {
-            setSectionIndex(sectionIndex + 1)
+            setSectionIndex(sectionIndex + 1);
+            setValidate(false);
         }
     }
 
