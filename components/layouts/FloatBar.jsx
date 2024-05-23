@@ -20,8 +20,9 @@ const FloatBar = ({formInfo, setFormInfo, sectionIndex}) => {
         e.stopPropagation();
         const payload = {
             survey_id: formInfo._id,
-            name: null,
-            description: null
+            name: "Untitled Section",
+            description: null,
+            isActive: true
         }
         const section = await createSection(payload);
         section["questions"] = []

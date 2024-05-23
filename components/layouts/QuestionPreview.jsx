@@ -1,38 +1,62 @@
-import { Checkbox, FormControl, FormControlLabel, FormGroup, MenuItem, Radio, RadioGroup, Select } from "@mui/material"
+import { Checkbox, FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material"
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers"
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo"
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { QUESTION_TYPE } from "../../app/utils/questionType.enum";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
-const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyResponse }) => {
+const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyResponse, missingIds }) => {
 
     let linearCount = questionData?.question_data?.startIndex == 0 ? questionData?.question_data?.endIndex + 1 : questionData?.question_data?.endIndex;
+
+    const questionRes = surveyResponse?.find((x) => x.question_id == questionData._id);
 
     const updateSurveyResponse = (value = null, index = null, e = null) => {
         const responseData = JSON.parse(JSON.stringify(surveyResponse))
         const questionResponse = responseData?.find((x) => x.question_id === questionData?._id);
 
         const directTypeValue = [QUESTION_TYPE.SHORT_ANSWER, QUESTION_TYPE.PARAGRAPH, QUESTION_TYPE.LINEAR_SCALE, QUESTION_TYPE.DATE, QUESTION_TYPE.TIME];
-        const optionTypeValue = [QUESTION_TYPE.MULTIPLE_CHOICE, QUESTION_TYPE.CHECKBOX, QUESTION_TYPE.DROPDOWN];
+        const optionTypeValue = [QUESTION_TYPE.MULTIPLE_CHOICE, QUESTION_TYPE.DROPDOWN];
 
         let userValue = null;
         if (directTypeValue.includes(questionData?.question_type_id)) {
-            userValue = value;
+            userValue = value === "" ? null : value;
         } else if (optionTypeValue.includes(questionData?.question_type_id)) {
             userValue = questionData.question_data[index]
+        }else if (questionData?.question_type_id === QUESTION_TYPE.CHECKBOX) {
+            let checkedValue = questionResponse?.question_response?.length > 0 ? JSON.parse(JSON.stringify(questionResponse?.question_response)) : [];
+
+            if (e.target.checked) {
+                checkedValue.push({...questionData.question_data[value], id: value})
+            } else {
+                checkedValue = checkedValue.filter((x) => x.id != value);
+            }
+
+            userValue = checkedValue.length > 0 ? checkedValue : null;
+
         } else if (questionData?.question_type_id === QUESTION_TYPE.MULTIPLE_CHOICE_GRID) {
+            questionData.question_data.rowData = questionData.question_data.rowData.map((x) => ({
+                ...x, checked: x?.checked ?? null
+            }))
             questionData.question_data.rowData[index]["checked"] = value;
             userValue = questionData.question_data.rowData;
         } else if (questionData?.question_type_id === QUESTION_TYPE.CHECKBOX_GRID) {
-            let checkedValue = questionData.question_data.rowData[index]["checked"] ?? [];
+            // add a property checked if it not present
+            questionData.question_data.rowData?.map((x) => x["checked"] = x["checked"] ?? [])
+
+            let checkedValue = questionData.question_data.rowData[index]["checked"];
+
             if (e.target.checked) {
                 checkedValue = [...checkedValue, value];
             } else {
                 checkedValue = checkedValue.filter((i) => i !== value);
             }
-            questionData.question_data.rowData[index]["checked"] = checkedValue
-            userValue = questionData.question_data.rowData;
+
+            questionData.question_data.rowData[index]["checked"] = checkedValue;
+            //check if the response from user is empty
+            const emptyResponse = questionData.question_data.rowData.every((x) => x.checked?.length == 0)
+            userValue = emptyResponse ? null : questionData.question_data.rowData;
+
         }
 
         if (questionResponse) {
@@ -48,7 +72,8 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
             }
             responseData.push(response);
         }
-        setSurveyResponse(responseData)
+        const finalData = responseData.filter((x) => x.question_response != null)
+        setSurveyResponse(finalData)
 
     }
 
@@ -72,19 +97,24 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                         }
                         <div className="question-field">
                             <input
+                                value={questionRes?.question_response ?? ""}
                                 type='text'
                                 placeholder="Short answer text"
                                 disabled={preview ? false : true}
                                 onChange={(e) => updateSurveyResponse(e.target.value)}
                             />
                         </div>
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.PARAGRAPH: {
                 return (
                     <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -100,18 +130,23 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                         <div className="question-field">
                             <input
                                 type='text'
+                                value={questionRes?.question_response ?? ""}
                                 placeholder="Long answer text"
                                 disabled={preview ? false : true}
                                 onChange={(e) => updateSurveyResponse(e.target.value)}
                             />
                         </div>
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.MULTIPLE_CHOICE: {
                 return (
                     <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -129,12 +164,13 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             name="radio-buttons-group"
                         >
                             {
-                                questionData?.question_data?.map((option, index) => (
+                                questionData?.question_data?.map((option, index) => {
+                                return(
                                     <div className="question-field" key={index}>
                                         <div className="row mt-2">
                                             <div className="col-md-10">
                                                 <div className="d-flex align-items-center mt-1 ms-2">
-                                                    <FormControlLabel control={<Radio value={option.name} disabled={preview ? false : true} />} label={option.name} onChange={() => updateSurveyResponse(null, index)} />
+                                                    <FormControlLabel control={<Radio value={option.name} checked={questionRes?.question_response?.name===option.name} disabled={preview ? false : true} />} label={option.name} onChange={() => updateSurveyResponse(null, index)} />
                                                 </div>
                                             </div>
                                         </div>
@@ -142,16 +178,20 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                             option.imgSrc && <img src={option.imgSrc} className='questionImage mt-3 ms-4' alt="" />
                                         }
                                     </div>
-                                ))
+                                )})
                             }
                         </RadioGroup>
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.CHECKBOX: {
                 return (
                     <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -170,7 +210,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                     <div className="row mt-2">
                                         <div className="col-md-10">
                                             <div className="multiple_option my-2 ms-2">
-                                                <FormControlLabel label={option.name} control={<Checkbox disabled={preview ? false : true} onChange={() => updateSurveyResponse(null, index)} />} />
+                                                <FormControlLabel label={option.name} control={<Checkbox disabled={preview ? false : true} checked={questionRes?.question_response?.map((x)=>x.id)?.includes(index)} onChange={(e) => updateSurveyResponse(index,  null, e)} />} />
                                             </div>
                                         </div>
                                     </div>
@@ -180,13 +220,17 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                 </div>
                             ))
                         }
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.DROPDOWN: {
                 return (
                     <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -208,8 +252,12 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                                 labelId="icon-select-label"
                                                 label="Icon Select"
                                                 placeholder="Select"
-                                                defaultValue={questionData?.question_data[0]?.name}
+                                                defaultValue={""}
+                                                value={questionRes?.question_response?.name ?? "null"}
                                             >
+                                                <MenuItem disabled value="null">
+                                                    <span className="ms-3">Select</span>
+                                                </MenuItem>
                                                 {
                                                     questionData?.question_data?.map((option, index) => (
                                                         <MenuItem value={option.name} key={index} onClick={() => updateSurveyResponse(null, index)}>
@@ -240,13 +288,17 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                     </div>
                                 ))
                         }
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.LINEAR_SCALE: {
                 return (
                     <div className='short-questions'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -270,7 +322,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                     [...Array(linearCount).keys()].map((x, index) => (
                                         <div className="d-flex flex-column align-items-center text-center" key={index}>
                                             <FormControlLabel
-                                                control={<Radio value={index} disabled={preview ? false : true} onClick={() => updateSurveyResponse(questionData?.question_data?.startIndex == 0 ? x : x + 1, null)} />}
+                                                control={<Radio value={index} disabled={preview ? false : true} checked={(questionRes?.question_response) == index +1} onClick={() => updateSurveyResponse(questionData?.question_data?.startIndex == 0 ? x : x + 1, null)} />}
                                                 labelPlacement="top"
                                                 label={questionData?.question_data?.startIndex == 0 ? x : x + 1}
                                             />
@@ -280,14 +332,17 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                             </RadioGroup>
                             <div className='ms-4' style={{ fontSize: "15px", textAlign: "center", wordBreak: "break-word" }}>{questionData.question_data.endLabel}</div>
                         </div>
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.MULTIPLE_CHOICE_GRID: {
-                console.log(questionData)
                 return (
                     <div className='short-questions'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -345,7 +400,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                                                     value={index}
                                                                     name="radio-buttons"
                                                                     onClick={() => updateSurveyResponse(index, rowIndex)}
-                                                                // checked={index == 2 ? true : false }
+                                                                    checked={row?.checked == index ? true : false }
                                                                 />
                                                             </div>
                                                         ))
@@ -357,13 +412,17 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                 </div>
                             </div>
                         </div>
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.CHECKBOX_GRID: {
                 return (
                     <div className='short-questions'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -413,7 +472,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                                     {
                                                         questionData.question_data.colData.map((x, index) => (
                                                             <div className="multiple_option" style={{ marginTop: "14px" }} key={index}>
-                                                                <Checkbox disabled={preview ? false : true} onClick={(e) => updateSurveyResponse(index, rowIndex, e)} />
+                                                                <Checkbox checked={row?.checked ? row?.checked.includes(index) : false} disabled={preview ? false : true} onClick={(e) => updateSurveyResponse(index, rowIndex, e)} />
                                                             </div>
                                                         ))
                                                     }
@@ -424,13 +483,17 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                                 </div>
                             </div>
                         </div>
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.DATE: {
                 return (
                     <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -446,17 +509,21 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                         <div className="question-field ms-2">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Month, day, year" disabled={preview ? false : true} onChange={(e) => updateSurveyResponse(dayjs(e).format('DD/MM/YYYY'), null)} />
+                                    <DatePicker label="Month, day, year" value={(preview && questionRes?.question_response) ? dayjs(questionRes?.question_response) : null} disabled={preview ? false : true} onChange={(e) => updateSurveyResponse(dayjs(e).format('DD/MM/YYYY'), null)} />
                                 </DemoContainer>
                             </LocalizationProvider>
                         </div>
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.TIME: {
                 return (
                     <div className='short-question'>
-                        <div className="question-heading ms-2 mb-3">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         {
@@ -472,17 +539,21 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
                         <div className="question-field ms-2">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['TimePicker']}>
-                                    <TimePicker label="Time" disabled={preview ? false : true} onChange={(e) => updateSurveyResponse(dayjs(e).format('h:mm A'), null)} />
+                                    <TimePicker label="Time" value={(preview && questionRes?.question_response) ? dayjs(new Date(questionRes?.question_response)) : null} format="hh:mm A" disabled={preview ? false : true} onChange={(e) => updateSurveyResponse(e.format(), null)} />
                                 </DemoContainer>
                             </LocalizationProvider>
                         </div>
+                        {
+                            missingIds?.includes(questionData?._id) ? 
+                                <div className="error-field">This is a required field</div> : <></>
+                        }
                     </div>
                 )
             }
             case QUESTION_TYPE.TITLE: {
                 return (
                     <div className='w-100'>
-                        <div className="question-heading ms-2 mb-2">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         <div className="ms-2 mt-3 text-light-color" style={{ fontSize: "15px" }}>
@@ -494,7 +565,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
             case QUESTION_TYPE.IMAGE: {
                 return (
                     <div className='w-100'>
-                        <div className="question-heading ms-2 mb-2">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         <div className="row">
@@ -511,7 +582,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
             case QUESTION_TYPE.VIDEO: {
                 return (
                     <div className='w-100'>
-                        <div className="question-heading ms-2 mb-2">
+                        <div className={`question-heading ms-2 mb-3 ${questionData?.mandatory ? "required" : ""}`}>
                             {questionData.question}
                         </div>
                         <div className="row">
@@ -533,6 +604,7 @@ const QuestionPreview = ({ questionData, preview, surveyResponse, setSurveyRespo
         <>
             {
                 renderQuestionPreview()
+
             }
         </>
     )

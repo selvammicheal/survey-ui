@@ -35,6 +35,7 @@ function page() {
             </div>
 
             {
+                forms?.length > 0 ?
 
                 forms?.map((form, index) => (
                     <Link href={`survey/${form?._id}`} key={index}>
@@ -42,7 +43,9 @@ function page() {
                             {form?.name ? form?.name : "Untitled form"}
                         </div>
                     </Link>
-                ))
+                )) :
+
+                <div className='form-item' style={{border: "0px"}}>No Survey's found</div>
             }
         </div>
     )

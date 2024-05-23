@@ -1,20 +1,72 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import QuestionPreview from './QuestionPreview';
 import Button from '@mui/material/Button';
 import { submitSurvey } from '../../services/api';
+import { QUESTION_TYPE } from '../../app/utils/questionType.enum';
 
-const Preview = ({formInfo, setFormInfo}) => {
+const Preview = ({ formInfo, setFormInfo }) => {
 
     const [sectionIndex, setSectionIndex] = useState(0);
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [mandatoryQuesId, setMandatoryQuesId] = useState([]);
+    const [missingIds, setMissingIds] = useState([]);
+
+    const [validate, setValidate] = useState(false);
 
     const [surveyResponse, setSurveyResponse] = useState([]);
-
-    console.log(surveyResponse,"surveyResponse")
 
     const submitResponse = async () => {
         await submitSurvey(surveyResponse).then(() => setFormSubmitted(true));
         setSurveyResponse([]);
+    }
+
+    useEffect(() => {
+        const data = formInfo?.sections[sectionIndex]?.questions?.filter((question) => question.mandatory === true).map((x) => ({
+            questionId: x._id,
+            questionTypeId: x.question_type_id
+        }));
+        setMandatoryQuesId(data)
+    }, [sectionIndex])
+
+    useEffect(() => {
+        if (validate) {
+            const missingIdsData = mandatoryQuesId.filter(data => {
+                const answered = surveyResponse.some(formResponse => formResponse.question_id === data.questionId)
+                if (data.questionTypeId === QUESTION_TYPE.CHECKBOX_GRID && answered) {
+                    return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked?.length > 0)
+                    // return true
+                } else if (data.questionTypeId === QUESTION_TYPE.MULTIPLE_CHOICE_GRID && answered) {
+                    return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked !== null) 
+                } else {
+                    return !answered
+                }
+            });
+
+            setMissingIds(missingIdsData.map((x) => x.questionId))
+        }
+    }, [surveyResponse, validate])
+
+    const validateFields = () => {
+
+        setValidate(true)
+
+        const missingIdsData = mandatoryQuesId.filter(data => {
+            const answered = surveyResponse.some(formResponse => formResponse.question_id === data.questionId)
+            if (data.questionTypeId === QUESTION_TYPE.CHECKBOX_GRID && answered) {
+                return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked?.length > 0)
+                // return true
+            } else if (data.questionTypeId === QUESTION_TYPE.MULTIPLE_CHOICE_GRID && answered) {
+                return !surveyResponse.find((x) => x.question_id === data.questionId).question_response.every((x) => x.checked !== null) 
+            } else {
+                return !answered
+            }
+        });
+
+        setMissingIds(missingIdsData.map((x) => x.questionId))
+
+        if (missingIdsData.length === 0) {
+            setSectionIndex(sectionIndex + 1)
+        }
     }
 
     return (
@@ -48,8 +100,8 @@ const Preview = ({formInfo, setFormInfo}) => {
 
                                                     section.questions.map((question, questionIndex) => (
                                                         <div key={questionIndex} className={`main-form-heading ${(index > 0 && questionIndex == 0) && "preview-active"}`} data-custom={section?.name}>
-                                                            <div className={`main-form-wrap left-border-0`}>
-                                                                <QuestionPreview questionData={question} preview={true} surveyResponse={surveyResponse} setSurveyResponse={setSurveyResponse}  />
+                                                            <div className={`main-form-wrap ${missingIds?.includes(question?._id) ? "error-border" : "left-border-0"}`}>
+                                                                <QuestionPreview missingIds={missingIds} questionData={question} preview={true} surveyResponse={surveyResponse} setSurveyResponse={setSurveyResponse} />
                                                             </div>
                                                         </div>
                                                     )) : <></>
@@ -65,7 +117,7 @@ const Preview = ({formInfo, setFormInfo}) => {
                                 }
                                 {
                                     formInfo?.sections?.length > sectionIndex + 1 &&
-                                    <Button variant="outlined" onClick={() => setSectionIndex(sectionIndex + 1)}>Next</Button>
+                                    <Button variant="outlined" onClick={() => validateFields()}>Next</Button>
                                 }
                                 {
                                     formInfo?.sections?.length == sectionIndex + 1 &&

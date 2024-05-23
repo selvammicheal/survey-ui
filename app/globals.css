@@ -407,3 +407,14 @@ height: 100px;
   color: red;
   margin-left:4px;
 }
+
+.error-field {
+  font-size: 14px;
+  margin-top: 20px;
+  color: red;
+}
+
+.error-border {
+  border: 2px solid red !important;
+  box-shadow: none;
+}
